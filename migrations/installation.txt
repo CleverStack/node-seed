@@ -1,0 +1,7 @@
+To install the schema locally, use the psql command line tool
+and just run these scripts in order. These scripts completely 
+destroy and rebuild the database, and we'll probably be running them
+a lot as we change the local schema. Hollar if that's unclear. --Mason
+
+psql -U YourAccountName
+\i all.sql

@@ -1,0 +1,35 @@
+{
+  "name": "ctstub",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app",
+    "test": "clear; NODE_ENV=test node ./node_modules/jasmine-node/bin/jasmine-node test/"
+  },
+  "dependencies": {
+    "express": "",
+    "pg": "",
+    "i18n": "",
+    "q": "",
+    "jasmine-node": "",
+    "squel": "",
+    "validator": "",
+    "moment": "",
+    "supervisor":"",
+    "underscore":""
+  },
+  "author": {
+    "name": "Mason Houtz",
+    "email": "mason@clevertech.biz"
+  },
+  "description": "",
+  "keywords": [
+    ""
+  ],
+  "main": "app.js",
+  "devDependencies": {
+    "grunt": "latest",
+    "grunt-exec": "latest",
+    "grunt-contrib-watch": "latest"
+  }
+}

@@ -1,0 +1,9 @@
+.nbrun
+.DS_Store
+npm-debug.log
+.netbeans.xml
+node_modules
+.idea
+config/local.js
+test-results.xml
+!.gitignore
