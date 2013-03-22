@@ -13,14 +13,9 @@
  * that itself creates promises. (It's a little dirty)
  */
 
-var Transaction = require('../components/PostgresTransaction'),
-	Query = require('../components/PostgresQuery');
 
-
-
-
-function BaseService(configs) {
-	this.configs = configs;
+function BaseService(dbAdapter) {
+	this.db = dbAdapter;
 }
 
 
@@ -31,7 +26,7 @@ function BaseService(configs) {
  * @return {Transaction} Transaction handler
  */
 BaseService.prototype.startTransaction = function() {
-	return new Transaction(this.configs);
+	return this.db.startTransaction();
 };
 
 
@@ -41,8 +36,7 @@ BaseService.prototype.startTransaction = function() {
  * @return {promise}
  */
 BaseService.prototype.query = function() {
-	var newQuery = new Query(this.configs);
-	return newQuery.create.apply(newQuery, arguments);
+	return this.db.query.apply(this.db, arguments);
 };
 
 

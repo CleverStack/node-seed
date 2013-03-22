@@ -20,7 +20,7 @@ module.exports = function(Service) {
 					res.send(200, users.map(User.export));
 				})
 				.fail(function(err) {
-					res.send(400, err);
+					res.send(500, err.toString());
 				});
 
 		},
@@ -34,7 +34,7 @@ module.exports = function(Service) {
 					res.send(200, user.export());
 				})
 				.fail(function(err) {
-					res.send(400, err);
+					res.send(500, err.toString());
 				});
 		},
 
@@ -45,7 +45,8 @@ module.exports = function(Service) {
 			Service.save(user)
 				.then(function(user) {
 					res.json(200, user.export());
-				}).fail(function(err) {
+				})
+				.fail(function(err) {
 					res.send(500, err.toString());
 				});
 		},

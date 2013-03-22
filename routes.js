@@ -4,6 +4,10 @@
  * @author Mason Houtz <mason@clevertech.biz>
  */
 
+// Postgres database adapter
+
+var DB = require('./src/components/PGAdapter/DB');
+
 
 // LOADER Utilities
 // These things cache the controllers and the services with their dependencies. 
@@ -19,11 +23,13 @@ var controller = loader(/* configs? */);
 controller.storage = __dirname + '/src/controllers/';
 
 
+
 module.exports = function(app) {
 
 	// Dependency injection happens now.
 	var config = app.get('config');
-	var userService = service('UserService', config.db);
+	var dbAdapter = new DB(config.db);
+	var userService = service('UserService', dbAdapter);
 	var AUTH = controller('AuthController', userService);
 	var USER = controller('UserController', userService);
 
