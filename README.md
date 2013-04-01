@@ -1,21 +1,29 @@
-# Problems we need to solve and/or demonstrate solutions for:
-
+# Solved Problems
 
 ## Javascript/CSS smashing. (StealJS recommended by Richard)
 
 	To do a production build,
 		1. cd public
 		2. (Windows) steal\js.bat scripts/build.js or (Nix) steal\js scripts/build.js
-
-## Examples of several types of data storage calls
-	1. Postgres, NoSQL, Redis
-	2. Transaction example
-
+		3. (TODO) Grunt build support for CI and CLI
 
 ## Environment-specific configuration mechanisms
 	
-	Uses Nconf now
-	You should set your NODE_ENV environment variable (but on your local machine you shouldn't need to, it will defaul to use config/local.json)
+	NCONF Configuration Files:
+	
+	config/global.json is where you put all your defaults/global stuff
+	config/NODE_ENV.json is also loaded and recursively merged with global (where NODE_ENV is one of 'local', 'dev', 'stag' or 'prod')
+
+	You should set your NODE_ENV environment variable (but on your local machine you shouldn't need to, it will default to use config/local.json)
+
+
+# Problems we need to solve and/or demonstrate solutions for:
+
+## Examples of several types of data storage calls
+	1. Postgres (MySQL as well?), NoSQL, Redis
+	2. Transaction example
+
+
 
 
 ## Demonstration of the important of modularizing data calls into service layer objects.
