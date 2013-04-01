@@ -17,7 +17,8 @@
     "moment": "",
     "supervisor":"",
     "underscore":"",
-    "nconf": "*"
+    "nconf": "*",
+    "uberclass": "*"
   },
   "author": {
     "name": "Mason Houtz",

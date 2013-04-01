@@ -33,6 +33,11 @@ module.exports = function(app) {
 	var AUTH = controller('AuthController', userService);
 	var USER = controller('UserController', userService);
 
+	var ExampleController = require('./src/controllers/ExampleController.js');
+
+	app.all('/example/:action/:id?', ExampleController.bind())
+	app.all('/example/?:action?', ExampleController.bind())
+
 	// Auth Routes
 	app.get('/auth/logout', AUTH.logout);
 	app.post('/auth/login', AUTH.login);
