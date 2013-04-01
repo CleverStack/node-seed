@@ -16,7 +16,8 @@
     "validator": "",
     "moment": "",
     "supervisor":"",
-    "underscore":""
+    "underscore":"",
+    "nconf": "*"
   },
   "author": {
     "name": "Mason Houtz",
