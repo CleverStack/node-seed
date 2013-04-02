@@ -1,10 +1,5 @@
 module.exports = function(UserService) {
 	return (require('./../classes/Controller.js')).extend(
-	/* @Static */
-	{
-		// ... section to place static items, async.queue()'s for instance
-		// You can also omit this entire argument in the extend call
-	},
 	/* @Prototype */
 	{
 		/**
@@ -25,18 +20,21 @@ module.exports = function(UserService) {
 		},
 
 		/**
-		 * 'GET /example' (It is possible to not be an index, but a list) or 'GET /example/12' or 'GET /example/get/12'
+		 * 'GET /example'
+		 */
+		listAction: function() {
+			this.send({
+				status: 'Sending you the list of examples.'
+			});
+		},
+
+		/**
+		 * 'GET /example/12' or 'GET /example/get/12'
 		 */
 		getAction: function() {
-			if (this.req.params.id) {
-				this.send({
-					status: 'sending you record with id of ' + this.req.params.id
-				});
-			} else {
-				this.send({
-					status: 'Sending you the list of examples.'
-				});
-			}
+			this.send({
+				status: 'sending you record with id of ' + this.req.params.id
+			});
 		},
 
 		/**
