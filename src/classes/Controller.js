@@ -97,6 +97,10 @@ module.exports = Class.extend(
 			: this.res[type || this.resType](content)
 	},
 
+	render: function(template, data) {
+		this.res.render(template, data);
+	},
+
 	handleException: function(exception) {
 		this.send({ error: 'Unhandled exception: ' + exception });
 	}

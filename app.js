@@ -39,6 +39,12 @@ app.configure(function() {
 	// static file delivery
 	app.use(express['static'](__dirname + '/public'));
 
+	app.set('views', __dirname + '/src/views')
+	app.set('view engine', 'ejs');
+	app.set('view options', {
+	    layout: false
+	});
+
 	// error handler, outputs json since that's usually
 	// what comes out of this thing
 	app.use(function(err, req, res, next) {
