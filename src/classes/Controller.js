@@ -18,14 +18,6 @@ module.exports = Class.extend(
 	res: null,
 	next: null,
 	resType: 'json',
-	binding: null,
-
-	bind: function() {
-		if (!this.getAction)
-			this.getAction = function() {
-				console.log('GET ACTION')
-			}
-	},
 
 	setup: function(req, res, next) {
 		try {
