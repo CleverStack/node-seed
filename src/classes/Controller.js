@@ -1,6 +1,4 @@
-var BadResponseException = require('./../exceptions/BadResponse')
-  , BadRequestException = require('./../exceptions/BadRequest')
-  , NoActionException = require('./../exceptions/NoAction')
+var NoActionException = require('./../exceptions/NoAction')
   , Class = require('uberclass');
 
 module.exports = Class.extend(
@@ -16,97 +14,98 @@ module.exports = Class.extend(
 },
 /* @Prototype */
 {
-	request: null,
-	response: null,
+	req: null,
+	res: null,
 	next: null,
-	responseType: 'json',
+	resType: 'json',
+	binding: null,
 
-	setup: function(_request, _response, _next) {
+	bind: function() {
+		if (!this.getAction)
+			this.getAction = function() {
+				console.log('GET ACTION')
+			}
+	},
+
+	setup: function(req, res, next) {
 		try {
-			return this.performanceSafeSetup(_request, _response, _next);
+			return this.performanceSafeSetup(req, res, next);
 		} catch(e) {
 			return [e];
 		}
 	},
 
-	performanceSafeSetup: function(_request, _response, _next) {
+	performanceSafeSetup: function(req, res, next) {
 		var method = null;
 
-		this.next = _next;
-		this.request = _request;
-		this.response = _response;
-
-		if (typeof this.response != 'object')
-			throw new BadResponseException('Response is not an object');
-
-		if (typeof this.response.send != 'function')
-			throw new BadResponseException('Response does not have a send function');
-
-		if (typeof this.response.json != 'function')
-			throw new BadResponseException('Response does not have a json function');
-
-		if (typeof this.request != 'object')
-			throw new BadRequestException('Request is not an object');
-
-		if (typeof this.request.method != 'string')
-			throw new BadRequestException('Request does not have that HTTP method ' + this.request.method);
+		this.next = next;
+		this.req = req;
+		this.res = res;
 
 		// Route based on an action first if we can
-		if (this.Class.actionsEnabled && typeof this.request.params == 'object' && typeof this.request.params.action != 'undefined') {
-			if (isNaN(this.request.params.action)) {
-				var funcName = this.request.params.action + 'Action';
+		if (this.Class.actionsEnabled && typeof this.req.params.action != 'undefined') {
+			if (isNaN(this.req.params.action)) {
+				var funcName = this.req.params.action + 'Action';
 
 				if (typeof this[funcName] == 'function') {
-					return [null, funcName, _next];
+					return [null, funcName, next];
 				} else {
-					throw new NoActionException('There is no action/function to handle that request');
+					throw new NoActionException();
 				}
 			} else {
-				method = this.request.method.toLowerCase() + 'Action';
+				method = this.req.method.toLowerCase() + 'Action';
 				if (typeof this[method] == 'function') {
 
-					// Swap out the action for the ID
-					this.request.params.id = this.request.params.action;
-					delete this.request.params.action;
+					this.req.params.id = this.req.params.action;
+					delete this.req.params.action;
 
-					return [null, method, _next];
+					return [null, method, next];
 				} else {
-					throw new NoActionException('There is no action/function to handle that request');
+					throw new NoActionException();
 				}
 			}
+		} else if (this.Class.actionsEnabled && this.req.params.action == undefined && this['listAction'] != undefined) {
+			return [null, 'listAction', next];
 		}
 
 		// Route based on the HTTP Method, otherwise throw an exception
 		if (this.Class.httpMethodsEnabled) {
-			var method = this.request.method.toLowerCase() + 'Action';
+			var method = this.req.method.toLowerCase() + 'Action';
 			if (typeof this[method] != 'function')
-				throw new NoActionException('There is no method (' + method + ') to handle that request');
+				throw new NoActionException();
 		}
 
 		// If we got this far without an action but with a method, then route based on that
-		return [null, method, _next];
+		return [null, method, next];
 	},
 
-	init: function(_error, _method, _next) {
-		if (_error instanceof BadResponseException) {
-			delete this;
-			throw _error; // as we can't send a respond
-		}
+	init: function(error, method, next) {
+		if (error && error instanceof NoActionException) {
+			this.next();
+		} else {
+			try {
+				if (error)
+					throw error;
 
-		try {
-			if (_error)
-				throw _error;
+				if (method != null) {
+					this[method](this.req, this.res);
+				} else {
+					this.next();
+				}
 
-			if (_method != null)
-				this[_method]();
-
-		} catch(e) {
-			this.send(500, e);
+			} catch(e) {
+				this.handleException(e);
+			}
 		}
 	},
 
-	send: function(_code, _content, _type) {
-		this.response[_type || this.responseType](_code, _content);
-		delete this;
+	send: function(content, code, type) {
+		code 
+			? this.res[type || this.resType](code, content)
+			: this.res[type || this.resType](content)
+	},
+
+	handleException: function(exception) {
+		this.send({ error: 'Unhandled exception: ' + exception });
 	}
 });

@@ -33,17 +33,19 @@ module.exports = function(app) {
 	var AUTH = controller('AuthController', userService);
 	var USER = controller('UserController', userService);
 
-	var ExampleController = require('./src/controllers/ExampleController.js');
+	var Example = controller('ExampleController.js', userService);
 
-	app.all('/example/:action/:id?', ExampleController.bind())
-	app.all('/example/?:action?', ExampleController.bind())
+	app.all('/example/:action/:id?', Example.bind())
+	app.all('/example/?:action?', Example.bind())
 
 	// Auth Routes
 	app.get('/auth/logout', AUTH.logout);
 	app.post('/auth/login', AUTH.login);
 
 	// User Routes
-	app.get('/user', AUTH.requiresLogin, USER.list);
+	app.all('/user/:action/:id?', USER.bind());
+	app.all('/user/?:action?', USER.bind());
+	// app.get('/user', AUTH.requiresLogin, USER.list);
 	// app.get('/user/:id', Auth.requiresLogin, USER.get);
 	// app.post('/user', AUTH.requiresLogin, USER.hydrate, USER.save);
 	// app.put('/user/:id', AUTH.requiresLogin, USER.hydrate, USER.save);
