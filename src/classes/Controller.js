@@ -18,6 +18,7 @@ module.exports = Class.extend(
 	res: null,
 	next: null,
 	resFunc: 'json',
+	action: null,
 
 	setup: function(req, res, next) {
 		try {
@@ -93,6 +94,7 @@ module.exports = Class.extend(
 					throw error;
 
 				if (method != null) {
+					this.action = method;
 					this[method](this.req, this.res);
 				} else {
 					this.next();

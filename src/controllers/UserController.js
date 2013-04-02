@@ -5,9 +5,7 @@ module.exports = function(Service) {
 	{
 		listAction: function() {
 			Service.getAll()
-				.then(function(users) {
-					this.send(users.map(User.export));
-					}.bind(this))
+				.then(this.proxy('usersMapExport'))
 				.fail(this.proxy('handleException'));
 		},
 
@@ -27,6 +25,10 @@ module.exports = function(Service) {
 			Service.save(user)
 				.then(this.proxy('userExport'))
 				.fail(this.proxy('handleException'));
+		},
+
+		usersMapExport: function(users) {
+			this.send(users.map(User.export));
 		},
 
 		userExport: function(user) {
