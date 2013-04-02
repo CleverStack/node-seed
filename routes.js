@@ -35,8 +35,10 @@ module.exports = function(app) {
 
 	var Example = controller('ExampleController.js', userService);
 
+	// app.get('/example/directBinding', Example.bind())
 	app.all('/example/:action/:id?', Example.bind())
 	app.all('/example/?:action?', Example.bind())
+	// app.all('/:action?', Example.bind());
 
 	// Auth Routes
 	app.get('/auth/logout', AUTH.logout);

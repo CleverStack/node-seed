@@ -17,7 +17,7 @@ module.exports = Class.extend(
 	req: null,
 	res: null,
 	next: null,
-	resType: 'json',
+	resFunc: 'json',
 
 	setup: function(req, res, next) {
 		try {
@@ -34,6 +34,18 @@ module.exports = Class.extend(
 		this.req = req;
 		this.res = res;
 
+		// Override routes where you bind specifically to a single route
+		if (this.Class.actionsEnabled && /\//.test(this.req.url)) {
+			var funcName = this.req.url.split('/')[2]
+
+			if (isNaN(funcName)) {
+				funcName = funcName + 'Action';
+				if (typeof this[funcName] == 'function') {
+					return [null, funcName, next];
+				}
+			}
+		}
+
 		// Route based on an action first if we can
 		if (this.Class.actionsEnabled && typeof this.req.params.action != 'undefined') {
 			if (isNaN(this.req.params.action)) {
@@ -48,6 +60,7 @@ module.exports = Class.extend(
 				method = this.req.method.toLowerCase() + 'Action';
 				if (typeof this[method] == 'function') {
 
+					console.dir(this.req.params)
 					this.req.params.id = this.req.params.action;
 					delete this.req.params.action;
 
@@ -93,8 +106,8 @@ module.exports = Class.extend(
 
 	send: function(content, code, type) {
 		code 
-			? this.res[type || this.resType](code, content)
-			: this.res[type || this.resType](content)
+			? this.res[type || this.resFunc](code, content)
+			: this.res[type || this.resFunc](content)
 	},
 
 	render: function(template, data) {
