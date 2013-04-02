@@ -1,0 +1,18 @@
+{
+	"environmentName": "LOCAL"
+
+	"params": {
+		"appName": "CleverTech Stub Application"
+	},
+
+	"secretKey": "secret",
+
+	"db": {
+		"driver": "postgres",
+		"host": "localhost",
+		"user": "ctstub_web",
+		"password": "ctstub_web",
+		"database": "ctstub",
+		"port": 5432
+	}
+}
