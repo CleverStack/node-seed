@@ -23,7 +23,7 @@ module.exports = function(Service) {
 			Service.save(User.hydrate(this.req.body))
 				.then(function(user) {
 					this.res.json(200, user.export());
-				})
+				}.bind(this))
 				.fail(this.proxy('handleException'))
 		},
 
@@ -31,7 +31,7 @@ module.exports = function(Service) {
 			Service.save(user)
 				.then(function(user) {
 					this.res.json(200, user.export());
-				})
+				}.bind(this))
 				.fail(this.proxy('handleException'))
 		}
 	});
