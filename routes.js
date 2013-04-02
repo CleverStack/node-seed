@@ -43,8 +43,8 @@ module.exports = function(app) {
 	app.post('/auth/login', AUTH.login);
 
 	// User Routes
-	app.all('/user/:action/:id?', USER.bind());
-	app.all('/user/?:action?', USER.bind());
+	app.all('/user/:action/:id?', AUTH.requiresLogin, USER.bind());
+	app.all('/user/?:action?', AUTH.requiresLogin, USER.bind());
 	// app.get('/user', AUTH.requiresLogin, USER.list);
 	// app.get('/user/:id', Auth.requiresLogin, USER.get);
 	// app.post('/user', AUTH.requiresLogin, USER.hydrate, USER.save);
