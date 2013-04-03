@@ -7,12 +7,14 @@ The main aim of controller is help simplify the most common tasks that you need 
 	
 	var ExampleController = controller('ExampleController'/* , injectedArgs ... */)
 
-	// Default route setup ~ '/example' or '/example/hello'
+	// Default route setup ~ '/example' or '/example/' or '/example/hello'
 	app.all('/example/?:action?', ExampleController.bind())
 
 	// Action + ID Routes setup ~ '/example/custom/12'
 	app.all('/example/:action/:id?', ExampleController.bind())
 Note: if you use both types of routes, be sure to place your routes in this order
+
+Express Routing: http://expressjs.com/api.html#app.VERB
 
 ### Making A Controller:
 
@@ -73,7 +75,7 @@ Note: if you use both types of routes, be sure to place your routes in this orde
 ### Making Actions:
 
 When doing a 'GET /example' it will route either listAction() first OR getAction() if listAction is not defined, if neither are defined
-express's next function will be called allowing it to fall through the controller and move onto any other middleware you configured
+express's next() function will be called allowing it to fall through the controller and move onto any other middleware you configured
 
 If you wanted '/example/hello' as a route, you simply implement helloAction() in your controller and it will be automatically routed to it.
 
@@ -82,19 +84,43 @@ This is the default way to setup a controller to use actions, by default you can
 ### Using Proxy
 In this example i demonstrate how to use a proxy function, that will be called in the correct context with the arguments that would have been passed to the function you otherwise would have had to put there.
 
-Note: handleException is an inbuilt Controller method
-
 	module.exports = ExampleController = function() {
 		return (require('./../classes/Controller.js')).extend(
 		{
-			getAction: function() {
+			listAction: function() {
 				model.findAll()
 					.success(this.proxy('handleFindAll'))
-					.error(this.proxy('handleException'));
+					.error(this.proxy('handleFindAllException'));
 			},
 
 			handleFindAll(allModels) {
 				this.send(allModels);
+			},
+
+			handleFindAllException: function(exception) {
+				console.error(exception);
+				this.send({
+					error: true,
+					message: 'There was a problem processing your request'
+				})
+			},
+			
+			getAction: function(id) {
+				model.find(id)
+					.success(this.proxy('handleFind'))
+					.error(this.proxy('handleFindException', id));
+			},
+
+			handleFind: function(model) {
+				this.send(model);
+			},
+
+			handleFindException: function(id, exception) {
+				console.error(exception);
+				this.send({
+					error: true,
+					message: 'Unable to find model with id of ' + id + ' because of an exception/error'
+				});
 			}
 		});
 	};
