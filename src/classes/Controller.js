@@ -61,7 +61,6 @@ module.exports = Class.extend(
 				method = this.req.method.toLowerCase() + 'Action';
 				if (typeof this[method] == 'function') {
 
-					console.dir(this.req.params)
 					this.req.params.id = this.req.params.action;
 					delete this.req.params.action;
 
