@@ -1,10 +1,20 @@
+This stub app is meant to be a base for node.js apps.
+
+It's got many examples and we encourage you to send suggestions.
+
+# Installation
+
+TODO
+
+# Examples/Explanations
+
 ## Controller
 
-The main aim of controller is help simplify the most common tasks that you need to do when setting up routes and functions/classes to handle them.
-
+The main aim of the controller is to help simplify the most common tasks that you need to do when setting up routes and functions/classes to handle them.
 
 ### Routing:
-	
+
+```javascript	
 	var ExampleController = controller('ExampleController'/* , injectedArgs ... */)
 
 	// Default route setup ~ '/example' or '/example/' or '/example/hello'
@@ -12,12 +22,14 @@ The main aim of controller is help simplify the most common tasks that you need 
 
 	// Action + ID Routes setup ~ '/example/custom/12'
 	app.all('/example/:action/:id?', ExampleController.bind())
-Note: if you use both types of routes, be sure to place your routes in this order
+```
+**Note:** if you use both types of routes, be sure to place your routes in this order
 
-Express Routing: http://expressjs.com/api.html#app.VERB
+We use Express' routing, so be sure to check it out at http://expressjs.com/api.html#app.VERB
 
 ### Making A Controller:
 
+```javascript
 	module.exports = ExampleController = function() {
 		return (require('./../classes/Controller.js')).extend(
 		{
@@ -34,9 +46,11 @@ Express Routing: http://expressjs.com/api.html#app.VERB
 			}
 		});
 	};
+```
 
 ### RESTful Actions
 
+```javascript
 	module.exports = ExampleController = function() {
 		return (require('./../classes/Controller.js')).extend(
 		{
@@ -71,19 +85,22 @@ Express Routing: http://expressjs.com/api.html#app.VERB
 			}
 		});
 	};
+```
 
 ### Making Actions:
 
-When doing a 'GET /example' it will route either listAction() first OR getAction() if listAction is not defined, if neither are defined
-express's next() function will be called allowing it to fall through the controller and move onto any other middleware you configured
+When doing a 'GET /example' it will route to either listAction() first OR getAction() if listAction is not defined.
 
-If you wanted '/example/hello' as a route, you simply implement helloAction() in your controller and it will be automatically routed to it.
+If neither are defined, express's `.next()` function will be called allowing it to fall through the controller and move onto any other middleware you may have configured.
 
-This is the default way to setup a controller to use actions, by default you can also vist '/example/12' and it will route to the getAction() function in your controller (if its defined) with this.req.params.id set for you to use. (the same applies for all http methods, eg PUT/DELETE/POST/GET etc)
+If you want '/example/hello' as a route, you can simply implement helloAction() in your controller and it will be automatically routed to it.
+
+This is the default way to setup a controller to use actions, by default you can also visit '/example/12' and it will route to the getAction() function in your controller (if it's defined) with `this.req.params.id` set for you to use (the same applies for all http methods, eg PUT/DELETE/POST/GET etc.).
 
 ### Using Proxy
-In this example i demonstrate how to use a proxy function, that will be called in the correct context with the arguments that would have been passed to the function you otherwise would have had to put there.
+In this example I demonstrate how to use a proxy function, that will be called in the correct context with the arguments that would have been passed to the function you otherwise would have had to put there.
 
+```javascript
 	module.exports = ExampleController = function() {
 		return (require('./../classes/Controller.js')).extend(
 		{
@@ -124,11 +141,13 @@ In this example i demonstrate how to use a proxy function, that will be called i
 			}
 		});
 	};
-
+```
 
 ### Error handling:
 
 By default any Exceptions thrown inside Controllers will be caught (before crashing your app) and a proper/sane response will be sent to the client.
+
+# Technical TODO Below
 
 # Solved Problems
 
@@ -156,8 +175,6 @@ By default any Exceptions thrown inside Controllers will be caught (before crash
 	2. Transaction example
 
 
-
-
 ## Demonstration of the important of modularizing data calls into service layer objects.
 
 	Example of dependency injection.
@@ -170,7 +187,7 @@ By default any Exceptions thrown inside Controllers will be caught (before crash
 
 	Need multiple instances and a means of not losing session information if one instance dies.
 	
-	1. Brian recommended Redis, (+1 from richard for redis)
+	1. Brian recommended Redis, (+1 from richard for redis, +1 from bruno for redis)
 	2. I saw a neat demo on gossip protocol and streaming that looked fun.
 	
 	Redis sounds easier and more straightforward.
@@ -181,7 +198,7 @@ By default any Exceptions thrown inside Controllers will be caught (before crash
 	grunt + jasmine-node is what I usually use but there's lots of options here
 	Richard: (Grunt will work well as StealJS has a plugin for building the JS)
 
+
 ## End-to-end testing
 
 	Brian Carlson mentioned a cool automated REST tester using something like CuRL
-
