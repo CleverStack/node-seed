@@ -4,6 +4,10 @@ It's got many examples and we encourage you to send suggestions.
 
 # Installation
 
+## Database
+Run `node bin/rebase` to setup your database
+Run `node bin/seedModels` to setup seed data in those model
+
 TODO
 
 # Examples/Explanations
@@ -18,10 +22,10 @@ The main aim of the controller is to help simplify the most common tasks that yo
 var ExampleController = controller('ExampleController'/* , injectedArgs ... */)
 
 // Default route setup ~ '/example' or '/example/' or '/example/hello'
-app.all('/example/?:action?', ExampleController.bind())
+app.all('/example/?:action?', ExampleController.attach())
 
 // Action + ID Routes setup ~ '/example/custom/12'
-app.all('/example/:action/:id?', ExampleController.bind())
+app.all('/example/:action/:id?', ExampleController.attach())
 ```
 
 **Note:** if you use both types of routes, be sure to place your routes in this order
