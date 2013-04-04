@@ -4,9 +4,11 @@ It's got many examples and we encourage you to send suggestions.
 
 # Installation
 
+## SequelizeJS
+We use sequelizejs as our default ORM layer (For now), for more information please see http://www.sequelizejs.com/
+
 ## Database
-Run `node bin/rebase` to setup your database
-Run `node bin/seedModels` to setup seed data in those model
+Run `node bin/rebase` to setup your database and Run `node bin/seedModels` to setup seed data in those model
 
 TODO
 
