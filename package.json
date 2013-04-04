@@ -21,7 +21,9 @@
     "uberclass": "*",
     "ejs": "*",
     "sequelize": "*",
-    "mysql": "*"
+    "mysql": "*",
+    "async": "*",
+    "i": "*"
   },
   "author": {
     "name": "Mason Houtz",

@@ -12,7 +12,9 @@ module.exports = function(sequelize) {
 	})
 
 	// Define relationships
-	m.User.hasMany(m.Role, { as: 'roles', joinTableName: 'UserRoles' });
 	
+	m.User.hasMany(m.Role);
+	m.Role.hasMany(m.User);
+
 	return m;
 }

@@ -6,7 +6,7 @@
 	"secretKey": "secret",
 
 	"db": {
-		"user": "ctstub_web",
+		"username": "ctstub_web",
 		"password": "ctstub_web",
 		"database": "ctstub",
 		"options": {
