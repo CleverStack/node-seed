@@ -14,7 +14,6 @@ var config = require('./config')
 
 // Setup ORM
 var sequelize = new Sequelize(
-    config.db.dialect,
     config.db.database, 
     config.db.username, 
     config.db.password,

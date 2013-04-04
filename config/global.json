@@ -6,14 +6,13 @@
 	"secretKey": "secret",
 
 	"db": {
-		"dialect": "mysql",
-		"host": "localhost",
 		"user": "ctstub_web",
 		"password": "ctstub_web",
 		"database": "ctstub",
-		"port": 5432,
 		"options": {
-			
+			"host": "localhost",
+        	"dialect": "mysql",
+			"port": 3306
 		}
 	}
 }
