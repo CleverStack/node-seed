@@ -9,18 +9,16 @@ module.exports = function(app) {
 	controller.storage = __dirname + '/src/controllers/';
 
 	// Dependency injection happens now, Load our controllers
-	var UserCtrl = controller('UserController', models.User)
-	  , AuthCtrl = controller('AuthController', models)
+	var UserCtrl = controller('UserController', models.User, models.Role)
 	  , ExampleCtrl = controller('ExampleController', models);
 
 	// Example routes
 	app.all('/example/:action/:id?', ExampleCtrl.attach())
 	app.all('/example/?:action?', ExampleCtrl.attach())
 
-	// Auth Routes
-	app.all('/auth/:action', AuthCtrl.attach());
-
 	// User Routes
-	app.all('/user/:action/:id?', AuthCtrl.requiresLogin, UserCtrl.attach());
-	app.all('/user/?:action?', AuthCtrl.requiresLogin, UserCtrl.attach());
+	app.post('/user/login', UserCtrl.attach())
+
+	app.all('/user/:action/:id?', UserCtrl.requiresLogin, UserCtrl.attach());
+	app.all('/user/?:action?', UserCtrl.requiresLogin, UserCtrl.attach());
 };

@@ -5,8 +5,9 @@ module.exports = function(sequelize, DataTypes) {
             primaryKey: true,
             autoIncrement: true
         },
-        firstname: DataTypes.STRING,
-        lastname: DataTypes.STRING,
+        firstName: DataTypes.STRING,
+        lastName: DataTypes.STRING,
+        username: DataTypes.STRING,
         email: {
             type: DataTypes.STRING,
             allowNull: false

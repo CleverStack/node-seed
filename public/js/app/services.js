@@ -13,11 +13,11 @@ function LoginServiceFactory($http) {
 	return {
 
 		login: function(params) {
-			return $http.post('auth/login', params);
+			return $http.post('user/login', params);
 		},
 
 		logout: function() {
-			return $http.get('auth/logout');
+			return $http.get('user/logout');
 		}
 
 	};	

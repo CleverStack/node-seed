@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "express": "",
-    "pg": "0.10.2",
+    "pg": "",
     "i18n": "",
     "q": "",
     "jasmine-node": "",
@@ -17,13 +17,13 @@
     "moment": "",
     "supervisor":"",
     "underscore":"",
-    "nconf": "*",
-    "uberclass": "*",
-    "ejs": "*",
-    "sequelize": "*",
+    "nconf": "",
+    "uberclass": "",
+    "ejs": "",
+    "sequelize": "",
     "mysql": "*",
-    "async": "*",
-    "i": "*"
+    "async": "",
+    "i": ""
   },
   "author": {
     "name": "Mason Houtz",
