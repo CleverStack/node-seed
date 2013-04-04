@@ -6,14 +6,31 @@
  * @author Mason Houtz
  */
 
-var Credentials = require('../model/Credentials');
+// var Credentials = require('../model/Credentials');
 
 module.exports = function(AuthService) {
+	return (require('./../classes/Controller.js')).extend(
+	/* @Static */
+	{
+		requiresLogin: function(req, res, next) {
+			if (!req.session.user)
+				return res.send(401);
+			next();
+		},
 
-	return {
-
-
-		login: function(req, res) {
+		requiresRole: function(roleName) {
+			return function(req, res, next) {
+				if (!req.session.user ||
+					!req.session.user.roles ||
+					req.session.user.roles.indexOf(roleName) === -1)
+					return res.send(401);
+				next();
+			};
+		}
+	},
+	/* @Prototype */
+	{
+		loginAction: function(req, res) {
 
 			// I usually do this in case it gets
 			// more complicated later.
@@ -46,34 +63,10 @@ module.exports = function(AuthService) {
 
 		},
 
-
-		logout: function(req, res) {
-			req.session.user = null;
-			res.send(200);
-		},
-
-
-
-		// authentication and authorization middleware
-
-		requiresLogin: function(req, res, next) {
-			if (!req.session.user)
-				return res.send(401);
-			next();
-		},
-
-		requiresRole: function(roleName) {
-			return function(req, res, next) {
-				if (!req.session.user ||
-					!req.session.user.roles ||
-					req.session.user.roles.indexOf(roleName) === -1)
-					return res.send(401);
-				next();
-			};
+		logoutAction: function() {
+			this.req.session.user = null;
+			this.res.send(200);
 		}
-		
-		
-	};
-
+	});
 };
 

@@ -1,5 +1,5 @@
 {
-	"environmentName": "LOCAL"
+	"environmentName": "LOCAL",
 
 	"params": {
 		"appName": "CleverTech Stub Application"

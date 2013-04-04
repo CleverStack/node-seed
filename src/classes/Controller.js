@@ -8,7 +8,7 @@ module.exports = Class.extend(
 
 	httpMethodsEnabled: true,
 
-	bind: function() {
+	attach: function() {
 		return this.callback('newInstance');
 	}
 },
@@ -35,7 +35,7 @@ module.exports = Class.extend(
 		this.req = req;
 		this.res = res;
 
-		// Override routes where you bind specifically to a single route
+		// Override routes where you attach specifically to a single route
 		if (this.Class.actionsEnabled && /\//.test(this.req.url)) {
 			var funcName = this.req.url.split('/')[2]
 
@@ -49,6 +49,7 @@ module.exports = Class.extend(
 
 		// Route based on an action first if we can
 		if (this.Class.actionsEnabled && typeof this.req.params.action != 'undefined') {
+			// Action Defined Routing
 			if (isNaN(this.req.params.action)) {
 				var funcName = this.req.params.action + 'Action';
 
@@ -58,6 +59,7 @@ module.exports = Class.extend(
 					throw new NoActionException();
 				}
 			} else {
+				// HTTP Method Based Routing
 				method = this.req.method.toLowerCase() + 'Action';
 				if (typeof this[method] == 'function') {
 

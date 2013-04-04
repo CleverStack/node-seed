@@ -6,11 +6,14 @@
 	"secretKey": "secret",
 
 	"db": {
-		"driver": "postgres",
+		"dialect": "mysql",
 		"host": "localhost",
 		"user": "ctstub_web",
 		"password": "ctstub_web",
 		"database": "ctstub",
-		"port": 5432
+		"port": 5432,
+		"options": {
+			
+		}
 	}
 }

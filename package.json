@@ -19,7 +19,9 @@
     "underscore":"",
     "nconf": "*",
     "uberclass": "*",
-    "ejs": "*"
+    "ejs": "*",
+    "sequelize": "*",
+    "mysql": "*"
   },
   "author": {
     "name": "Mason Houtz",

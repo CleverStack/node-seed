@@ -1,38 +1,30 @@
 var User = require('../model/User');
 
-module.exports = function(Service) {
+module.exports = function(UserModel) {
 	return (require('./../classes/Controller.js')).extend(
 	{
 		listAction: function() {
-			Service.getAll()
-				.then(this.proxy('usersMapExport'))
+			UserModel.findAll()
+				.success(this.proxy('send'))
 				.fail(this.proxy('handleException'));
 		},
 
 		getAction: function() {
-			Service.getById(this.req.params.id)
-				.then(this.proxy('userExport'))
+			UserModel.find(this.req.params.id)
+				.success(this.proxy('send'))
 				.fail(this.proxy('handleException'));
 		},
 
 		postAction: function() {
-			Service.save(User.hydrate(this.req.body))
-				.then(this.proxy('userExport'))
+			UserModel.create(this.req.body)
+				.success(this.proxy('send'))
 				.fail(this.proxy('handleException'));
 		},
 
 		putAction: function() {
-			Service.save(user)
-				.then(this.proxy('userExport'))
+			UserModel.update(this.req.body)
+				.success(this.proxy('send'))
 				.fail(this.proxy('handleException'));
-		},
-
-		usersMapExport: function(users) {
-			this.send(users.map(User.export));
-		},
-
-		userExport: function(user) {
-			this.send(user.export());
 		}
 	});
 };
