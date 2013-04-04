@@ -47,7 +47,7 @@ module.exports = function(UserModel, RoleModel) {
 		loginAction: function() {
 			var credentials = {
 				username: this.req.body.username,
-				password: crypto.createHash('sha1').update(credentials.password).digest('hex')
+				password: crypto.createHash('sha1').update(this.req.body.password).digest('hex')
 			}
 
 			UserModel.find({ where: credentials })
