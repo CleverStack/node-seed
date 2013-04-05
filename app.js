@@ -30,6 +30,7 @@ app.configure(function() {
     app.set('config', config);
     app.set('models', models);
     app.set('loader', loader);
+    app.set('db', sequelize);
 
     // middleware stack
     app.use(express.bodyParser());

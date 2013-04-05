@@ -1,6 +1,6 @@
 var crypto = require('crypto');
 
-module.exports = function(UserModel, RoleModel) {
+module.exports = function(UserService) {
 	return (require('./../classes/Controller.js')).extend(
 	{
 		requiresLogin: function(req, res, next) {
@@ -21,41 +21,42 @@ module.exports = function(UserModel, RoleModel) {
 	},
 	{
 		listAction: function() {
-			UserModel.findAll()
-				.success(this.proxy('send'))
+			UserService.findAll()
+				.then(this.proxy('send'))
 				.fail(this.proxy('handleException'));
 		},
 
 		getAction: function() {
-			UserModel.find(this.req.params.id)
-				.success(this.proxy('send'))
+			UserService.findById(this.req.params.id)
+				.then(this.proxy('send'))
 				.fail(this.proxy('handleException'));
 		},
 
 		postAction: function() {
-			UserModel.create(this.req.body)
-				.success(this.proxy('send'))
+			UserService.create(this.req.body)
+				.then(this.proxy('send'))
 				.fail(this.proxy('handleException'));
 		},
 
 		putAction: function() {
-			UserModel.update(this.req.body)
-				.success(this.proxy('send'))
+			UserService.update(this.req.body)
+				.then(this.proxy('send'))
 				.fail(this.proxy('handleException'));
 		},
 
 		loginAction: function() {
-			var credentials = {
-				username: this.req.body.username,
-				password: crypto.createHash('sha1').update(this.req.body.password).digest('hex')
-			}
+			// var credentials = {
+			// 	username: this.req.body.username,
+			// 	password: crypto.createHash('sha1').update(this.req.body.password).digest('hex')
+			// }
 
-			UserModel.find({ where: credentials })
-				.success(this.proxy('authorizedUser'))
-				.error(this.proxy('handleException'));
+			UserService.authenticate(this.req.body)
+				.then(this.proxy('authorizedUser'))
+				.fail(this.proxy('handleException'));
 		},
 
 		authorizedUser: function(user) {
+			console.dir(user)
 			if (user) {
 				this.req.session.user = user;
 				this.res.send(200);	
