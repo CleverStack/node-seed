@@ -24,6 +24,6 @@ module.exports = function(app) {
 	// User Routes
 	app.post('/user/login', UserCtrl.attach())
 
-	app.all('/user/:action/:id?', UserCtrl.attach());
-	app.all('/user/?:action?', UserCtrl.attach());
+	app.all('/user/:action/:id?', UserCtrl.requiresLogin, UserCtrl.attach());
+	app.all('/user/?:action?', UserCtrl.requiresLogin, UserCtrl.attach());
 };
