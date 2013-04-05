@@ -1,10 +1,9 @@
 var BaseClass = require(__dirname + '/Base')
   , Q = require('q')
-  , UserService = null
-  , instance = null;
+  , UserService = null;
 
 module.exports = function(Db, UserModel) {
-	if (instance === null) {
+	if (UserService === null) {
 		UserService = BaseClass.extend({
 			findById: function(id) {
 				var deferred = Q.defer();
@@ -44,8 +43,8 @@ module.exports = function(Db, UserModel) {
 			}
 		});
 
-		instance = new UserService(Db);
+		UserService.instance = new UserService(Db);
 	}
 
-	return instance;
+	return UserService.instance;
 }
