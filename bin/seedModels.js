@@ -27,8 +27,8 @@ var seedData = {
 		{
 			username: 'admin',
 			email: 'admin@ctstub.com',
-			password: crypto.createHash('sha1').update('password').digest('hex'),
-			// password: 'password',
+			// password: crypto.createHash('sha1').update('password').digest('hex'),
+			password: 'password',
 			firstName: 'Admin',
 			lastName: 'User',
 			assocations: {

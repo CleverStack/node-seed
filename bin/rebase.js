@@ -21,7 +21,7 @@ console.log('Forcing Database to be created! (Note: All your data will disapear!
 sequelize
 .sync({force:true})
 .success(function() {
-	fs.readFile(__dirname + '/../schema' + config.db.options.dialect + '.sql', function(err, sql) {
+	fs.readFile(__dirname + '/../schema/' + config.db.options.dialect + '.sql', function(err, sql) {
 		if (err || !sql) {
 			console.log('Database is rebased');
 		} else {
