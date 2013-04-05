@@ -118,6 +118,6 @@ module.exports = Class.extend(
 	},
 
 	handleException: function(exception) {
-		this.send({ error: 'Unhandled exception: ' + exception });
+		this.send({ error: 'Unhandled exception: ' + exception }, 500);
 	}
 });

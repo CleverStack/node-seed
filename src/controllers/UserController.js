@@ -56,6 +56,7 @@ module.exports = function(UserService) {
 		},
 
 		authorizedUser: function(user) {
+			console.dir(user);
 			if (user) {
 				this.req.session.user = user;
 				this.res.send(200);	
