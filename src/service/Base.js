@@ -20,6 +20,6 @@ module.exports = Class.extend(
 
 	query: function(sql) {
 		console.log('Running SQL: ' + sql);
-		return this.db.query(sql);
+		return this.db.query(sql, null, { raw: true });
 	}
 })

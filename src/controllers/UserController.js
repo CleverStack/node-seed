@@ -45,18 +45,17 @@ module.exports = function(UserService) {
 		},
 
 		loginAction: function() {
-			// var credentials = {
-			// 	username: this.req.body.username,
-			// 	password: crypto.createHash('sha1').update(this.req.body.password).digest('hex')
-			// }
+			var credentials = {
+				username: this.req.body.username,
+				password: crypto.createHash('sha1').update(this.req.body.password).digest('hex')
+			}
 
-			UserService.authenticate(this.req.body)
+			UserService.authenticate(credentials)
 				.then(this.proxy('authorizedUser'))
 				.fail(this.proxy('handleException'));
 		},
 
 		authorizedUser: function(user) {
-			console.dir(user)
 			if (user) {
 				this.req.session.user = user;
 				this.res.send(200);	

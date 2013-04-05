@@ -28,12 +28,16 @@ module.exports = function(Db, UserModel) {
 
 			authenticate: function(credentials) {
 				var deferred = Q.defer();
-				var sql = "select * from \"Users\" where email = '" + credentials.username + "' \
-							and password = contrib.crypt('" + credentials.password + "', password);";
 
-				this.query(sql).success(function(models) {
-					models.length ? deferred.resolve(models[0]) : deferred.reject('Incorrect username/password');
-				}).error(deferred.reject);
+				// While i can do this Mason, i cannot find a way of CREATING a user using these functions :(
+				// var sql = "select * from \"Users\" where email = '" + credentials.username + "' \
+				// 			and password = contrib.crypt(id || '" + credentials.password + "', password);";
+				// this.query(sql).success(function(models) {
+				// 	models.length ? deferred.resolve(models[0]) : deferred.reject('Incorrect username/password');
+				// }).error(deferred.reject);
+				
+				// For now so the stub app works
+				UserModel.find(credentials).success(deferred.resolve).error(deferred.reject);
 
 				return deferred.promise;
 			}
