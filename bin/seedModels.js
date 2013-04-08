@@ -36,10 +36,10 @@ async.forEachSeries(
 					console.log('Created ' + modelName);
 					assocMap[modelName].push(model);
 
-					if (data.assocations != undefined) {
-						Object.keys(data.assocations).forEach(function(assocModelName) {
-							var required = data.assocations[assocModelName]
-							  , assocations = []
+					if (data.associations != undefined) {
+						Object.keys(data.associations).forEach(function(assocModelName) {
+							var required = data.associations[assocModelName]
+							  , associations = []
 
 							assocMap[assocModelName].forEach(function(m) {
 								var isMatched = null;
@@ -55,15 +55,15 @@ async.forEachSeries(
 								})
 
 								if (isMatched) {
-									assocations.push(m);
+									associations.push(m);
 								}
 							});
 
-							if (assocations.length) {
+							if (associations.length) {
 								var funcName = 'set'+inflect.pluralize(assocModelName);
 								
 								console.log('Calling ' + funcName);
-								model[funcName](assocations).success(function() {
+								model[funcName](associations).success(function() {
 									modelCb(null);
 								}).error(modelCb)
 							}
