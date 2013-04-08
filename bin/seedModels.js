@@ -17,28 +17,7 @@ var sequelize = new Sequelize(
 // Get our models
 var models = require('./../src/model')(sequelize);
 
-var seedData = {
-	Role: [
-		{
-			name: 'Admin'
-		}
-	],
-	User: [
-		{
-			username: 'admin',
-			email: 'admin@ctstub.com',
-			// password: crypto.createHash('sha1').update('password').digest('hex'),
-			password: 'password',
-			firstName: 'Admin',
-			lastName: 'User',
-			assocations: {
-				Role: {
-					name: 'Admin'
-				}
-			}
-		}
-	]
-}
+var seedData = require('./../schema/seedData.json');
 
 var assocMap = {};
 
