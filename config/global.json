@@ -23,14 +23,10 @@
 
 	"modelAssociations": {
 		"Role": {
-			"associations": {
-				"hasMany": ["User"]
-			}
+			"hasMany": ["User"]
 		},
 		"User": {
-			"associations": {
-				"hasMany": ["Role"]
-			}
+			"hasMany": ["Role"]
 		}
 	}
 }

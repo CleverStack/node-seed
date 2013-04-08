@@ -13,7 +13,7 @@ var sequelize = new Sequelize(
 );
 
 // Get our models
-var models = require('./../src/model')(sequelize);
+var models = require('./../src/model')(sequelize, config);
 
 // Force a sync
 console.log('Forcing Database to be created! (Note: All your data will disapear!)');

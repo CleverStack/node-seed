@@ -21,7 +21,7 @@ var sequelize = new Sequelize(
 );
 
 // Get our models
-var models = require('./src/model')(sequelize);
+var models = require('./src/model')(sequelize, config);
 
 app.configure(function() {
 

@@ -15,7 +15,7 @@ var sequelize = new Sequelize(
 );
 
 // Get our models
-var models = require('./../src/model')(sequelize);
+var models = require('./../src/model')(sequelize, config);
 
 var seedData = require('./../schema/seedData.json');
 
@@ -35,7 +35,7 @@ async.forEachSeries(
 				ModelType.create(data).success(function(model) {
 					console.log('Created ' + modelName);
 					assocMap[modelName].push(model);
-
+					
 					if (data.associations != undefined) {
 						Object.keys(data.associations).forEach(function(assocModelName) {
 							var required = data.associations[assocModelName]

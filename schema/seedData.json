@@ -11,7 +11,7 @@
 			"password": "password",
 			"firstName": "Admin",
 			"lastName": "User",
-			"assocations": {
+			"associations": {
 				"Role": {
 					"name": "Admin"
 				}
