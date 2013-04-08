@@ -1,8 +1,8 @@
-//js vitalime/scripts/doc.js
+//js scripts/doc.js
 
 load('steal/rhino/rhino.js');
 steal("documentjs").then(function(){
-	DocumentJS('vitalime/vitalime.html', {
-		markdown : ['vitalime']
+	DocumentJS('scripts/build.html', {
+		markdown : ['ctstub']
 	});
 });

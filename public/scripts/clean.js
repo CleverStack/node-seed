@@ -1,8 +1,8 @@
-//steal/js vitalime/scripts/compress.js
+//steal/js scripts/compress.js
 
 load("steal/rhino/rhino.js");
 steal('steal/clean',function(){
-	steal.clean('vitalime/vitalime.html',{
+	steal.clean('scripts/build.html',{
 		indent_size: 1, 
 		indent_char: '\t', 
 		jslint : false,
