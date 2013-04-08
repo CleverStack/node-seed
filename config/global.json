@@ -14,5 +14,23 @@
         	"dialect": "mysql",
 			"port": 3306
 		}
+	},
+
+	"models": [
+		"Role",
+		"User"
+	],
+
+	"modelAssociations": {
+		"Role": {
+			"associations": {
+				"hasMany": ["User"]
+			}
+		},
+		"User": {
+			"associations": {
+				"hasMany": ["Role"]
+			}
+		}
 	}
 }
