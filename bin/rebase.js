@@ -6,8 +6,8 @@ var config = require('./../config');
 // Setup ORM
 var Sequelize = require('sequelize');
 var sequelize = new Sequelize(
-    config.db.database, 
-    config.db.username, 
+    config.db.database,
+    config.db.username,
     config.db.password,
     config.db.options
 );
@@ -32,8 +32,8 @@ sequelize
 				console.error(err);
 			});
 		}
-	})
+	});
 })
 .error(function(err) {
 	console.error('Error trying to connect to ' + config.db.options.dialect, err);
-})
+});

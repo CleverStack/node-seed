@@ -8,8 +8,8 @@ var config = require('./../config');
 // Setup ORM
 var Sequelize = require('sequelize');
 var sequelize = new Sequelize(
-    config.db.database, 
-    config.db.username, 
+    config.db.database,
+    config.db.username,
     config.db.password,
     config.db.options
 );
@@ -35,24 +35,27 @@ async.forEachSeries(
 				ModelType.create(data).success(function(model) {
 					console.log('Created ' + modelName);
 					assocMap[modelName].push(model);
-					
-					if (data.associations != undefined) {
+
+					if (data.associations !== undefined) {
+						var assocLength = Object.keys(data.associations).length,
+							called = 0;
+
 						Object.keys(data.associations).forEach(function(assocModelName) {
 							var required = data.associations[assocModelName]
-							  , associations = []
+							  , associations = [];
 
 							assocMap[assocModelName].forEach(function(m) {
 								var isMatched = null;
 
 								Object.keys(required).forEach(function(reqKey) {
-									if (isMatched != false) {
+									if (isMatched !== false) {
 										if (m[reqKey] == required[reqKey]) {
-											isMatched = true
+											isMatched = true;
 										} else {
-											isMatched = false
+											isMatched = false;
 										}
 									}
-								})
+								});
 
 								if (isMatched) {
 									associations.push(m);
@@ -61,17 +64,20 @@ async.forEachSeries(
 
 							if (associations.length) {
 								var funcName = 'set'+inflect.pluralize(assocModelName);
-								
+
 								console.log('Calling ' + funcName);
 								model[funcName](associations).success(function() {
-									modelCb(null);
-								}).error(modelCb)
+									called++;
+
+									if (called == assocLength)
+										modelCb(null);
+								}).error(modelCb);
 							}
 						});
 					} else {
 						modelCb(null);
 					}
-				}).error(modelCb)
+				}).error(modelCb);
 			},
 			function forEachModelComplete(err) {
 				cb(err);
