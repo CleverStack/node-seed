@@ -65,6 +65,12 @@ async.forEachSeries(
 							if (associations.length) {
 								var funcName = 'set'+inflect.pluralize(assocModelName);
 
+								// Handle hasOne
+								if (typeof model[funcName] !== 'function') {
+									funcName = 'set'+assocModelName;
+									associations = associations[0];
+								}
+
 								console.log('Calling ' + funcName);
 								model[funcName](associations).success(function() {
 									called++;

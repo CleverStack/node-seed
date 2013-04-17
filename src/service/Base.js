@@ -18,8 +18,13 @@ module.exports = Class.extend(
 		return this.db.startTransaction();
 	},
 
-	query: function(sql) {
+	rawQuery: function(sql) {
 		console.log('Running SQL: ' + sql);
 		return this.db.query(sql, null, { raw: true });
+	},
+
+	query: function(sql) {
+		console.log('Running SQL: ' + sql);
+		return this.db.query(sql);
 	}
-})
+});
