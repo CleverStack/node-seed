@@ -1,5 +1,5 @@
 function Authentication(message) {
-	this.message = message;
+  this.message = message;
 }
 
 Authentication.prototype = new Error;

@@ -1,20 +1,27 @@
 {
-	"environmentName": "LOCAL",
+    "environmentName": "LOCAL",
 
-	"params": {
-		"appName": "CleverTech Stub Application"
-	},
+    "memcacheHost": "localhost:11211",
 
-	"secretKey": "secret",
+    "db": {
+        "username": "",
+        "password": "",
+        "database": "",
+        "options": {
+            "host": "",
+            "dialect": "mysql",
+            "port": 3306
+        }
+    },
 
-	"db": {
-		"username": "ctstub_web",
-		"password": "ctstub_web",
-		"database": "ctstub",
-		"options": {
-			"host": "localhost",
-        	"dialect": "mysql",
-			"port": 3306
-		}
-	}
+    "testDb": {
+        "username": "",
+        "password": "",
+        "database": "",
+        "options": {
+            "host": "",
+            "dialect": "mysql",
+            "port": 3306
+        }
+    }
 }

@@ -1,21 +1,2 @@
 {
-	"Role": [
-		{
-			"name": "Admin"
-		}
-	],
-	"User": [
-		{
-			"username": "admin",
-			"email": "admin@ctstub.com",
-			"password": "password",
-			"firstName": "Admin",
-			"lastName": "User",
-			"associations": {
-				"Role": {
-					"name": "Admin"
-				}
-			}
-		}
-	]
 }

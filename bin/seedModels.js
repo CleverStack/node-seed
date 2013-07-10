@@ -20,14 +20,15 @@ var models = require('./../src/model')(sequelize, config);
 var seedData = require('./../schema/seedData.json');
 
 var assocMap = {};
+Object.keys(seedData).forEach(function (modelName) {
+    assocMap[modelName] = [];
+});
 
 async.forEachSeries(
 	Object.keys(seedData),
 	function forEachModelType(modelName, cb) {
 		var ModelType = models[modelName]
 		  , Models = seedData[modelName];
-
-		assocMap[modelName] = [];
 
 		async.forEach(
 			Models,
@@ -91,6 +92,6 @@ async.forEachSeries(
 		);
 	},
 	function forEachModelTypeComplete(err) {
-		console.log(err ? 'Error: ' : 'Seed completed with no errors', err)
+		console.log(err ? 'Error: ' : 'Seed completed with no errors', err);
 	}
 );

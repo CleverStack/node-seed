@@ -7,3 +7,4 @@ node_modules
 config/local.json
 test-results.xml
 !.gitignore
+.*.swp

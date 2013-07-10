@@ -1,34 +1,40 @@
 {
-  "name": "ctstub",
-  "version": "0.0.1",
+  "name": "cleverstack-node-seed",
+  "version": "0.0.2",
   "private": true,
   "scripts": {
     "start": "node app",
-    "test": "clear; NODE_ENV=test node ./node_modules/jasmine-node/bin/jasmine-node test/"
+    "test": "./node_modules/.bin/mocha test/server/unit --require should --reporter spec"
   },
   "dependencies": {
     "express": "",
-    "pg": "",
-    "i18n": "",
     "q": "",
-    "jasmine-node": "",
-    "squel": "",
-    "validator": "",
     "moment": "",
-    "supervisor":"",
-    "underscore":"",
+    "underscore": "",
     "nconf": "",
     "uberclass": "",
-    "ejs": "",
     "sequelize": "",
     "mysql": "*",
     "async": "",
-    "i": ""
+    "i": "",
+    "passport": "*",
+    "passport-local": "*",
+    "passport-facebook": "",
+    "dehumanize-date": "",
+    "time": "",
+    "memcached": "",
+    "vague-time": "~0.5.4",
+    "connect-redis": "~1.4.5",
+    "clever-controller": ""
   },
   "author": {
-    "name": "Mason Houtz",
-    "email": "mason@clevertech.biz"
+    "name": "Richard Gustin",
+    "email": "richard@clevertech.biz"
   },
+  "collaborators": [
+    "Leandro Ostera <leandro@clevertech.biz>",
+    "Dmitry Bashkatov <dmitry@clevertech.biz>"
+  ],
   "description": "",
   "keywords": [
     ""
@@ -37,6 +43,10 @@
   "devDependencies": {
     "grunt": "latest",
     "grunt-exec": "latest",
-    "grunt-contrib-watch": "latest"
+    "grunt-contrib-watch": "latest",
+    "mocha": "*",
+    "should": "*",
+    "sinon": "*",
+    "karma": "*"
   }
 }
