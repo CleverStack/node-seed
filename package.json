@@ -35,8 +35,13 @@
   ],
   "main": "app.js",
   "devDependencies": {
-    "grunt": "latest",
-    "grunt-exec": "latest",
-    "grunt-contrib-watch": "latest"
+    "grunt": "",
+    "grunt-exec": "",
+    "grunt-contrib-watch": "",
+    "mocha": "",
+    "should": "",
+    "sinon": "",
+    "karma": "",
+    "supertest": ""
   }
 }

@@ -71,7 +71,10 @@ app.configure(function() {
 // register application routes
 initializeRoutes(app);
 
-// start server
-app.listen(webPort, function() {
-    console.log("Starting server on port " + webPort + " in " + config.environmentName + " mode");
-});
+module.exports = app;
+
+if (require.main == module) {
+    app.listen(webPort, function() {
+        console.log("Starting server on port " + webPort + " in " + config.environmentName + " mode");
+    });
+}
