@@ -1,6 +1,6 @@
 var crypto = require('crypto');
 
-module.exports = function(UserService) {
+module.exports = function(UserService, models) {
 	return (require('./../classes/Controller.js')).extend(
 	{
 		requiresLogin: function(req, res, next) {

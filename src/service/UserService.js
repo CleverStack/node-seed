@@ -2,26 +2,26 @@ var BaseClass = require(__dirname + '/Base')
   , Q = require('q')
   , UserService = null;
 
-module.exports = function(Db, UserModel) {
+module.exports = function(db, models) {
 	if (UserService === null) {
 		UserService = BaseClass.extend({
 			findById: function(id) {
 				var deferred = Q.defer();
-				UserModel.find(id).success(deferred.resolve).error(deferred.reject)
+				models.User.find(id).success(deferred.resolve).error(deferred.reject)
 				return deferred.promise
 			},
 
 			findAll: function(options) {
 				options || {}
 				var deferred = Q.defer();
-				UserModel.findAll().success(deferred.resolve).error(deferred.reject)
+				models.User.findAll().success(deferred.resolve).error(deferred.reject)
 				return deferred.promise
 			},
 
 			find: function(options) {
 				options || {}
 				var deferred = Q.defer();
-				UserModel.findAll(options).success(deferred.resolve).error(deferred.reject)
+				models.User.findAll(options).success(deferred.resolve).error(deferred.reject)
 				return deferred.promise
 			},
 
@@ -37,13 +37,13 @@ module.exports = function(Db, UserModel) {
 				*/
 				
 				// For now so the stub app works
-				UserModel.find({ where: credentials }).success(deferred.resolve).error(deferred.reject);
+				models.User.find({ where: credentials }).success(deferred.resolve).error(deferred.reject);
 
 				return deferred.promise;
 			}
 		});
 
-		UserService.instance = new UserService(Db);
+		UserService.instance = new UserService(db);
 	}
 
 	return UserService.instance;
