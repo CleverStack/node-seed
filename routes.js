@@ -13,9 +13,8 @@ module.exports = function(app) {
   controller.storage = __dirname + '/src/controllers/';
   service.storage = __dirname + '/src/service/';
 
-  var UserService = service('User', db, models.User);
-
-  var UserCtrl = controller('UserController', UserService);
+  var UserService = service('UserService', db, models.User);
+  var ExampleCtrl = controller('ExampleController');
 
   // Some passport use
   // app.get('/auth/facebook', passport.authenticate('facebook', {
@@ -23,6 +22,6 @@ module.exports = function(app) {
   // }));
   // app.get('/auth/facebook/callback', UserCtrl.attach('facebookLoginAction'));
 
-  app.all('/api/user/:action/:id?', UserCtrl.attach());
-  app.all('/api/user/?:action?', UserCtrl.attach());
+  app.all('/api/example/:action/:id?', ExampleCtrl.attach());
+  app.all('/api/example/?:action?', ExampleCtrl.attach());
 };

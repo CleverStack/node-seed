@@ -1,4 +1,4 @@
-module.exports = function(UserService) {
+module.exports = function() {
 	return (require('./../classes/Controller.js')).extend(
 	/* @Prototype */
 	{
@@ -59,7 +59,7 @@ module.exports = function(UserService) {
 		 * 'GET/PUT/POST/DELETE /example/custom'
 		 */
 		customAction: function() {
-			this.set({ message: 'Hello from custom action controller' });
+			this.render('example/custom.ejs', { message: 'Hello from custom action controller' });
 		},
 
 		/**
