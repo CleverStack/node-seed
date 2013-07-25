@@ -1,9 +1,9 @@
 var Query = require('./PostgresQuery'),
-	Transaction = require('./PostgresTransaction');
+  Transaction = require('./PostgresTransaction');
 
 
 function DB(configs) {
-	this.configs = configs;
+  this.configs = configs;
 }
 
 
@@ -14,7 +14,7 @@ function DB(configs) {
  * @return {Transaction} Transaction handler
  */
 DB.prototype.startTransaction = function() {
-	return new Transaction(this.configs);
+  return new Transaction(this.configs);
 };
 
 
@@ -24,8 +24,8 @@ DB.prototype.startTransaction = function() {
  * @return {promise}
  */
 DB.prototype.query = function() {
-	var newQuery = new Query(this.configs);
-	return newQuery.create.apply(newQuery, arguments);
+  var newQuery = new Query(this.configs);
+  return newQuery.create.apply(newQuery, arguments);
 };
 
 

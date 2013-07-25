@@ -1,8 +1,14 @@
-This seed app is meant to be a base for node.js apps.
+# CleverStack NodeJS Seed
 
-It's got many examples and we encourage you to send suggestions.
+## Setup
 
-# Installation
+1. Clone the repo git@assembla.com:wellcaster.git
+2. `git submodule init` and `git submodule update`
+6. create and configure `config/local.json`
+3. `npm i`
+4. `node bin/rebase.js`
+5. `node bin/seedModels.js`
+7. `nodemon` (if you have `nodemon`) otherwise just `node app`
 
 ## SequelizeJS
 We use sequelizejs as our default ORM layer (For now), for more information please see http://www.sequelizejs.com/

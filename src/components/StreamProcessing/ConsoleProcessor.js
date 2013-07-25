@@ -5,14 +5,14 @@ var Processor = require('./ProcessorStream');
 
 module.exports = function(prefix) {
 
-	return new Processor(
+  return new Processor(
 
-		function(data) {
-			console.log(prefix, data);
-			return data;
-		}
-		
-	);
+    function(data) {
+      console.log(prefix, data);
+      return data;
+    }
+    
+  );
 
 };
 
