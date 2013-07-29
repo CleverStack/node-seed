@@ -7,20 +7,18 @@ module.exports = function(Db, UserModel) {
         return UserService.instance;
     }
 
-	if (UserService === null) {
-		UserService = BaseService.extend({
-			authenticate: function(credentials) {
-				var deferred = Q.defer();
-				
-				UserModel.find({ where: credentials }).success(deferred.resolve).error(deferred.reject);
+    UserService = BaseService.extend({
+        authenticate: function(credentials) {
+            var deferred = Q.defer();
+            
+            UserModel.find({ where: credentials }).success(deferred.resolve).error(deferred.reject);
 
-				return deferred.promise;
-			}
-		});
+            return deferred.promise;
+        }
+    });
 
-		UserService.instance = new UserService(Db);
-        UserService.Model = UserModel;
-	}
+    UserService.instance = new UserService(Db);
+    UserService.Model = UserModel;
 
 	return UserService.instance;
-}
+};
