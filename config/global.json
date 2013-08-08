@@ -21,5 +21,7 @@
 
     "modelAssociations": {
         "User": {}
-    }
+    },
+
+    "db": {}
 }
