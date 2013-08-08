@@ -15,13 +15,5 @@
         "key": ""
     },
 
-    "models": [
-        "User"
-    ],
-
-    "modelAssociations": {
-        "User": {}
-    },
-
     "db": {}
 }

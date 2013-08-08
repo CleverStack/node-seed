@@ -1,5 +1,4 @@
-var NoActionException = require('./../exceptions/NoAction'),
-    Controller = require('clever-controller');
+var Controller = require('clever-controller');
 
 module.exports = Controller.extend(
 /* @Static */
