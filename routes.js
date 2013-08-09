@@ -13,8 +13,9 @@ module.exports = function(app) {
   controller.storage = __dirname + '/src/controllers/';
   service.storage = __dirname + '/src/service/';
 
-  var UserService = service('UserService', db, models.User);
-  var ExampleCtrl = controller('ExampleController');
+  var ExampleCtrl = controller('ExampleController')
+    , UserService = service('UserService', db, models.User)
+    , UserCtrl = controller('UserController', UserService);
 
   // Some passport use
   // app.get('/auth/facebook', passport.authenticate('facebook', {
@@ -24,4 +25,11 @@ module.exports = function(app) {
 
   app.all('/api/example/:action/:id?', ExampleCtrl.attach());
   app.all('/api/example/?:action?', ExampleCtrl.attach());
+
+  // User Routes
+  app.get('/user/current', UserCtrl.attach());
+  app.post('/user/login', UserCtrl.attach());
+  app.post('/user', UserCtrl.attach());
+  app.all('/user/:action/:id?', UserCtrl.requiresLogin, UserCtrl.attach());
+  app.all('/user/?:action?', UserCtrl.requiresLogin, UserCtrl.attach());
 };

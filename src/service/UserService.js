@@ -20,5 +20,5 @@ module.exports = function(Db, UserModel) {
     UserService.instance = new UserService(Db);
     UserService.Model = UserModel;
 
-	return UserService.instance;
+    return UserService.instance;
 };
