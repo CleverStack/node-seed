@@ -11,14 +11,10 @@
 7. `nodemon` (if you have `nodemon`) otherwise just `node app`
 
 ## SequelizeJS
-We use sequelizejs as our default ORM layer (For now), for more information please see http://www.sequelizejs.com/
+We use sequelizejs as our default ORM layer, for more information please see http://www.sequelizejs.com/ and we use Mongoose as our ODM.
 
 ## Database
 Run `node bin/rebase` to setup your database and Run `node bin/seedModels` to setup seed data in those model
-
-TODO
-
-# Examples/Explanations
 
 ## Controller
 
@@ -42,7 +38,8 @@ Also, note local.json is ignored, but you have a sample in local.example.json
 3. Transaction example
 ```
 
-## Demonstration of the important of modularizing data calls into service layer objects.
+## Service Layer
 ## Production Deployment Mechanism
 ## Continuous integration
-## End-to-end testing
+## End-to-end (integration) testing
+## Unit testing
