@@ -100,8 +100,8 @@ initializeRoutes( app );
 
 module.exports = app;
 
-if (require.main == module) {
+// if (require.main == module) {
     app.listen(webPort, function() {
         console.log("Starting server on port " + webPort + " in " + config.environmentName + " mode");
     });
-}
+// }
