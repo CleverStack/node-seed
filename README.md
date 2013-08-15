@@ -2,7 +2,7 @@
 
 ## Setup
 
-1. Clone the repo git@assembla.com:wellcaster.git
+1. Clone the repo
 2. `git submodule init` and `git submodule update`
 6. create and configure `config/local.json`
 3. `npm i`
