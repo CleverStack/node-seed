@@ -1,32 +1,19 @@
 {
-	"params": {
-		"appName": "CleverTech Stub Application"
-	},
-	
-	"secretKey": "secret",
+    "webPort": 8080,
 
-	"db": {
-		"username": "ctstub_web",
-		"password": "ctstub_web",
-		"database": "ctstub",
-		"options": {
-			"host": "localhost",
-        	"dialect": "mysql",
-			"port": 3306
-		}
-	},
+    "numChildren": 1,
+    
+    "params": {
+        "appName": ""
+    },
 
-	"models": [
-		"Role",
-		"User"
-	],
+    "secretKey": "",
+    "redis": {
+        "host": "localhost",
+        "port": "6379",
+        "prefix": "",
+        "key": ""
+    },
 
-	"modelAssociations": {
-		"Role": {
-			"hasMany": ["User"]
-		},
-		"User": {
-			"hasMany": ["Role"]
-		}
-	}
+    "db": {}
 }

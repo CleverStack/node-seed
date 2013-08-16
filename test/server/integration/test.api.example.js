@@ -1,12 +1,12 @@
 var should = require('should'),
     request = require('supertest'),
-    app = require('../../../app');
+    app = require('../../../index');
 
-describe('ExampleController', function () {
-    describe('postAction', function () {
+describe('/api/example', function () {
+    describe('POST /api/example', function () {
         it('should return valid status', function (done) {
             request(app)
-                .post('/example')
+                .post('/api/example')
                 .expect('Content-Type', /json/)
                 .expect(200)
                 .end(function (err, res) {
@@ -19,10 +19,10 @@ describe('ExampleController', function () {
         });
     });
 
-    describe('listAction', function () {
+    describe('GET /api/example', function () {
         it('should return valid status', function (done) {
             request(app)
-                .get('/example')
+                .get('/api/example')
                 .expect('Content-Type', /json/)
                 .expect(200)
                 .end(function (err, res) {
@@ -35,10 +35,10 @@ describe('ExampleController', function () {
         });
     });
 
-    describe('getAction', function () {
+    describe('GET /api/example/:id', function () {
         it('should return valid status', function (done) {
             request(app)
-                .get('/example/123')
+                .get('/api/example/123')
                 .expect('Content-Type', /json/)
                 .expect(200)
                 .end(function (err, res) {
@@ -51,10 +51,10 @@ describe('ExampleController', function () {
         });
     });
 
-    describe('putAction', function () {
+    describe('PUT /api/example/:id', function () {
         it('should return valid status', function (done) {
             request(app)
-                .put('/example/123')
+                .put('/api/example/123')
                 .expect('Content-Type', /json/)
                 .expect(200)
                 .end(function (err, res) {
@@ -67,10 +67,10 @@ describe('ExampleController', function () {
         });
     });
 
-    describe('deleteAction', function () {
+    describe('DELETE /api/example/:id', function () {
         it('should return valid status', function (done) {
             request(app)
-                .del('/example/123')
+                .del('/api/example/123')
                 .expect('Content-Type', /json/)
                 .expect(200)
                 .end(function (err, res) {
@@ -83,10 +83,10 @@ describe('ExampleController', function () {
         });
     });
 
-    describe('customAction', function () {
+    describe('GET /api/example/custom', function () {
         it('should return valid status', function (done) {
             request(app)
-                .get('/example/custom')
+                .get('/api/example/custom')
                 .expect('Content-Type', /html/)
                 .expect(200)
                 .end(function (err, res) {

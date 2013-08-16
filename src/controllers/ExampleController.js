@@ -1,4 +1,4 @@
-module.exports = function(UserService) {
+module.exports = function() {
 	return (require('./../classes/Controller.js')).extend(
 	/* @Prototype */
 	{

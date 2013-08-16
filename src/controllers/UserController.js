@@ -1,73 +1,146 @@
-var crypto = require('crypto');
+var crypto = require('crypto')
+, passport = require('passport')
+, LocalStrategy = require('passport-local').Strategy;
 
-module.exports = function(UserService, models) {
-	return (require('./../classes/Controller.js')).extend(
-	{
-		requiresLogin: function(req, res, next) {
-			if (!req.session.user)
-				return res.send(401);
-			next();
-		},
+module.exports = function(UserService) {
 
-		requiresRole: function(roleName) {
-			return function(req, res, next) {
-				if (!req.session.user ||
-					!req.session.user.roles ||
-					req.session.user.roles.indexOf(roleName) === -1)
-					return res.send(401);
-				next();
-			};
-		}
-	},
-	{
-		listAction: function() {
-			UserService.findAll()
-				.then(this.proxy('send'))
-				.fail(this.proxy('handleException'));
-		},
+    passport.serializeUser(function (user, done) {
+        done(null, user.id);
+    });
 
-		getAction: function() {
-			UserService.findById(this.req.params.id)
-				.then(this.proxy('send'))
-				.fail(this.proxy('handleException'));
-		},
+    passport.deserializeUser(function (id, done) {
+        UserService.findById(id)
+        .then(done.bind(null, null))
+        .fail(done);
+    });
 
-		postAction: function() {
-			UserService.create(this.req.body)
-				.then(this.proxy('send'))
-				.fail(this.proxy('handleException'));
-		},
+    passport.use(new LocalStrategy(function (username, password, done) {
+        var credentials = {
+            username: username,
+            password: crypto.createHash('sha1').update(password).digest('hex')
+        };
 
-		putAction: function() {
-			UserService.update(this.req.body)
-				.then(this.proxy('send'))
-				.fail(this.proxy('handleException'));
-		},
+        UserService.authenticate(credentials)
+        .then(done.bind(null, null))
+        .fail(done);
+    }));
 
-		loginAction: function() {
-			var credentials = {
-				username: this.req.body.username,
-				password: crypto.createHash('sha1').update(this.req.body.password).digest('hex')
-			}
+    return (require('./../classes/Controller.js')).extend(
+    {
+        service: UserService,
 
-			UserService.authenticate(credentials)
-				.then(this.proxy('authorizedUser'))
-				.fail(this.proxy('handleException'));
-		},
+        requiresLogin: function(req, res, next) {
+            if (!req.isAuthenticated())
+                return res.send(401);
+            next();
+        },
 
-		authorizedUser: function(user) {
-			console.dir(user);
-			if (user) {
-				this.req.session.user = user;
-				this.res.send(200);	
-			} else {
-				this.res.send(403);
-			}
-		},
+        requiresRole: function(roleName) {
+            return function(req, res, next) {
+                if (!req.isAuthenticated() ||
+                    !req.session.user.roles ||
+                    req.session.user.roles.indexOf(roleName) === -1)
+                    return res.send(401);
+                next();
+            };
+        }
+    },
+    {
+        postAction: function() {
+            var self = this;
+            var data = self.req.body;
+            if (data.id) {
+                return self.putAction();
+            }
 
-		logoutAction: function() {
-			this.req.session.user = null;
-			this.res.send(200);
-		}
-	});
+            if (data.password) {
+                data.password = crypto.createHash('sha1').update(data.password).digest('hex');
+            }
+
+            UserService
+            .create(data)
+            .then(this.proxy('send'))
+            .fail(self.proxy('handleException'));
+        },
+
+        putAction: function() {
+            var user = this.req.user;
+            var data = this.req.body;
+            if ( data.password ) {
+                data.password = crypto.createHash('sha1').update(data.password).digest('hex');
+            }
+
+            if ( data.new_password ) {
+                UserService.find({
+                    where: {
+                        id: data.id,
+                        password: data.password
+                    }
+                })
+                .then( this.proxy( 'handleUpdatePassword', data.new_password ) )
+                .fail( this.proxy( 'handleException' ) );
+            } else {
+                UserService
+                    .update(user, data)
+                    .then(this.proxy('send'))
+                    .fail(this.proxy('handleException'));
+            }
+        },
+
+        handleUpdatePassword: function ( newPassword, user ) {
+            if (user.length) {
+                user = user[0];
+                user.updateAttributes({
+                    password: crypto.createHash('sha1').update(newPassword).digest('hex')
+                }).success(function (user) {
+                    this.send({status: 200, results: user});
+                }.bind(this)
+                ).fail(this.proxy('handleException'));
+            } else {
+                this.send({status: 500, error: "Incorrect old password!"});
+            }
+        },
+
+        loginAction: function() {
+            passport.authenticate('local', this.proxy('handleLocalUser'))(this.req, this.res, this.next);
+        },
+
+        handleLocalUser: function (err, user) {
+            if (err) return this.handleException(err);
+            if (!user) return this.send(403);
+            this.loginUserJson(user);
+        },
+
+        loginUserJson: function (user) {
+            this.req.login(user, this.proxy('handleLoginJson', user));
+        },
+
+        handleLoginJson: function (user, err) {
+            if (err) return this.handleException(err);
+            this.send(user);
+        },
+
+        currentAction: function () {
+            var user = this.req.user;
+            if (!user) {
+                return this.send({});
+            }
+            this.send(user);
+        },
+
+        authorizedUser: function(user) {
+            console.dir(user);
+            if (user) {
+                this.req.login(user);
+                this.res.send(200); 
+            } else {
+                this.res.send(403);
+            }
+        },
+
+        logoutAction: function() {
+            this.req.logout();
+            this.res.send(200);
+        }
+    });
 };

@@ -8,17 +8,17 @@
 
 module.exports = function() {
 
-	// utility for loading a controller and injecting indicated dependencies
-	function loader(/* name, dependency, dependency, ... */) {
-		var name = Array.prototype.shift.apply(arguments);
-		var fnObjectFactory = require(loader.storage + name);
-		return fnObjectFactory.apply(null, arguments);
-	}
+  // utility for loading a controller and injecting indicated dependencies
+  function loader(/* name, dependency, dependency, ... */) {
+    var name = Array.prototype.shift.apply(arguments);
+    var fnObjectFactory = require(loader.storage + name);
+    return fnObjectFactory.apply(null, arguments);
+  }
 
-	// base storage path, can be set externally if so desired to find
-	// controllers in different paths
-	loader.storage = './';
+  // base storage path, can be set externally if so desired to find
+  // controllers in different paths
+  loader.storage = './';
 
-	return loader;
+  return loader;
 
 };
