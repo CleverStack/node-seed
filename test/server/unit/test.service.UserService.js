@@ -2,15 +2,13 @@ var should = require('should')
   , testEnv = require('./utils').testEnv;
 
 describe('service.UserService', function () {
+    var UserService;
+
     beforeEach(function (done) {
         testEnv(function (_UserService_) {
             UserService = _UserService_;
             done();
         }, done);
-    });
-
-    afterEach(function () {
-        UserService.constructor.instance = null;
     });
 
     describe('.authenticate(credentials)', function () {

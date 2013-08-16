@@ -1,13 +1,8 @@
 var BaseService = require('./BaseService')
   , Q = require('q')
-  , UserService = null;
 
 module.exports = function(db, models) {
-    if (UserService && UserService.instance) {
-        return UserService.instance;
-    }
-
-    UserService = BaseService.extend({
+    var UserService = BaseService.extend({
         authenticate: function(credentials) {
             var deferred = Q.defer();
             
@@ -17,8 +12,6 @@ module.exports = function(db, models) {
         }
     });
 
-    UserService.instance = new UserService(db);
     UserService.Model = models.User;
-
-    return UserService.instance;
+    return new UserService(db);t
 };
