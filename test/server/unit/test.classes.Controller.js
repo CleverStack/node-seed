@@ -9,16 +9,12 @@ describe('classes.Controller', function () {
         service,
         Controller,
         ctrl,
-        env,
         objs = [];
 
     beforeEach(function (done) {
-        testEnv().then(function (_env_) {
-            env = _env_;
-
+        testEnv(function (models) {
             Service = BaseService.extend();
-            Model = env.models.TestModel;
-            Service.Model = Model;
+            Service.Model = models.TestModel;
             service = new Service();
 
             Controller = BaseController.extend();
@@ -50,7 +46,7 @@ describe('classes.Controller', function () {
                 done();
             })
             .fail(done);
-        }, done);
+        });
     });
 
     describe('.listAction()', function () {
