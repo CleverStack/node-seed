@@ -1,6 +1,6 @@
 var should = require('should'),
     request = require('supertest'),
-    app = require('../../../app');
+    app = require('../../../index');
 
 describe('/api/example', function () {
     describe('POST /api/example', function () {
