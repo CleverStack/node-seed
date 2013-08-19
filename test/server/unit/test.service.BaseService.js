@@ -3,17 +3,16 @@ var should = require('should'),
     BaseService = require('../../../src/service/BaseService');
 
 describe('service.BaseService', function () {
-    var env, service, Service, Model;
+    var service, Service, Model;
 
     beforeEach(function (done) {
-        testEnv().then(function (_env_) {
-            env = _env_;
+        testEnv(function (models) {
             Service = BaseService.extend();
-            Model = env.models.TestModel;
+            Model = models.TestModel;
             Service.Model = Model;
             service = new Service();
             done();
-        }, done);
+        });
     });
 
     describe('.setup(dbAdapter)', function () {

@@ -6,6 +6,7 @@ var config = require( './config' )
   , initializeRoutes = require( './routes' )
   , loader = require( './src/components/Loader.js' )
   , Sequelize = require( 'sequelize' )
+  , Injector = require( './src/utils/injector' )
   , passport = require( 'passport' )
   , app = express();
 
@@ -29,11 +30,12 @@ app.configure( function() {
     app.use( express[ 'static' ]( __dirname + '/public' ) );
 
     // application variables, part of a config block maybe?
+    var injector = Injector(  __dirname + '/src/service', __dirname + '/src/controllers' );
+    injector.instance( 'config', config );
+    injector.instance( 'models', models );
+    injector.instance( 'db', sequelize );
     app.set( 'port', webPort );
-    app.set( 'config', config );
-    app.set( 'models', models );
-    app.set( 'loader', loader );
-    app.set( 'db', sequelize );
+    app.set( 'injector', injector );
 
     // middleware stack
     app.use( express.bodyParser() );

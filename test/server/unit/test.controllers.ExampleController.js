@@ -2,16 +2,10 @@ var should = require('should'),
     testEnv = require('./utils').testEnv;
 
 describe('controllers.ExampleController', function () {
-    var env, ctrl;
+    var ctrl;
 
     beforeEach(function (done) {
-        testEnv()
-        .then(function (_env_) {
-            env = _env_;
-
-            var ExampleController = env.controller('ExampleController');
-            ExampleController.prototype.fakeAction = function () {};
-
+        testEnv(function (ExampleController) {
             var req = {
                 params: {},
                 method: 'GET',
@@ -24,8 +18,7 @@ describe('controllers.ExampleController', function () {
             ctrl = new ExampleController('fakeAction', req, res, next);
 
             done();
-        })
-        .fail(done);
+        });
     });
 
 

@@ -1,38 +1,37 @@
 var config = require('../../../config')
   , defineModels = require('../../../src/model')
-  , loader = require('../../../src/components/Loader.js')
+  , Injector = require( '../../../src/utils/injector' )
   , Sequelize = require('sequelize')
   , Q = require('q');
 
-exports.testEnv = function (cb) {
+exports.testEnv = function (fn) {
     var deferred = Q.defer();
-    var env = {};
 
-    env.config = config;
-    env.db = new Sequelize(
+    var db = new Sequelize(
         config.testDb.database, 
         config.testDb.username, 
         config.testDb.password,
         config.testDb.options
     );
 
-    env.models = defineModels(env.db, env.config);
-    env.models.TestModel = env.db.define('Test', {
+    var models = defineModels(db, config);
+    models.TestModel = db.define('Test', {
         name: Sequelize.STRING,
     }, {
         paranoid: true
     });
 
-    env.controller = loader();
-    env.service = loader();
+    var injector = Injector(  __dirname + '/../../../src/service', __dirname + '/../../../src/controllers' );
+    injector.instance( 'config', config );
+    injector.instance( 'models', models );
+    injector.instance( 'db', db );
 
-    env.controller.storage = __dirname + '/../../../src/controllers/';
-    env.service.storage = __dirname + '/../../../src/service/';
-
-    env.db
+    db
     .sync({force:true})
-    .success(deferred.resolve.bind(this, env))
-    .error(deferred.reject);
-
-    return deferred.promise;
+    .success(function () {
+        injector.inject(fn);
+    })
+    .error(function (err) {
+        throw err;
+    });
 };

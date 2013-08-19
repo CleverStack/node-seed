@@ -2,7 +2,7 @@ var crypto = require('crypto')
 , passport = require('passport')
 , LocalStrategy = require('passport-local').Strategy;
 
-module.exports = function(UserService, ReservationService, ClientService, TrainerModel) {
+module.exports = function(UserService) {
 
     passport.serializeUser(function (user, done) {
         done(null, user.id);

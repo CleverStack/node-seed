@@ -2,18 +2,13 @@ var should = require('should')
   , testEnv = require('./utils').testEnv;
 
 describe('service.UserService', function () {
-    var env, service;
+    var UserService;
 
     beforeEach(function (done) {
-        testEnv().then(function (_env_) {
-            env = _env_;
-            service = env.service('UserService', env.db, env.models.User);
+        testEnv(function (_UserService_) {
+            UserService = _UserService_;
             done();
         }, done);
-    });
-
-    afterEach(function () {
-        service.constructor.instance = null;
     });
 
     describe('.authenticate(credentials)', function () {
@@ -29,12 +24,12 @@ describe('service.UserService', function () {
                 password: '1234'
             };
 
-            service.create(data1)
+            UserService.create(data1)
             .then(function () {
-                return service.create(data2);
+                return UserService.create(data2);
             })
             .then(function () {
-                return service.authenticate({
+                return UserService.authenticate({
                     email: 'rachel@example.com',
                     password: '1234'
                 })
