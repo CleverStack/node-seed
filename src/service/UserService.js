@@ -1,24 +1,17 @@
 var BaseService = require('./BaseService')
   , Q = require('q')
-  , UserService = null;
 
-module.exports = function(Db, UserModel) {
-    if (UserService && UserService.instance) {
-        return UserService.instance;
-    }
-
-    UserService = BaseService.extend({
+module.exports = function(db, models) {
+    var UserService = BaseService.extend({
         authenticate: function(credentials) {
             var deferred = Q.defer();
             
-            UserModel.find({ where: credentials }).success(deferred.resolve).error(deferred.reject);
+            models.User.find({ where: credentials }).success(deferred.resolve).error(deferred.reject);
 
             return deferred.promise;
         }
     });
 
-    UserService.instance = new UserService(Db);
-    UserService.Model = UserModel;
-
-    return UserService.instance;
+    UserService.Model = models.User;
+    return new UserService(db);t
 };
