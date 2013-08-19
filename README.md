@@ -38,6 +38,38 @@ Also, note local.json is ignored, but you have a sample in local.example.json
 3. Transaction example
 ```
 
+## Dependency injection
+
+1. Write modules
+   ```js
+   // src/controllers/ExampleController.js
+   module.exports = function () {
+       return {};
+   };
+   ```
+
+2. Setup injector
+
+   ```js
+   var Injector = require( './src/utils/injector' );
+   
+   var injector = Injector(  __dirname + '/src/service', __dirname + '/src/controllers' );
+   injector.instance( 'config', config );
+   injector.instance( 'models', models );
+   injector.instance( 'db', db );
+   ```
+
+3. Use injector
+
+   ```js
+   injector.inject( function (ExampleController, models, config) {
+       // this function will be called asynchronously after all required modules are initialized
+   });
+   ```
+
+For more details take a look at provided [testsuite](test/server/unit/test.utils.injector.js).
+There are all possible use cases.
+
 ## Service Layer
 ## Production Deployment Mechanism
 ## Continuous integration
