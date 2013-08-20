@@ -3,8 +3,8 @@
   "version": "0.0.2",
   "private": true,
   "scripts": {
-    "start": "node app",
-    "test": "./node_modules/.bin/mocha test/server/unit --require should --reporter spec"
+    "start": "grunt",
+    "setup": "npm i; grunt db;"
   },
   "dependencies": {
     "async": "",
@@ -27,12 +27,14 @@
     "q": "",
     "sequelize": "",
     "squel": "",
-    "supervisor":"",
+    "supervisor": "",
     "time": "",
     "uberclass": "",
-    "underscore":"",
+    "underscore": "",
     "vague-time": "~0.5.4",
-    "validator": ""
+    "validator": "",
+    "matchdep": "~0.1.2",
+    "colors": "~0.6.1"
   },
   "author": {
     "name": "Richard Gustin",
@@ -48,13 +50,21 @@
   ],
   "main": "app.js",
   "devDependencies": {
-    "grunt": "",
-    "grunt-exec": "",
+    "docular": "git://github.com/leostera/docular.git",
     "grunt-contrib-watch": "",
+    "grunt-contrib-clean": "",
+    "grunt-contrib-jshint": "",
+    "grunt-contrib-connect": "~0.3.0",
+    "grunt-mocha-test": "",
+    "grunt-nodemon": "",
+    "grunt-docular": "",
+    "matchdep": "",
     "mocha": "",
     "should": "",
     "sinon": "",
     "karma": "",
-    "supertest": ""
+    "supertest": "",
+    "grunt-concurrent": "~0.3.0",
+    "grunt-exec": "~0.4.2"
   }
 }

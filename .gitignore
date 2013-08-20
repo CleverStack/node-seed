@@ -8,3 +8,4 @@ config/local.json
 test-results.xml
 !.gitignore
 .*.swp
+docs
