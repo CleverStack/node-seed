@@ -88,7 +88,44 @@ Also, note `local.json` is ignored in `.gitignore`, but you have a sample in `lo
 3. Transaction example
 ```
 
-### 3.2 Dependency injection
+### 3.2 Config Options
+```
+{
+    "webPort": 8080, // The port that the application will run on
+
+    "numChildren": 1, // The number of children to spawn in the cluster, use N-1 where N is the number of cores in your CPU.
+    
+    "params": {
+        "appName": "" // Name of the application
+    },
+
+    "secretKey": "changeme", // Secret key for sessions
+
+    "memcacheHost": "some.host.com:11211", // The memcache server for Background-Tasks
+    
+    // Redis Configuration
+    "redis": {
+        "host": "10.0.0.1",
+        "port": "6379",
+        "prefix": "dev",
+        "key": ""
+    },
+
+    "db": {
+        "username": "",
+        "password": "",
+        "database": "",
+        "options": {
+            "host": "",
+            "dialect": "mysql", // or postgre - Note: if you use PG then you must put "omitNull": true in options.
+            "port": 3306
+        }
+    }
+}
+```
+
+
+### 3.3 Dependency injection
 
 #### Write modules
 ```
@@ -118,7 +155,7 @@ injector.inject( function (ExampleController, models, config) {
 For more details take a look at provided [testsuite](test/server/unit/test.utils.injector.js).
 There are all possible use cases.
 
-### 3.3 Service Layer
+### 3.4 Service Layer
 Needs to be documented.
 
 
