@@ -47,7 +47,7 @@ app.configure( function() {
       , cookie: { secure: false, maxAge: 86400000 }
       , store: new RedisStore({
           host: config.redis.host
-        , port: config.redis.key
+        , port: config.redis.port
         , prefix: config.redis.prefix+process.env.NODE_ENV+"_"
         , password: config.redis.key
         })
