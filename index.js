@@ -4,7 +4,7 @@ var config = require( './config' )
   , webPort = process.env.NODE_WWW_PORT || config.webPort || 8080
   , env = process.env.NODE_ENV || config.environmentName || 'development'
   , initializeRoutes = require( './routes' )
-  , loader = require( './src/components/Loader.js' )
+  , modelInjector = require( './src/utils/modelInjector' )
   , Sequelize = require( 'sequelize' )
   , Injector = require( './src/utils/injector' )
   , passport = require( 'passport' )
@@ -36,6 +36,8 @@ app.configure( function() {
     injector.instance( 'db', sequelize );
     app.set( 'port', webPort );
     app.set( 'injector', injector );
+
+    modelInjector( injector, models );
 
     // middleware stack
     app.use( express.bodyParser() );
