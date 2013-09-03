@@ -30,13 +30,17 @@ async.forEachSeries(
 		var ModelType = models[modelName]
 		  , Models = seedData[modelName];
 
-		async.forEach(
+		async.forEachSeries(
 			Models,
 			function forEachModel(data, modelCb) {
+				var assocs = data.associations;
+				delete data.associations;
+
 				ModelType.create(data).success(function(model) {
+					data.associations = assocs;
+
 					console.log('Created ' + modelName);
 					assocMap[modelName].push(model);
-
 					if (data.associations !== undefined) {
 						var assocLength = Object.keys(data.associations).length,
 							called = 0;
