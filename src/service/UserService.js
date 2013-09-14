@@ -1,5 +1,5 @@
 var BaseService = require('./BaseService')
-  , Q = require('q')
+  , Q = require('q');
 
 module.exports = function(db, models) {
     var UserService = BaseService.extend({
@@ -13,5 +13,5 @@ module.exports = function(db, models) {
     });
 
     UserService.Model = models.User;
-    return new UserService(db);t
+    return new UserService(db);
 };
