@@ -9,7 +9,7 @@ module.exports = function( sequelize, config ) {
     });
 
     // Define relationships
-    config.models.forEach( function(modelName) {
+    config.controllers.forEach( function(modelName) {
         //console.log("Defining relationships for "+modelName);
         if ( typeof config.modelAssociations[modelName] !== 'undefined' ) {
             Object.keys( config.modelAssociations[modelName] ).forEach( function( assocType ) {
