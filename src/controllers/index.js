@@ -9,29 +9,29 @@ module.exports = function( sequelize, config ) {
     });
 
     // Define relationships
-    config.controllers.forEach( function(modelName) {
-        //console.log("Defining relationships for "+modelName);
-        if ( typeof config.modelAssociations[modelName] !== 'undefined' ) {
-            Object.keys( config.modelAssociations[modelName] ).forEach( function( assocType ) {
-                var associatedWith = config.modelAssociations[modelName][assocType];
+    config.controllers.forEach( function(ctrlName) {
+        //console.log("Defining relationships for "+ctrlName);
+        if ( typeof config.modelAssociations[ctrlName] !== 'undefined' ) {
+            Object.keys( config.modelAssociations[ctrlName] ).forEach( function( assocType ) {
+                var associatedWith = config.modelAssociations[ctrlName][assocType];
                 if ( ! associatedWith instanceof Array ) {
                     associatedWith = [ associatedWith ];
                 }
 
                 associatedWith.forEach( function(assocTo) {
-                    //console.log(modelName+" "+assocType+" of "+assocTo);
+                    //console.log(ctrlName+" "+assocType+" of "+assocTo);
                     // Support second argument
                     if ( assocTo instanceof Array ) {
-                        //console.log([modelName, assocType, assocTo[0]].join(' '), assocTo[1]);
-                        m[ modelName ][ assocType ]( m[ assocTo[0] ], assocTo[1] );
+                        //console.log([ctrlName, assocType, assocTo[0]].join(' '), assocTo[1]);
+                        m[ ctrlName ][ assocType ]( m[ assocTo[0] ], assocTo[1] );
                     } else {
-                        //console.log([modelName, assocType, assocTo].join(' '));
-                        m[ modelName ][ assocType ]( m[ assocTo ] );
+                        //console.log([ctrlName, assocType, assocTo].join(' '));
+                        m[ ctrlName ][ assocType ]( m[ assocTo ] );
                     }
                 });
             });
         } else {
-            throw modelName + ' cannot be found in modelAssocations scope';
+            throw ctrlName + ' cannot be found in modelAssocations scope';
         }
     });
 
