@@ -37,12 +37,14 @@
     "colors": "~0.6.1"
   },
   "author": {
-    "name": "Richard Gustin",
-    "email": "richard@clevertech.biz"
+    "name": "Clevertech",
+    "email": "info@clevertech.biz",
+    "web": "http://www.clevertech.biz"
   },
   "collaborators": [
-    "Leandro Ostera <leandro@clevertech.biz>",
-    "Dmitry Bashkatov <dmitry@clevertech.biz>"
+    "Richard Gustin <richard@clevertech.biz>",
+    "Dmitry Bashkatov <dmitry@clevertech.biz>",
+    "Leandro Ostera <leostera@gmail.com>"
   ],
   "description": "",
   "keywords": [
