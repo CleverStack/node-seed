@@ -3,6 +3,9 @@ var cluster = require('cluster')
   , cp = require('child_process')
   , config = require('./config');
 
+//
+process.env.NODE_PATH = './src/';
+
 if ( cluster.isMaster ) {
     cluster.on('exit', function( worker, code, signal ) {
         console.dir( arguments );
