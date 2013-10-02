@@ -4,7 +4,7 @@ var cluster = require('cluster')
   , config = require('./config');
 
 //
-process.env.NODE_PATH = './src/';
+process.env.NODE_PATH = process.env.NODE_PATH ? './src/:' + process.env.NODE_PATH : './src';
 
 if ( cluster.isMaster ) {
     cluster.on('exit', function( worker, code, signal ) {
