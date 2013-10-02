@@ -51,8 +51,7 @@
     ""
   ],
   "main": "app.js",
-  "devDependencies": {
-    "docular": "git://github.com/leostera/docular.git",
+  "devDependencies": {    
     "grunt-contrib-watch": "",
     "grunt-contrib-clean": "",
     "grunt-contrib-jshint": "",
