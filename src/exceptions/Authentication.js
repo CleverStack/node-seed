@@ -1,7 +1,7 @@
-function Authentication(message) {
-  this.message = message;
+function Authentication( message ) {
+    this.message = message;
 }
 
-Authentication.prototype = new Error;
+Authentication.prototype = new Error();
 
 module.exports = Authentication;

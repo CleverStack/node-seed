@@ -3,22 +3,22 @@ module.exports = function( sequelize, config ) {
         m = {};
 
     // Add them to exports
-    config.models.forEach( function(model, i) {
+    config.models.forEach( function( model, i ) {
         //console.log("Importing "+model);
         m[model] = sequelize.import( __dirname + '/' + model );
     });
 
     // Define relationships
-    config.models.forEach( function(modelName) {
+    config.models.forEach( function( modelName ) {
         //console.log("Defining relationships for "+modelName);
         if ( typeof config.modelAssociations[modelName] !== 'undefined' ) {
             Object.keys( config.modelAssociations[modelName] ).forEach( function( assocType ) {
                 var associatedWith = config.modelAssociations[modelName][assocType];
-                if ( ! associatedWith instanceof Array ) {
+                if ( !associatedWith instanceof Array ) {
                     associatedWith = [ associatedWith ];
                 }
 
-                associatedWith.forEach( function(assocTo) {
+                associatedWith.forEach( function( assocTo ) {
                     //console.log(modelName+" "+assocType+" of "+assocTo);
                     // Support second argument
                     if ( assocTo instanceof Array ) {
@@ -34,6 +34,5 @@ module.exports = function( sequelize, config ) {
             throw modelName + ' cannot be found in modelAssocations scope';
         }
     });
-
     return m;
 };
