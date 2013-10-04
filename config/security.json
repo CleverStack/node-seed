@@ -1,0 +1,38 @@
+{
+
+    "security":{
+
+        "csp": {
+            "policy": {
+                "defaultPolicy": {
+                    "default-src": ["'self'"],
+                    "img-src": [
+                        "static.example.com",
+                        "*.cdn.example.com"
+                    ]
+                }
+            }
+        },
+
+        "hsts": {
+            "maxAge": "1234567",
+            "includeSubdomains": true
+        },
+
+        "xframe": {
+            "mode": "allow-from",
+            "from": "http://example.com"
+        },
+
+        "iexss": {
+        },
+
+        "contentTypeOptions": {
+        },
+
+        "cacheControl":{
+        }
+
+    }
+
+}

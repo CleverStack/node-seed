@@ -8,6 +8,7 @@ var config = require( './config' )
   , Sequelize = require( 'sequelize' )
   , Injector = require( './src/utils/injector' )
   , passport = require( 'passport' )
+  , initializeSecurity = require( './security' )
   , app = express();
 
 var RedisStore = require( 'connect-redis' )( express );
@@ -78,6 +79,9 @@ app.configure( function() {
 
     app.use( passport.initialize() );
     app.use( passport.session() );
+
+    // register middleware for security headers
+    initializeSecurity( app, config );
 
     app.use( app.router );
 

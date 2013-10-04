@@ -158,7 +158,11 @@ There are all possible use cases.
 ### 3.4 Service Layer
 Needs to be documented.
 
+### 3.5 Security
 
+* `config/security.json` is where you put all your settings for security headers
+ 
+We are using [Helmet](https://github.com/evilpacket/helmet). Check it out to learn more.
 
 ## 4. Deployment ##
 Needs to be documented.
