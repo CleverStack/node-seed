@@ -20,9 +20,15 @@ var sequelize = new Sequelize(
     config.db.options
 );
 
+// Setup ODM
+var mongoose = require( 'mongoose' );
+mongoose.connect(config.mongoose.uri);
+
 // Get our models
 // Note from richard: We have to do this for now, otherwise we cannot access other models inside a model
-GLOBAL.models = require( './src/model' )( sequelize, config );
+GLOBAL.models = require( './src/model' )( sequelize, mongoose, config );
+
+
 
 app.configure( function() {
 

@@ -8,4 +8,16 @@ if ( fs.existsSync( envConfigOverride ) ) {
 	throw new Error( 'Error: No configuration for environment: ' + process.env.NODE_ENV );
 }
 
-module.exports = require( 'nconf' ).loadFilesSync( files );
+var config = require( 'nconf' ).loadFilesSync( files );
+
+var odmFile = __dirname + '/odm.json';
+if ( fs.existsSync( odmFile ) ) {
+    var odm = require( 'nconf' ).loadFilesSync( [__dirname + '/odm.json'] );
+    for ( var m in odm.models ) {
+        if( odm.models.hasOwnProperty( m ) ){
+            config.models.push(odm.models[m]);
+        }
+    }
+}
+
+module.exports = config;

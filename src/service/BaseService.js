@@ -23,8 +23,22 @@ module.exports = Class.extend({
     findById: function (id) {
         var deferred = Q.defer();
 
-        if (this.Class.model !== null) {
-            this.Class.Model.find(id).success(deferred.resolve).error(deferred.reject);
+        if (this.Class.Model !== null) {
+            if( this.Class.Model.SQL ){
+                this.Class.Model.find(id).success(deferred.resolve).error(deferred.reject);
+            } else {
+                this.Class.Model.findById(id, function(err, result){
+                    if ( err ) {
+                        process.nextTick(function() {
+                            deferred.reject();
+                        });
+                    } else {
+                        process.nextTick(function() {
+                            deferred.resolve(result);
+                        });
+                    }
+                });
+            }
         } else {
             process.nextTick(function() {
                 deferred.reject('Function not defined and no Model provided');
@@ -39,7 +53,22 @@ module.exports = Class.extend({
         var deferred = Q.defer();
 
         if (this.Class.Model !== null) {
-            this.Class.Model.findAll().success(deferred.resolve).error(deferred.reject);
+            if ( this.Class.Model.SQL ) {
+                this.Class.Model.findAll().success(deferred.resolve).error(deferred.reject);
+            } else {
+                this.Class.Model.find(function(err, result){
+                    if ( err ) {
+                        process.nextTick(function() {
+                            deferred.reject();
+                        });
+                    } else {
+                        process.nextTick(function() {
+                            deferred.resolve(result);
+                        });
+                    }
+                });
+            }
+
         } else {
             process.nextTick(function() {
                 deferred.reject('Function not defined and no Model provided.');
@@ -54,7 +83,21 @@ module.exports = Class.extend({
         var deferred = Q.defer();
 
         if (this.Class.Model !== null) {
-            this.Class.Model.findAll(options).success(deferred.resolve).error(deferred.reject);
+            if ( this.Class.Model.SQL ) {
+                this.Class.Model.findAll(options).success(deferred.resolve).error(deferred.reject);
+            } else {
+                this.Class.Model.find(options, function(err, result){
+                    if ( err ) {
+                        process.nextTick(function() {
+                            deferred.reject();
+                        });
+                    } else {
+                        process.nextTick(function() {
+                            deferred.resolve(result);
+                        });
+                    }
+                });
+            }
         } else {
             process.nextTick(function() {
                 deferred.reject('Function not defined and no Model provided.');
@@ -68,9 +111,24 @@ module.exports = Class.extend({
         var deferred = Q.defer();
 
         if (this.Class.Model !== null) {
-            this.Class.Model.create(data)
-                .success(deferred.resolve)
-                .error(deferred.reject);
+            if ( this.Class.Model.SQL ) {
+                this.Class.Model.create(data)
+                    .success(deferred.resolve)
+                    .error(deferred.reject);
+            } else {
+                new this.Class.Model(data).save(function(err, result){
+                    if ( err ) {
+                        process.nextTick(function() {
+                            deferred.reject();
+                        });
+                    } else {
+                        process.nextTick(function() {
+                            deferred.resolve(result);
+                        });
+                    }
+                });
+            }
+
         } else {
             process.nextTick(function() {
                 deferred.reject('Function not defined and no Model provided.');
@@ -84,13 +142,27 @@ module.exports = Class.extend({
         var deferred = Q.defer();
 
         if (this.Class.Model !== null) {
-            this.Class.Model.find(id)
-                .success(function (trainer) {
-                    trainer.updateAttributes(data)
-                    .success(deferred.resolve)
+            if ( this.Class.Model.SQL ) {
+                this.Class.Model.find(id)
+                    .success(function (trainer) {
+                        trainer.updateAttributes(data)
+                        .success(deferred.resolve)
+                        .error(deferred.reject);
+                    })
                     .error(deferred.reject);
-                })
-                .error(deferred.reject);
+            } else {
+                this.Class.Model.findOneAndUpdate({_id: id}, data, function(err, result){
+                    if ( err ) {
+                        process.nextTick(function() {
+                            deferred.reject();
+                        });
+                    } else {
+                        process.nextTick(function() {
+                            deferred.resolve(result);
+                        });
+                    }
+                });
+            }
         } else {
             process.nextTick(function() {
                 deferred.reject('Function not defined and no Model provided.');
@@ -104,13 +176,27 @@ module.exports = Class.extend({
         var deferred = Q.defer();
 
         if (this.Class.Model !== null) {
-            this.Class.Model.find(id)
-                .success(function (trainer) {
-                    trainer.destroy()
-                    .success(deferred.resolve)
+            if ( this.Class.Model.SQL ) {
+                this.Class.Model.find(id)
+                    .success(function (trainer) {
+                        trainer.destroy()
+                        .success(deferred.resolve)
+                        .error(deferred.reject);
+                    })
                     .error(deferred.reject);
-                })
-                .error(deferred.reject);
+            } else {
+                this.Class.Model.findById(id).remove(function(err, result){
+                    if ( err ) {
+                        process.nextTick(function() {
+                            deferred.reject();
+                        });
+                    } else {
+                        process.nextTick(function() {
+                            deferred.resolve(result);
+                        });
+                    }
+                });
+            }
         } else {
             process.nextTick(function() {
                 deferred.reject('Function not defined and no Model provided.');

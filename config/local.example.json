@@ -23,5 +23,9 @@
             "dialect": "mysql",
             "port": 3306
         }
+    },
+
+    "mongoose": {
+        "uri": "mongodb://localhost/database"
     }
 }
