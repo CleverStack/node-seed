@@ -23,7 +23,7 @@ module.exports = Class.extend({
     findById: function (id) {
         var deferred = Q.defer();
 
-        if (this.Class.model !== null) {
+        if (this.Class.Model !== null) {
             this.Class.Model.find(id).success(deferred.resolve).error(deferred.reject);
         } else {
             process.nextTick(function() {
