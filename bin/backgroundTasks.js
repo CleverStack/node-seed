@@ -14,11 +14,6 @@ GLOBAL.db = sequelize;
 // Get our models
 GLOBAL.models = require('./../src/model')(sequelize, config);
 
-GLOBAL.loader = require('./../src/components/Loader.js')
-GLOBAL.service = loader();
-
-service.storage = __dirname + '/../src/service/';
-
 // Launch our background process class
 GLOBAL.backgroundTasksClass = require('./../src/classes/BackgroundTasks.js');
 GLOBAL.backgroundTasks = new backgroundTasksClass(config, models);
