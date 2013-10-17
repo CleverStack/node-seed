@@ -1,6 +1,22 @@
-var files = [ __dirname + '/global.json', __dirname + '/orm.json' ]
+var files = [ __dirname + '/global.json' ]
+  , ormJson = __dirname + '/orm.json'
+  , odmJson = __dirname + '/odm.json'
   , fs = require( 'fs' )
   , envConfigOverride = __dirname + '/' + (process.env.NODE_ENV ? process.env.NODE_ENV.toLowerCase() : 'local') + '.json';
+
+// Load ORM.json if its available and configured
+if ( fs.existsSync( ormJson ) ) {
+  files.push( ormJson );
+} else {
+  console.info( 'ORM.json not found, no ORM loaded.' );
+}
+
+// Load ODM.json if its available and configured
+if ( fs.existsSync( odmJson ) ) {
+  files.push( odmJson );
+} else {
+  console.info( 'ODM.json not found, no ODM loaded.' );
+}
 
 if ( fs.existsSync( envConfigOverride ) ) {
 	files.push( envConfigOverride );
@@ -9,15 +25,5 @@ if ( fs.existsSync( envConfigOverride ) ) {
 }
 
 var config = require( 'nconf' ).loadFilesSync( files );
-
-var odmFile = __dirname + '/odm.json';
-if ( fs.existsSync( odmFile ) ) {
-    var odm = require( 'nconf' ).loadFilesSync( [__dirname + '/odm.json'] );
-    for ( var m in odm.models ) {
-        if( odm.models.hasOwnProperty( m ) ){
-            config.models.push(odm.models[m]);
-        }
-    }
-}
-
+console.dir( config );
 module.exports = config;

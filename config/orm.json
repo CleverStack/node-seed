@@ -1,9 +1,11 @@
 {
-    "models": [
-        "User"
-    ],
+    "orm": {
+        "models": [
+            "User"
+        ],
 
-    "modelAssociations": {
-        "User": {}
+        "modelAssociations": {
+            "User": {}
+        }
     }
 }

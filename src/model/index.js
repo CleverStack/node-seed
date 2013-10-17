@@ -6,9 +6,9 @@ module.exports = function( sequelize, mongoose, config ) {
     config.models.forEach( function(model, i) {
 
         //load SQL models
-        if ( fs.existsSync( __dirname + '/' + 'sql' + '/' + model + '.js' ) ) {
+        if ( fs.existsSync( __dirname + '/' + 'orm' + '/' + model + '.js' ) ) {
             //console.log("Importing "+model);
-            m[model] = sequelize.import( __dirname + '/' + 'sql' + '/' + model );
+            m[model] = sequelize.import( __dirname + '/' + 'orm' + '/' + model );
             m[model].SQL = true;
 
             // Define relationships
@@ -37,9 +37,9 @@ module.exports = function( sequelize, mongoose, config ) {
         }
 
         // load NoSQL models
-        if ( fs.existsSync( __dirname + '/' + 'nosql' + '/' + model + '.js' ) ) {
+        if ( fs.existsSync( __dirname + '/' + 'odm' + '/' + model + '.js' ) ) {
             //console.log("Importing "+model);
-            m[model] = require(__dirname + '/' + 'nosql' + '/' + model)(mongoose);
+            m[model] = require(__dirname + '/' + 'odm' + '/' + model)(mongoose);
             m[model].NoSQL = true;
         }
     });

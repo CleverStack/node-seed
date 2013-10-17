@@ -21,8 +21,10 @@ var sequelize = new Sequelize(
 );
 
 // Setup ODM
-var mongoose = require( 'mongoose' );
-mongoose.connect(config.mongoose.uri);
+// if ( config.odm ) {
+  var mongoose = require( 'mongoose' );
+  mongoose.connect(config.mongoose.uri);
+// }
 
 // Get our models
 // Note from richard: We have to do this for now, otherwise we cannot access other models inside a model

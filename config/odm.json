@@ -1,5 +1,7 @@
 {
-    "models": [
-        "Mongo"
-    ]
+	"odm": {
+	    "models": [
+	        "Mongo"
+	    ]
+	}
 }
