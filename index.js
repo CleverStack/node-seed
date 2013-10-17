@@ -4,9 +4,9 @@ var config = require( './config' )
   , webPort = process.env.NODE_WWW_PORT || config.webPort || 8080
   , env = process.env.NODE_ENV || config.environmentName || 'development'
   , initializeRoutes = require( './routes' )
-  , modelInjector = require( './src/utils/modelInjector' )
+  , modelInjector = require( 'utils' ).modelInjector
   , Sequelize = require( 'sequelize' )
-  , Injector = require( './src/utils/injector' )
+  , Injector = require( 'utils' ).injector
   , passport = require( 'passport' )
   , app = express();
 
@@ -21,8 +21,7 @@ var sequelize = new Sequelize(
 );
 
 // Get our models
-// Note from richard: We have to do this for now, otherwise we cannot access other models inside a model
-GLOBAL.models = require( './src/model' )( sequelize, config );
+var models = require( 'model' )( sequelize, config )
 
 app.configure( function() {
 

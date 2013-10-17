@@ -1,6 +1,6 @@
 var config = require('../../../config')
-  , defineModels = require('../../../src/model')
-  , Injector = require( '../../../src/utils/injector' )
+  , defineModels = require('model')
+  , Injector = require('utils').injector
   , Sequelize = require('sequelize')
   , Q = require('q');
 

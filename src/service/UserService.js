@@ -1,4 +1,4 @@
-var BaseService = require('./BaseService')
+var BaseService = require('service').BaseService
   , Q = require('q');
 
 module.exports = function(db, models) {
