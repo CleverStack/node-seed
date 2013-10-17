@@ -17,7 +17,11 @@ module.exports = function( app, config ) {
 
     // X-FRAME-OPTIONS
     if ( config.security.xframe ) {
-        app.use(helmet.xframe());
+        if (config.security.xframe.mode === 'allow-from') {
+            app.use(helmet.xframe('allow-from', config.security.xframe.from));
+        } else {
+            app.use(helmet.xframe(config.security.xframe.mode));
+        }
     }
 
     // X-XSS-PROTECTION for IE8+

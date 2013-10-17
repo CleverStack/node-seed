@@ -1,5 +1,4 @@
 {
-
     "security":{
 
         "csp": {
@@ -12,11 +11,6 @@
                     ]
                 }
             }
-        },
-
-        "hsts": {
-            "maxAge": "1234567",
-            "includeSubdomains": true
         },
 
         "xframe": {
