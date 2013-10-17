@@ -15,8 +15,8 @@ var RedisStore = require( 'connect-redis' )( express );
 
 // Setup ORM
 var sequelize = new Sequelize(
-    config.db.database, 
-    config.db.username, 
+    config.db.database,
+    config.db.username,
     config.db.password,
     config.db.options
 );
@@ -28,7 +28,7 @@ injector.instance( 'config', config );
 // Get our models
 var models = require( 'models' )
 
-app.configure( function() {
+app.configure(function() {
 
     // static file delivery
     app.use( express[ 'static' ]( __dirname + '/public' ) );
@@ -48,29 +48,29 @@ app.configure( function() {
     app.use( express.cookieParser() );
     app.use( express.session({
         secret: config.secretKey
-      , cookie: { secure: false, maxAge: 86400000 }
-      , store: new RedisStore({
-          host: config.redis.host
-        , port: config.redis.port
-        , prefix: config.redis.prefix+process.env.NODE_ENV+"_"
-        , password: config.redis.key
+        , cookie: { secure: false, maxAge: 86400000 }
+        , store: new RedisStore({
+            host: config.redis.host
+            , port: config.redis.port
+            , prefix: config.redis.prefix+process.env.NODE_ENV+"_"
+            , password: config.redis.key
         })
     }));
 
     // Enable CORS
-    app.use(function(req, res, next) {
-      res.header("Access-Control-Allow-Origin", req.headers.origin);
-      res.header("Access-Control-Allow-Headers", "x-requested-with, content-type");
-      res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
-      res.header("Access-Control-Allow-Credentials", "true");
-      res.header("Access-Control-Max-Age", "1000000000");
-      // intercept OPTIONS method
-      if ('OPTIONS' == req.method) {
-        res.send(200);
-      }
-      else {
-        next();
-      }
+    app.use(function( req, res, next ) {
+        res.header("Access-Control-Allow-Origin", req.headers.origin);
+        res.header("Access-Control-Allow-Headers", "x-requested-with, content-type");
+        res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
+        res.header("Access-Control-Allow-Credentials", "true");
+        res.header("Access-Control-Max-Age", "1000000000");
+        // intercept OPTIONS method
+        if ('OPTIONS' == req.method) {
+            res.send(200);
+        }
+        else {
+            next();
+        }
     });
 
     app.use( express.logger('dev') );
@@ -110,7 +110,7 @@ initializeRoutes( app );
 module.exports = app;
 
 // if (require.main == module) {
-    app.listen(webPort, function() {
-        console.log("Starting server on port " + webPort + " in " + config.environmentName + " mode");
-    });
+app.listen(webPort, function() {
+    console.log("Starting server on port " + webPort + " in " + config.environmentName + " mode");
+});
 // }

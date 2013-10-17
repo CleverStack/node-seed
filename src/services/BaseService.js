@@ -7,7 +7,7 @@ module.exports = Class.extend({
 }, {
     db: null,
 
-    setup: function(dbAdapter) {
+    setup: function( dbAdapter ) {
         this.db = dbAdapter;
     },
 
@@ -15,15 +15,15 @@ module.exports = Class.extend({
         return this.db.startTransaction();
     },
 
-    query: function(sql) {
+    query: function( sql ) {
         console.log('Running SQL: ' + sql);
         return this.db.query(sql, null, { raw: true });
     },
 
-    findById: function (id) {
+    findById: function ( id ) {
         var deferred = Q.defer();
 
-        if (this.Class.Model !== null) {
+        if ( this.Class.model !== null ) {
             this.Class.Model.find(id).success(deferred.resolve).error(deferred.reject);
         } else {
             process.nextTick(function() {
@@ -34,11 +34,11 @@ module.exports = Class.extend({
         return deferred.promise;
     },
 
-    findAll: function (options) {
+    findAll: function ( options ) {
         options = options || {};
         var deferred = Q.defer();
 
-        if (this.Class.Model !== null) {
+        if ( this.Class.Model !== null ) {
             this.Class.Model.findAll().success(deferred.resolve).error(deferred.reject);
         } else {
             process.nextTick(function() {
@@ -49,12 +49,12 @@ module.exports = Class.extend({
         return deferred.promise;
     },
 
-    find: function (options) {
+    find: function ( options ) {
         options = options || {};
         var deferred = Q.defer();
 
-        if (this.Class.Model !== null) {
-            this.Class.Model.findAll(options).success(deferred.resolve).error(deferred.reject);
+        if ( this.Class.Model !== null ) {
+            this.Class.Model.findAll( options ).success(deferred.resolve).error(deferred.reject);
         } else {
             process.nextTick(function() {
                 deferred.reject('Function not defined and no Model provided.');
@@ -64,10 +64,10 @@ module.exports = Class.extend({
         return deferred.promise;
     },
 
-    create: function (data) {
+    create: function ( data ) {
         var deferred = Q.defer();
 
-        if (this.Class.Model !== null) {
+        if ( this.Class.Model !== null ) {
             this.Class.Model.create(data)
                 .success(deferred.resolve)
                 .error(deferred.reject);
@@ -80,12 +80,12 @@ module.exports = Class.extend({
         return deferred.promise;
     },
 
-    update: function (id, data) {
+    update: function( id, data ) {
         var deferred = Q.defer();
 
-        if (this.Class.Model !== null) {
+        if ( this.Class.Model !== null ) {
             this.Class.Model.find(id)
-                .success(function (trainer) {
+                .success(function( trainer ) {
                     trainer.updateAttributes(data)
                     .success(deferred.resolve)
                     .error(deferred.reject);
@@ -100,12 +100,12 @@ module.exports = Class.extend({
         return deferred.promise;
     },
 
-    destroy: function (id) {
+    destroy: function( id ) {
         var deferred = Q.defer();
 
-        if (this.Class.Model !== null) {
+        if ( this.Class.Model !== null ) {
             this.Class.Model.find(id)
-                .success(function (trainer) {
+                .success(function( trainer ) {
                     trainer.destroy()
                     .success(deferred.resolve)
                     .error(deferred.reject);

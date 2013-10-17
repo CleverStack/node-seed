@@ -1,12 +1,12 @@
 var passport = require('passport');
 
-module.exports = function(app) {
+module.exports = function( app ) {
     var injector = app.get('injector');
-  
-    injector.inject(function (ExampleController, UserController) {
+
+    injector.inject(function( ExampleController, UserController ) {
         app.all('/example/:action/:id?', ExampleController.attach());
         app.all('/example/?:action?', ExampleController.attach());
-  
+
         // Some passport use
         // app.get('/auth/facebook', passport.authenticate('facebook', {
         //     scope: ['email', 'user_location', 'user_photos']
