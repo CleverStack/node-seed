@@ -1,6 +1,6 @@
 'use strict';
 
-var stacktrace = require('../../../src/utils/stacktrace');
+var stacktrace = require('utils').stacktrace;
 
 describe('utils', function () {
     describe('.stacktrace()', function () {

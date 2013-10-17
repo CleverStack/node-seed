@@ -1,4 +1,4 @@
-var files = [ __dirname + '/global.json', __dirname + '/orm.json' ]
+var files = [ __dirname + '/global.json', __dirname + '/orm.json',  __dirname + '/security.json',  ]
   , fs = require( 'fs' )
   , envConfigOverride = __dirname + '/' + (process.env.NODE_ENV ? process.env.NODE_ENV.toLowerCase() : 'local') + '.json';
 

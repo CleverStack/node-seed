@@ -1,6 +1,6 @@
 'use strict';
 
-var injector = require('../../../src/utils/injector'),
+var injector = require('utils').injector,
     should = require('should'),
     async = require('async');
 

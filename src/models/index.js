@@ -1,7 +1,6 @@
-module.exports = function( sequelize, config ) {
-    var exports = {},
-        m = {};
+var m = module.exports = {};
 
+injector.inject(function( sequelize, config ) {
     // Add them to exports
     config.models.forEach( function( model, i ) {
         //console.log("Importing "+model);
@@ -35,4 +34,4 @@ module.exports = function( sequelize, config ) {
         }
     });
     return m;
-};
+});
