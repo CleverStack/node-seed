@@ -5,6 +5,10 @@ var async = require('async'),
     _ = require('underscore'),
     stacktrace = require('./stacktrace');
 
+    // require('utils').stacktrace; 
+    // Issue 31: Tried using this notication and couldn't because stacktrace isn't
+    //  defined when required.
+
 var injector = module.exports = function (factoriesDirs) {
     var self = this;
     if(!(self instanceof injector)) return new injector(Array.prototype.slice.call(arguments));
