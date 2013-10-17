@@ -4,9 +4,9 @@ var config = require( './config' )
   , webPort = process.env.NODE_WWW_PORT || config.webPort || 8080
   , env = process.env.NODE_ENV || config.environmentName || 'development'
   , initializeRoutes = require( './routes' )
-  , modelInjector = require( './src/utils/modelInjector' )
+  , modelInjector = require( 'utils' ).modelInjector
   , Sequelize = require( 'sequelize' )
-  , Injector = require( './src/utils/injector' )
+  , Injector = require( 'utils' ).injector
   , passport = require( 'passport' )
   , app = express();
 
@@ -26,11 +26,12 @@ var sequelize = new Sequelize(
   mongoose.connect(config.mongoose.uri);
 // }
 
+GLOBAL.injector = Injector(  __dirname + '/src/services', __dirname + '/src/controllers' );
+injector.instance( 'sequelize', sequelize );
+injector.instance( 'config', config );
+
 // Get our models
-// Note from richard: We have to do this for now, otherwise we cannot access other models inside a model
-GLOBAL.models = require( './src/model' )( sequelize, mongoose, config );
-
-
+var models = require( 'models' )
 
 app.configure( function() {
 
@@ -38,8 +39,6 @@ app.configure( function() {
     app.use( express[ 'static' ]( __dirname + '/public' ) );
 
     // application variables, part of a config block maybe?
-    var injector = Injector(  __dirname + '/src/service', __dirname + '/src/controllers' );
-    injector.instance( 'config', config );
     injector.instance( 'models', models );
     injector.instance( 'db', sequelize );
     app.set( 'port', webPort );

@@ -1,6 +1,6 @@
 var config = require('../../../config')
-  , defineModels = require('../../../src/model')
-  , Injector = require( '../../../src/utils/injector' )
+  , defineModels = require('models')
+  , Injector = require('utils').injector
   , Sequelize = require('sequelize')
   , Q = require('q');
 
@@ -21,7 +21,7 @@ exports.testEnv = function (fn) {
         paranoid: true
     });
 
-    var injector = Injector(  __dirname + '/../../../src/service', __dirname + '/../../../src/controllers' );
+    var injector = Injector(  __dirname + '/../../../src/services', __dirname + '/../../../src/controllers' );
     injector.instance( 'config', config );
     injector.instance( 'models', models );
     injector.instance( 'db', db );

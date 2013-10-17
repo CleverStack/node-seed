@@ -1,8 +1,8 @@
 var should = require('should'),
     sinon = require('sinon'),
     testEnv = require('./utils').testEnv,
-    BaseController = require('../../../src/classes/Controller'),
-    BaseService = require('../../../src/service/BaseService');
+    BaseController = require('classes').Controller,
+    BaseService = require('services').BaseService;
 
 describe('classes.Controller', function () {
     var Service,

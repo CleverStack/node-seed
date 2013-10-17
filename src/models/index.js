@@ -1,15 +1,15 @@
-module.exports = function( sequelize, mongoose, config ) {
-    var exports = {}
-      , m = {}
-      , fs = require( 'fs' );
+var fs = require( 'fs' )
+  , m = module.exports = {};
 
-    config.models.forEach( function(model, i) {
+injector.inject(function( sequelize, config, mongoose ) {
+    // Add them to exports
+    config.models.forEach( function( model, i ) {
 
-        //load SQL models
+        //load ORM models
         if ( fs.existsSync( __dirname + '/' + 'orm' + '/' + model + '.js' ) ) {
             //console.log("Importing "+model);
             m[model] = sequelize.import( __dirname + '/' + 'orm' + '/' + model );
-            m[model].SQL = true;
+            m[model].ORM = true;
 
             // Define relationships
             if ( typeof config.modelAssociations[model] !== 'undefined' ) {
@@ -36,13 +36,13 @@ module.exports = function( sequelize, mongoose, config ) {
             }
         }
 
-        // load NoSQL models
+        // load ODM models
         if ( fs.existsSync( __dirname + '/' + 'odm' + '/' + model + '.js' ) ) {
             //console.log("Importing "+model);
             m[model] = require(__dirname + '/' + 'odm' + '/' + model)(mongoose);
-            m[model].NoSQL = true;
+            m[model].ODM = true;
         }
     });
 
     return m;
-};
+});

@@ -1,4 +1,5 @@
-var fs = require('fs');
+var fs = require('fs')
+  , Injector = require( '../src/utils' ).injector;
 
 // Get the application config
 var config = require('./../config');
@@ -12,8 +13,12 @@ var sequelize = new Sequelize(
     config.db.options
 );
 
+GLOBAL.injector = Injector(  __dirname + '/src/services', __dirname + '/src/controllers' );
+injector.instance( 'sequelize', sequelize );
+injector.instance( 'config', config );
+
 // Get our models
-var models = require('./../src/model')(sequelize, config);
+var models = require('../src/models');
 
 // Force a sync
 console.log('Forcing Database to be created! (Note: All your data will disapear!)');
