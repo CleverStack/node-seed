@@ -1,9 +1,9 @@
 var BaseService = require('services').BaseService
   , Q = require('q');
 
-module.exports = function(db, models) {
+module.exports = function( db, models ) {
     var UserService = BaseService.extend({
-        authenticate: function(credentials) {
+        authenticate: function( credentials ) {
             var deferred = Q.defer();
             
             models.User.find({ where: credentials }).success(deferred.resolve).error(deferred.reject);
