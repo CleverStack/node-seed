@@ -3,6 +3,8 @@
 1. A Highly Configurable Environment
 2. Automated tasks with `grunt`
 3. Lightning Fast Unit and Integration Testing Support with `mocha`
+4. MEAN Stack (Mongo, Express, Angular, Node) - use our angular-seed with this repo.
+5. ORM & ODM (SQL & NoSQL) run side by side for ultimate flexibility and control.
 
 ## 1. Features ##
 
@@ -26,6 +28,7 @@ Running tests takes a breeze with `mocha`, and we provide handy shortcuts for it
 Any of this tasks can be easily configured to use any `mocha` reporters, in case you need an specific output.
 
 #### Database Tasks:
+Note: Currently these db tools only work with ORM, please refer to Mongoose documentation for ODM usage - We are working on cleaning this up.
 We also provide database tasks to `rebase` and `seed` very quickly.
 
 1. `grunt db` will first `rebase` and then `seed`.
@@ -120,6 +123,10 @@ Also, note `local.json` is ignored in `.gitignore`, but you have a sample in `lo
             "dialect": "mysql", // or postgre - Note: if you use PG then you must put "omitNull": true in options.
             "port": 3306
         }
+    },
+
+    "mongoose": {
+        "uri": "mongodb://localhost/database" // Uri of your mongo server for use with ODM (Mongoose)
     }
 }
 ```

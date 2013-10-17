@@ -1,5 +1,7 @@
 {
     "orm": {
+        "enabled": true,
+
         "models": [
             "User"
         ],

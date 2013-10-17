@@ -1,11 +1,11 @@
 var BaseService = require('./BaseService')
     , Q = require('q');
 
-module.exports = function(db, models) {
+module.exports = function(db, ODMMongoModel) {
     var MongoService = BaseService.extend({
 
     });
 
-    MongoService.Model = models.Mongo;
+    MongoService.Model = ODMMongoModel;
     return new MongoService(db);
 };

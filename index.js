@@ -8,7 +8,8 @@ var config = require( './config' )
   , Sequelize = require( 'sequelize' )
   , Injector = require( 'utils' ).injector
   , passport = require( 'passport' )
-  , app = express();
+  , app = express()
+  , mongoose = require( 'mongoose' );
 
 var RedisStore = require( 'connect-redis' )( express );
 
@@ -21,17 +22,28 @@ var sequelize = new Sequelize(
 );
 
 // Setup ODM
-// if ( config.odm ) {
-  var mongoose = require( 'mongoose' );
+if ( config.odm && config.odm.enabled ) {
   mongoose.connect(config.mongoose.uri);
-// }
+}
 
+// Bootstrap our DI
 GLOBAL.injector = Injector(  __dirname + '/src/services', __dirname + '/src/controllers' );
+
 injector.instance( 'sequelize', sequelize );
 injector.instance( 'config', config );
+injector.instance( 'mongoose', mongoose );
+injector.instance( 'db', sequelize );
 
 // Get our models
 var models = require( 'models' )
+injector.instance( 'models', models );
+
+app.set( 'port', webPort );
+app.set( 'injector', injector );
+
+// Run our model injection service
+modelInjector( injector, models );
+
 
 app.configure( function() {
 
@@ -39,12 +51,6 @@ app.configure( function() {
     app.use( express[ 'static' ]( __dirname + '/public' ) );
 
     // application variables, part of a config block maybe?
-    injector.instance( 'models', models );
-    injector.instance( 'db', sequelize );
-    app.set( 'port', webPort );
-    app.set( 'injector', injector );
-
-    modelInjector( injector, models );
 
     // middleware stack
     app.use( express.bodyParser() );

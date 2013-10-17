@@ -25,5 +25,4 @@ if ( fs.existsSync( envConfigOverride ) ) {
 }
 
 var config = require( 'nconf' ).loadFilesSync( files );
-console.dir( config );
 module.exports = config;
