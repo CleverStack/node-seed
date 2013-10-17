@@ -1,5 +1,6 @@
 // Get the application config
 GLOBAL.config = require('./../config');
+var Injector = require( './../src/utils' ).injector;
 
 // Setup ORM
 var Sequelize = require('sequelize');
@@ -11,8 +12,12 @@ var sequelize = new Sequelize(
 );
 GLOBAL.db = sequelize;
 
+GLOBAL.injector = Injector(  __dirname + '/src/services', __dirname + '/src/controllers' );
+injector.instance( 'sequelize', sequelize );
+injector.instance( 'config', config );
+
 // Get our models
-GLOBAL.models = require('./../src/models')(sequelize, config);
+var models = require('./../src/models');
 
 // Launch our background process class
 GLOBAL.backgroundTasksClass = require('./../src/classes/BackgroundTasks.js');
