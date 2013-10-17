@@ -158,19 +158,33 @@ There are all possible use cases.
 ### 3.4 Service Layer
 Needs to be documented.
 
+### 3.5 Security
 
+* `config/security.json` is where all your security settings are set.
+
+Set attributes on the security object in security.json to enable and configure security middlewares.
+The following keys can be set on the security object:
+
+ - csp: Content Security Policy
+ - hsts: HTTP Strict Transport Security
+ - xframe: X-FRAME-OPTIONS
+ - iexss: X-XSS-PROTECTION
+ - contentTypeOptions: X-Content-Type-Options
+ - cacheControl: Cache-Control
+
+We are using [Helmet](https://github.com/evilpacket/helmet). Check it out to learn more.
 
 ## 4. Deployment ##
 Needs to be documented.
 
 ## 5. Contributing ##
-We welcome all help, but please follow this guidelines (Work In Progress):
+We welcome all help, but please follow these guidelines (Work In Progress):
 
 #### 5.1 Git commit message style ###
 We follow these [Git Commit Message Conventions](https://docs.google.com/document/d/12niRA9r8j8C4W0_0y_fRrKDjKIq2DBknbkrWQQl1taI/). Thou it's not entirely mandatory, we generate Changelogs with this so please keep in mind.
 
 #### 5.2 Some words about coding style ###
-- semi-colons.
+- Semi-colons.
 - Curly braces for single line if blocks. Same for loops and other places.
 - Spacing. Indentation = 4 spaces.
 - Spacing in functions. `function( like, this ) {}`
