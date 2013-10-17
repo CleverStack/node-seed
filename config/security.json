@@ -1,18 +1,5 @@
 {
     "security":{
-
-        "csp": {
-            "policy": {
-                "defaultPolicy": {
-                    "default-src": ["'self'"],
-                    "img-src": [
-                        "static.example.com",
-                        "*.cdn.example.com"
-                    ]
-                }
-            }
-        },
-
         "xframe": {
             "mode": "allow-from",
             "from": "http://example.com"
