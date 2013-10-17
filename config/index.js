@@ -1,4 +1,4 @@
-var files = [ __dirname + '/global.json' ]
+var files = [ __dirname + '/global.json', __dirname + '/security.json' ]
   , ormJson = __dirname + '/orm.json'
   , odmJson = __dirname + '/odm.json'
   , fs = require( 'fs' )
