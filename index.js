@@ -21,7 +21,7 @@ var sequelize = new Sequelize(
 );
 
 // Get our models
-var models = require( 'model' )( sequelize, config )
+var models = require( 'models' )( sequelize, config )
 
 app.configure( function() {
 
@@ -29,7 +29,7 @@ app.configure( function() {
     app.use( express[ 'static' ]( __dirname + '/public' ) );
 
     // application variables, part of a config block maybe?
-    var injector = Injector(  __dirname + '/src/service', __dirname + '/src/controllers' );
+    var injector = Injector(  __dirname + '/src/services', __dirname + '/src/controllers' );
     injector.instance( 'config', config );
     injector.instance( 'models', models );
     injector.instance( 'db', sequelize );

@@ -139,7 +139,7 @@ module.exports = function () {
 ```
 var Injector = require( './src/utils/injector' );
    
-var injector = Injector(  __dirname + '/src/service', __dirname + '/src/controllers' );
+var injector = Injector(  __dirname + '/src/services', __dirname + '/src/controllers' );
    injector.instance( 'config', config );
    injector.instance( 'models', models );
    injector.instance( 'db', db );

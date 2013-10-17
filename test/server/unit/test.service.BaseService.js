@@ -1,6 +1,6 @@
 var should = require('should'),
     testEnv = require('./utils').testEnv,
-    BaseService = require('service').BaseService;
+    BaseService = require('services').BaseService;
 
 describe('service.BaseService', function () {
     var service, Service, Model;

@@ -15,7 +15,7 @@ var sequelize = new Sequelize(
 );
 
 // Get our models
-var models = require('./../src/model')(sequelize, config);
+var models = require('./../src/models')(sequelize, config);
 
 var seedData = require('./../schema/seedData.json');
 

@@ -2,7 +2,7 @@ var should = require('should'),
     sinon = require('sinon'),
     testEnv = require('./utils').testEnv,
     BaseController = require('classes').Controller,
-    BaseService = require('service').BaseService;
+    BaseService = require('services').BaseService;
 
 describe('classes.Controller', function () {
     var Service,

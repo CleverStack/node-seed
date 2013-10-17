@@ -12,7 +12,7 @@ var sequelize = new Sequelize(
 GLOBAL.db = sequelize;
 
 // Get our models
-GLOBAL.models = require('./../src/model')(sequelize, config);
+GLOBAL.models = require('./../src/models')(sequelize, config);
 
 // Launch our background process class
 GLOBAL.backgroundTasksClass = require('./../src/classes/BackgroundTasks.js');
