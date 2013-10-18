@@ -2,8 +2,8 @@ var BaseService = require('./BaseService')
   , Q = require('q')
   , crypto = require('crypto')
   , moment = require('moment')
-  , sendgrid = require( '../../utils/sendgrid' )
-  , ejsFileRender = require( '../../utils/ejsfilerender' )
+  , sendgrid = require('utils').sendgrid
+  , ejsFileRender = require('utils').ejsfilerender
   , UserService = null;
 
 module.exports = function( db, UserModel, AccountModel, RoleModel, config ) {
