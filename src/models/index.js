@@ -43,7 +43,7 @@ if ( config.orm && config.orm.enabled ) {
                     });
                 });
             } else {
-                throw modelName + ' cannot be found in modelAssocations scope';
+                debug( modelName + ' cannot be found in modelAssocations scope' );
             }
         }
     });
@@ -58,7 +58,7 @@ if ( config.odm && config.odm.enabled ) {
 
             m[ 'ODM' ][ modelName ] = require( modelPath )( mongoose );
             m[ 'ODM' ][ modelName ].ODM = true;
-        }            
+        }
     });
 }
 

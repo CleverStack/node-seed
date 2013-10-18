@@ -19,7 +19,8 @@
             },
             "Permission": {
                 "hasMany": ["Role"]
-            }
+            },
+            "Account": {}
         }
     }
 }
