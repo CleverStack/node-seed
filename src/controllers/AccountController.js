@@ -1,7 +1,7 @@
 
 module.exports = function(AccountService, UserService, RoleService, config) {
 
-    return (require('./../classes/Controller.js')).extend(
+    return (require('classes').Controller).extend(
     {
 
         service:AccountService,

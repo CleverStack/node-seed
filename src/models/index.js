@@ -40,7 +40,6 @@ if ( config.orm && config.orm.enabled ) {
                     m['ORM'][ modelName ][ assocType ]( m[ assocTo[0] ], assocTo[1] );
                 } else {
                     debug( '%s %s %s', modelName, assocType, assocTo );
-                    // console.log('assoc', assocType, assocTo, m['ORM'][assocTo]);
                     m['ORM'][ modelName ][ assocType ]( m['ORM'][assocTo] );
                 }
             });

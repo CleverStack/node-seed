@@ -1,7 +1,7 @@
 
 module.exports = function( RoleService ) {
 
-    return (require('./../classes/Controller.js')).extend(
+    return (require('classes').Controller).extend(
     {
 
         service:RoleService

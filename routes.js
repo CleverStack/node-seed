@@ -3,7 +3,7 @@ var passport = require('passport');
 module.exports = function( app ) {
     var injector = app.get('injector');
 
-    injector.inject( function ( ExampleController, UserController, MongoController ) {
+    injector.inject( function ( ExampleController, UserController, MongoController, AccountController, RoleController, PermissionController ) {
         app.all('/example/:action/:id?', ExampleController.attach());
         app.all('/example/?:action?', ExampleController.attach());
 
