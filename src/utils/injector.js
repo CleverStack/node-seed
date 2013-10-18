@@ -5,7 +5,7 @@ var async = require('async'),
     _ = require('underscore'),
     stacktrace = require('./stacktrace');
 
-    // require('utils').stacktrace; 
+    // require('utils').stacktrace;
     // Issue 31: Tried using this notication and couldn't because stacktrace isn't
     //  defined when required.
 

@@ -4,15 +4,13 @@
 
         "models": [
             "Account",
-            "User",
             "Role",
-            "Permission"
+            "Permission",
+            "User"
         ],
 
         "modelAssociations": {
-            "User": {
-              "belongsTo": ["Account", "Role"]
-            },
+            "Account": {},
             "Role": {
                 "belongsTo": ["Account"],
                 "hasMany": ["Permission"]
@@ -20,7 +18,9 @@
             "Permission": {
                 "hasMany": ["Role"]
             },
-            "Account": {}
+            "User": {
+              "belongsTo": ["Account", "Role"]
+            }
         }
     }
 }
