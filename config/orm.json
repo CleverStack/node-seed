@@ -1,9 +1,13 @@
 {
-    "models": [
-        "User"
-    ],
+    "orm": {
+        "enabled": true,
 
-    "modelAssociations": {
-        "User": {}
+        "models": [
+            "User"
+        ],
+
+        "modelAssociations": {
+            "User": {}
+        }
     }
 }

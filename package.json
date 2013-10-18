@@ -35,7 +35,9 @@
     "validator": "",
     "matchdep": "~0.1.2",
     "colors": "~0.6.1",
-    "helmet": "~0.1.0"
+    "mongoose": "~3.6.20",
+    "helmet": "~0.1.0",
+    "debug": "~0.7.2"
   },
   "author": {
     "name": "Clevertech",

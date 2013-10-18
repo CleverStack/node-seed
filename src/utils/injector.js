@@ -75,6 +75,10 @@ injector.prototype.instance = function( name, obj ) {
     this._inherited.instances[name] = obj;
 };
 
+injector.prototype.getInstance = function( name ) {
+    return this._inherited.instances[name];
+};
+
 injector.prototype.factory = function( name, factory) {
     this._inherited.factories[name] = factory;
 };

@@ -8,6 +8,7 @@ var config = require( './config' )
   , Sequelize = require( 'sequelize' )
   , Injector = require( 'utils' ).injector
   , passport = require( 'passport' )
+  , mongoose = require( 'mongoose' )
   , initializeSecurity = require( './security' )
   , app = express();
 
@@ -21,25 +22,33 @@ var sequelize = new Sequelize(
     config.db.options
 );
 
-GLOBAL.injector = Injector(  __dirname + '/src/services', __dirname + '/src/controllers' );
+// Setup ODM
+if ( config.odm && config.odm.enabled ) {
+  mongoose.connect(config.mongoose.uri);
+}
+
+// Bootstrap our DI
+GLOBAL.injector = Injector(  __dirname + '/src/services/', __dirname + '/src/controllers/' );
+
+app.set( 'port', webPort );
+app.set( 'injector', injector );
+
 injector.instance( 'sequelize', sequelize );
 injector.instance( 'config', config );
+injector.instance( 'mongoose', mongoose );
+injector.instance( 'db', sequelize );
 
 // Get our models
 var models = require( 'models' )
+injector.instance( 'models', models );
+
+// Run our model injection service
+modelInjector( models );
 
 app.configure(function() {
 
     // static file delivery
     app.use( express[ 'static' ]( __dirname + '/public' ) );
-
-    // application variables, part of a config block maybe?
-    injector.instance( 'models', models );
-    injector.instance( 'db', sequelize );
-    app.set( 'port', webPort );
-    app.set( 'injector', injector );
-
-    modelInjector( injector, models );
 
     // middleware stack
     app.use( express.bodyParser() );
@@ -101,8 +110,6 @@ app.configure(function() {
         });
     });
 });
-
-//
 
 // register application routes
 initializeRoutes( app );
