@@ -1,52 +1,65 @@
 var fs = require( 'fs' )
-  , m = module.exports = { ORM: {}, ODM: {} };
+  , path = require( 'path' )
+  , debug = require( 'debug' )( 'modelLoader' )
+  , m = module.exports = { ORM: {}, ODM: {} }
+  , sequelize = injector.getInstance( 'sequelize' )
+  , config = injector.getInstance( 'config' )
+  , mongoose = injector.getInstance( 'mongoose' );
 
-injector.inject(function( sequelize, config, mongoose ) {
-    
-    if ( config.orm ) {
-        //load ORM models
-        config.orm.models.forEach( function( model, i ) {
+debug( 'Loading models...' );
 
-            if ( fs.existsSync( __dirname + '/' + 'orm' + '/' + model + '.js' ) ) {
-                m['ORM'][model] = sequelize.import( __dirname + '/' + 'orm' + '/' + model );
-                m['ORM'][model].ORM = true;
+// load ORM models if its configured
+if ( config.orm && config.orm.enabled ) {
+    config.orm.models.forEach( function( modelName, i ) {
+        var modelPath = [ __dirname, 'orm', modelName + '.js' ].join( path.sep );
+        if ( fs.existsSync( modelPath ) ) {
+            debug( 'Loading ORM Model %s', modelName );
 
-                // Define relationships
-                if ( typeof config.orm.modelAssociations[model] !== 'undefined' ) {
-                    Object.keys( config.orm.modelAssociations[model] ).forEach( function( assocType ) {
-                        var associatedWith = config.orm.modelAssociations[model][assocType];
-                        if ( ! associatedWith instanceof Array ) {
-                            associatedWith = [ associatedWith ];
+            m[ 'ORM' ][ modelName ] = sequelize.import( modelPath );
+            m[ 'ORM' ][ modelName ].ORM = true;
+
+            // Define relationships
+            if ( typeof config.orm.modelAssociations[ modelName ] !== 'undefined' ) {
+                var keys = Object.keys( config.orm.modelAssociations[ modelName ] )
+                  , len = keys.length
+                  , i = 0;
+
+                Object.keys( config.orm.modelAssociations[ modelName ] ).forEach( function( assocType ) {
+                    var associatedWith = config.orm.modelAssociations[ modelName ][ assocType ];
+                    if ( ! associatedWith instanceof Array ) {
+                        associatedWith = [ associatedWith ];
+                    }
+
+                    associatedWith.forEach( function( assocTo ) {
+                        debug( '%s %s of %', modelName, assocType, assocTo );
+                        // Support second argument
+                        if ( assocTo instanceof Array ) {
+                            debug( '%s %s %s with second argument of %s', modelName, assocType, assocTo[0], assocTo[1] );
+                            m['ORM'][ modelName ][ assocType ]( m[ assocTo[0] ], assocTo[1] );
+                        } else {
+                            debug( '%s %s %s', modelName, assocType, assocTo[0] );
+                            m['ORM'][ modelName ][ assocType ]( m[ assocTo ] );
                         }
-
-                        associatedWith.forEach( function(assocTo) {
-                            //console.log(modelName+" "+assocType+" of "+assocTo);
-                            // Support second argument
-                            if ( assocTo instanceof Array ) {
-                                //console.log([modelName, assocType, assocTo[0]].join(' '), assocTo[1]);
-                                m['ORM'][ model ][ assocType ]( m[ assocTo[0] ], assocTo[1] );
-                            } else {
-                                //console.log([modelName, assocType, assocTo].join(' '));
-                                m['ORM'][ model ][ assocType ]( m[ assocTo ] );
-                            }
-                        });
                     });
-                } else {
-                    throw model + ' cannot be found in modelAssocations scope';
-                }
+                });
+            } else {
+                throw modelName + ' cannot be found in modelAssocations scope';
             }
-        });
-    }
+        }
+    });
+}
 
-    if ( config.odm ) {
-        // load ODM models
-        config.odm.models.forEach( function( model, i ) {
-            if ( fs.existsSync( __dirname + '/' + 'odm' + '/' + model + '.js' ) ) {
-                m['ODM'][model] = require(__dirname + '/' + 'odm' + '/' + model)(mongoose);
-                m['ODM'][model].ODM = true;
-            }            
-        });
-    } 
+// load ODM models if its configured
+if ( config.odm && config.odm.enabled ) {
+    config.odm.models.forEach( function( modelName, i ) {
+        var modelPath = [ __dirname, 'odm', modelName + '.js' ].join( path.sep );
+        if ( fs.existsSync( modelPath ) ) {
+            debug( 'Loading ODM Model %s', modelName );
 
-    return m;
-});
+            m[ 'ODM' ][ modelName ] = require( modelPath )( mongoose );
+            m[ 'ODM' ][ modelName ].ODM = true;
+        }            
+    });
+}
+
+debug( 'Finished loading models.' );

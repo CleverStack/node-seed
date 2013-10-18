@@ -28,7 +28,10 @@ if ( config.odm && config.odm.enabled ) {
 }
 
 // Bootstrap our DI
-GLOBAL.injector = Injector(  __dirname + '/src/services', __dirname + '/src/controllers' );
+GLOBAL.injector = Injector(  __dirname + '/src/services/', __dirname + '/src/controllers/' );
+
+app.set( 'port', webPort );
+app.set( 'injector', injector );
 
 injector.instance( 'sequelize', sequelize );
 injector.instance( 'config', config );
@@ -39,19 +42,13 @@ injector.instance( 'db', sequelize );
 var models = require( 'models' )
 injector.instance( 'models', models );
 
-app.set( 'port', webPort );
-app.set( 'injector', injector );
-
 // Run our model injection service
-modelInjector( injector, models );
-
+modelInjector( models );
 
 app.configure(function() {
 
     // static file delivery
     app.use( express[ 'static' ]( __dirname + '/public' ) );
-
-    // application variables, part of a config block maybe?
 
     // middleware stack
     app.use( express.bodyParser() );
@@ -113,8 +110,6 @@ app.configure(function() {
         });
     });
 });
-
-//
 
 // register application routes
 initializeRoutes( app );
