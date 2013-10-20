@@ -6,12 +6,15 @@ var config = require('../../../config')
   , mongoose = require( 'mongoose' )
   , connected = false;
 
-exports.testEnv = function (fn) {
+var exec = require('child_process').exec
+  , path = require('path');
+
+exports.testEnv = function () {
     var deferred = Q.defer();
 
     var db = new Sequelize(
-        config.testDb.database, 
-        config.testDb.username, 
+        config.testDb.database,
+        config.testDb.username,
         config.testDb.password,
         config.testDb.options
     );
@@ -32,22 +35,23 @@ exports.testEnv = function (fn) {
       mongoose.connect(config.mongoose.uri);
     }
 
-    models.ORM.TestModel = db.define('Test', {
-        name: Sequelize.STRING,
-    }, {
-        paranoid: true
-    });
-    models.ORM.TestModel.ORM = true
-
     // Run our model injection service
     modelInjector( models );
 
     db
     .sync({force:true})
     .success(function () {
-        injector.inject(fn);
+        //Seed DataBase
+        var seedCmd   = 'export NODE_ENV=local;export NODE_TEST=test;node ' +
+                        path.resolve(__dirname + '/../../../bin/seedModels.js');
+
+        exec(seedCmd,function(){
+            console.log("********************* DB HAS BEEN REBASED AND SEEDED *********************");
+            deferred.resolve();
+        });
+
     })
-    .error(function (err) {
-        throw err;
-    });
+    .error(deferred.reject);
+
+    return deferred.promise;
 };

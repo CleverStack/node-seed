@@ -1,7 +1,9 @@
 var crypto = require('crypto')
   , async = require('async')
   , inflect = require('i')()
-  , Injector = require( '../src/utils' ).injector;
+  , modelInjector = require('utils').modelInjector
+  , Injector = require( '../src/utils' ).injector
+  , mongoose = require( 'mongoose' );
 
 // Get the application config
 var config = require('./../config');
@@ -16,11 +18,22 @@ var sequelize = new Sequelize(
 );
 
 GLOBAL.injector = Injector(  __dirname + '/src/services', __dirname + '/src/controllers' );
-injector.instance( 'sequelize', sequelize );
 injector.instance( 'config', config );
+injector.instance( 'db', sequelize );
+injector.instance( 'sequelize', sequelize );
+injector.instance( 'mongoose', mongoose );
 
 // Get our models
-var models = require('./../src/models');
+var models = require( 'models' )
+injector.instance( 'models', models );
+
+// Setup ODM
+if ( config.odm && config.odm.enabled ) {
+  mongoose.connect(config.mongoose.uri);
+}
+
+// Run our model injection service
+modelInjector( models );
 
 var seedData = require('./../schema/seedData.json');
 
@@ -32,7 +45,7 @@ Object.keys(seedData).forEach(function( modelName ) {
 async.forEachSeries(
     Object.keys(seedData),
     function forEachModelType( modelName, cb ) {
-        var ModelType = models[modelName]
+        var ModelType = models.ORM[modelName]
             , Models = seedData[modelName];
 
         async.forEachSeries(
@@ -102,5 +115,8 @@ async.forEachSeries(
     },
     function forEachModelTypeComplete( err ) {
         console.log(err ? 'Error: ' : 'Seed completed with no errors', err);
+        if ( config.odm && config.odm.enabled ) {
+          mongoose.disconnect();
+        }
     }
 );

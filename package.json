@@ -37,7 +37,8 @@
     "colors": "~0.6.1",
     "mongoose": "~3.6.20",
     "helmet": "~0.1.0",
-    "debug": "~0.7.2"
+    "debug": "~0.7.2",
+    "sendgrid": "~0.3.1"
   },
   "author": {
     "name": "Clevertech",

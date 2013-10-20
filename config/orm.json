@@ -3,11 +3,24 @@
         "enabled": true,
 
         "models": [
+            "Account",
+            "Role",
+            "Permission",
             "User"
         ],
 
         "modelAssociations": {
-            "User": {}
+            "Account": {},
+            "Role": {
+                "belongsTo": ["Account"],
+                "hasMany": ["Permission"]
+            },
+            "Permission": {
+                "hasMany": ["Role"]
+            },
+            "User": {
+              "belongsTo": ["Account", "Role"]
+            }
         }
     }
 }

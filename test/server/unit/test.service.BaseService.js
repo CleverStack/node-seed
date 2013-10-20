@@ -8,7 +8,7 @@ describe('service.BaseService', function () {
     beforeEach(function (done) {
         testEnv(function (models) {
             Service = BaseService.extend();
-            Model = models.TestModel;
+            Model = models.ORM.TestModel;
             Service.Model = Model;
             service = new Service();
             done();
