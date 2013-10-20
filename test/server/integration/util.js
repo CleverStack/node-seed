@@ -1,7 +1,10 @@
 var config = require('../../../config')
-  , defineModels = require('../../../src/model')
+  , Injector = require('utils').injector
+  , modelInjector = require('utils').modelInjector
   , Sequelize = require('sequelize')
-  , Q = require('q');
+  , Q = require('q')
+  , mongoose = require( 'mongoose' )
+  , connected = false;
 
 var exec = require('child_process').exec
   , path = require('path');
@@ -16,8 +19,24 @@ exports.testEnv = function () {
         config.testDb.options
     );
 
-    var models = defineModels(db, config);
+    GLOBAL.injector = Injector(  __dirname + '/../../../src/services', __dirname + '/../../../src/controllers' );
+    injector.instance( 'config', config );
+    injector.instance( 'db', db );
+    injector.instance( 'sequelize', db );
+    injector.instance( 'mongoose', mongoose );
 
+    // Get our models
+    var models = require( 'models' )
+    injector.instance( 'models', models );
+
+    // Setup ODM
+    if ( config.odm && config.odm.enabled && connected === false ) {
+      connected = true;
+      mongoose.connect(config.mongoose.uri);
+    }
+
+    // Run our model injection service
+    modelInjector( models );
 
     db
     .sync({force:true})

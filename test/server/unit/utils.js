@@ -28,8 +28,8 @@ exports.testEnv = function (fn) {
 
     // Setup ODM
     if ( config.odm && config.odm.enabled && connected === false ) {
-      mongoose.connect(config.mongoose.uri);
       connected = true;
+      mongoose.connect(config.mongoose.uri);
     }
 
     models.ORM.TestModel = db.define('Test', {
