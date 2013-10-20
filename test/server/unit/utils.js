@@ -1,8 +1,10 @@
 var config = require('../../../config')
-  , defineModels = require('models')
   , Injector = require('utils').injector
+  , modelInjector = require('utils').modelInjector
   , Sequelize = require('sequelize')
-  , Q = require('q');
+  , Q = require('q')
+  , mongoose = require( 'mongoose' )
+  , connected = false;
 
 exports.testEnv = function (fn) {
     var deferred = Q.defer();
@@ -14,17 +16,31 @@ exports.testEnv = function (fn) {
         config.testDb.options
     );
 
-    var models = defineModels(db, config);
-    models.TestModel = db.define('Test', {
+    GLOBAL.injector = Injector(  __dirname + '/../../../src/services', __dirname + '/../../../src/controllers' );
+    injector.instance( 'config', config );
+    injector.instance( 'db', db );
+    injector.instance( 'sequelize', db );
+    injector.instance( 'mongoose', mongoose );
+
+    // Get our models
+    var models = require( 'models' )
+    injector.instance( 'models', models );
+
+    // Setup ODM
+    if ( config.odm && config.odm.enabled && connected === false ) {
+      mongoose.connect(config.mongoose.uri);
+      connected = true;
+    }
+
+    models.ORM.TestModel = db.define('Test', {
         name: Sequelize.STRING,
     }, {
         paranoid: true
     });
+    models.ORM.TestModel.ORM = true
 
-    var injector = Injector(  __dirname + '/../../../src/services', __dirname + '/../../../src/controllers' );
-    injector.instance( 'config', config );
-    injector.instance( 'models', models );
-    injector.instance( 'db', db );
+    // Run our model injection service
+    modelInjector( models );
 
     db
     .sync({force:true})

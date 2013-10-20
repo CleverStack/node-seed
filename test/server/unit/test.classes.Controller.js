@@ -14,7 +14,7 @@ describe('classes.Controller', function () {
     beforeEach(function (done) {
         testEnv(function (models) {
             Service = BaseService.extend();
-            Service.Model = models.TestModel;
+            Service.Model = models.ORM.TestModel;
             service = new Service();
 
             Controller = BaseController.extend();
@@ -22,15 +22,15 @@ describe('classes.Controller', function () {
             Controller.prototype.fakeAction = function () {};
 
             var req = {
-                params: {},
+                params: { action: 'fakeAction' },
                 method: 'GET',
                 query: {}
             };
             var res = {
-                send: function () {}
+                send: function () {},
             };
             var next = function () {};
-            ctrl = new Controller('fakeAction', req, res, next);
+            ctrl = new Controller(req, res, next);
 
             service.create({
                 name: 'Joe'

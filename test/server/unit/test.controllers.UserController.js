@@ -12,7 +12,7 @@ describe('controllers.UserController', function () {
             UserController.prototype.fakeAction = function () {};
 
             var req = {
-                params: {},
+                params: { action: 'fakeAction' },
                 method: 'GET',
                 query: {}
             };
@@ -20,7 +20,7 @@ describe('controllers.UserController', function () {
                 json: function () {}
             };
             var next = function () {};
-            ctrl = new UserController('fakeAction', req, res, next);
+            ctrl = new UserController(req, res, next);
 
             UserService.create({
                 firstName: 'Joe',

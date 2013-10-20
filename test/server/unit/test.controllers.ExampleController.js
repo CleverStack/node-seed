@@ -7,7 +7,7 @@ describe('controllers.ExampleController', function () {
     beforeEach(function (done) {
         testEnv(function (ExampleController) {
             var req = {
-                params: {},
+                params: { action: 'fakeAction'},
                 method: 'GET',
                 query: {}
             };
@@ -15,7 +15,7 @@ describe('controllers.ExampleController', function () {
                 json: function () {}
             };
             var next = function () {};
-            ctrl = new ExampleController('fakeAction', req, res, next);
+            ctrl = new ExampleController(req, res, next);
 
             done();
         });
