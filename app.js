@@ -15,6 +15,17 @@ if ( cluster.isMaster ) {
         cluster.fork();
     }
 
+    Object.keys( cluster.workers ).forEach(function( id ) {
+        cluster.workers[ id ].on('message', function( msg ) {
+            console.log('Master ' + process.pid + ' received message from worker ' + id + '.', msg);
+            
+            //Send message to background task
+            if( msg.cmd == 'backgroundTask'){
+                backgroundTasks.send({ cmd: 'master', task:msg.task, wrkid: id });
+            }
+        });
+    });
+
     // Setup the background tasks worker
     if ( process.env.NODE_ENV !== 'local' ) {
         function setupBackgroundTasks() {
@@ -22,6 +33,12 @@ if ( cluster.isMaster ) {
 
             backgroundTasks = cp.fork('./bin/backgroundTasks.js');
             backgroundTasks.on('exit', setupBackgroundTasks);
+            backgroundTasks.on('message', function( msg ){
+                console.log('\nMaster ' + process.pid + ' received message from Background Task Process ' + this.pid + '.', msg);
+                msg['cmd'] = 'master';
+                
+                ( !msg.wrkid ) ? backgroundTasks.send( msg ) : cluster.workers[ msg.wrkid ].send( msg ) ;
+            });
         }
         setupBackgroundTasks();
     }
