@@ -1,3 +1,8 @@
 {
-
+	"background":{
+        "on" : true
+    ,   "tasks":[
+            {"name": "ExampleTask",    "masterOnly": true }
+        ]
+    }
 }

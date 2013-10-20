@@ -20,24 +20,75 @@ module.exports = Class.extend(
 
         interval: null,
 
+        tasksToRun: null,
+
         init: function() {
             this.isMaster = false;
             this.isMasterScanning = false;
             this.masterKey = process.env.NODE_ENV + '_backgroundTasks';
             this.serverKey = Date.now() + Math.floor(Math.random()*1001); // @TODO - implement storing the server key in /tmp/serverKey
             this.memcache = new MemCached( config.memcacheHost )
-            this.interval = setInterval( this.proxy( 'masterLoop' ), 15000 );
-            this.masterLoop();
+            this.setupTasksAndStartMasterLoop();
+            //Process Messages coming from the cluster
+            process.on('message', this.proxy('handleMessage'));
         },
 
-        masterLoop: function() {
+        handleMessage: function( msg ){
+            var taskObj;
+            var m = { 
+                type   : 'error'
+            ,   result : 'invalid'
+            ,   wrkid  : ( !msg.wrkid ) ? null : msg.wrkid
+            ,   pid    : process.pid
+            };
+            
+            if( this.tasksToRun !== null ){
+                if( config.background.on ){
+                    var l = config.background.tasks.length, item;
+
+                    while ( l-- ) {
+                        item = config.background.tasks[ l ];
+                        if( ( item.name == msg.task ) && ( tasks[ item.name ] !== undefined ) ){
+                             taskObj = tasks[ item.name ];
+                        };
+                    };
+                }
+
+            }
+
+            if( taskObj ){
+                taskObj.startTask(function( err, result ){
+                    
+                    if( !err ){
+                        m['type'] = 'success';
+                        m['result'] = result;
+                    }else{
+                        m['type'] = 'error';
+                        m['result'] = err;
+                    }
+                    
+                    process.send(m);
+                });
+            }else{
+                process.send(m);
+            }
+        },
+
+        mainLoop: function() {
             if ( this.isMasterScanning === false ) {
                 this.isMasterScanning = true;
 
                 if ( this.isMaster !== true ) {
                     this.getMasterLock();
                 } else {
-                    this.runMasterTasks();
+                    
+                    async.parallel([
+                        this.runMasterTasks
+                    ,   this.runTasks
+                    ],
+                        this.proxy( 'tasksAreCompleted' )
+                    );
+
                 }
 
             } else {
@@ -53,7 +104,7 @@ module.exports = Class.extend(
         handleGetMasterLock: function( err, result ) {
             if ( err ) {
                 console.error( 'Unable to gets the lock from memcache. Err:' + err + ' Result:' + result );
-                this.isMasterScanning = false;
+                this.tasksAreRunning = false;
             } else if ( result === false ) {
                 this.memcache.add( this.masterKey, this.serverKey, 30, function( addErr, addResult ) {
                     if ( addResult && !addErr ) {
@@ -62,7 +113,7 @@ module.exports = Class.extend(
                         this.runMasterTasks();
                     } else {
                         console.error( 'Unable to add the lock key into memcache. Err:' + addErr + ' Result:' + addResult );
-                        this.isMasterScanning = false;
+                        this.tasksAreRunning = false;
                     }
                 }.bind(this));
             } else {
@@ -72,7 +123,7 @@ module.exports = Class.extend(
                     this.runMasterTasks();
                 } else {
                     console.log( 'There is already a master holding the lock!' );
-                    this.isMasterScanning = false;
+                    this.tasksAreRunning = false;
                 }
             }
         },
@@ -99,23 +150,68 @@ module.exports = Class.extend(
 
             console.log( 'Run master tasks.' );
             async.parallel(
-                [
-                    // this.proxy( 'sendNotifications' ),
-                    // this.proxy( 'generateBookings' ),
-                    // this.proxy( 'sendMessages' ),
-                    // this.proxy( 'sendRequests' ),
-                    // this.proxy( 'processRequests' )
-                ],
-                this.proxy( 'runMasterTasksComplete' )
+                this.tasksToRun.master,
+                this.proxy( 'tasksAreCompleted' )
             );
         },
 
-        runMasterTasksComplete: function( err ) {
-            console.log( 'runMasterTasksComplete', err );
+        runTasks : function( ){
+            console.log( 'Run non master tasks.' );
+            async.series(
+                this.tasksToRun.nomaster,
+                this.proxy( 'tasksAreCompleted' )
+            ); 
+        },
+
+        tasksAreCompleted : function(){
+            console.log( 'tasksAreCompleted', err );
             if ( err ) {
                 console.dir(err.stack);
             }
 
-            this.isMasterScanning = false;
+            this.tasksAreRunning = false;
+        },
+
+        setupTasksAndStartMasterLoop : function( ){
+            async.series([
+                this.proxy( 'setupBackgroundTask' )
+            ,   this.proxy( 'initMasterLoop' )
+            ]);
+
+        },
+
+        setupBackgroundTask : function( cback ){
+            console.log( "Check which tasks needs to run" );
+            var t = null
+            ,   cbt = config.background;
+
+            if( cbt.on ){
+                var l = cbt.tasks.length, item;
+                t = {
+                    master:[]
+                ,   nomaster:[]
+                };
+
+                while ( l-- ) {
+                    item = cbt.tasks[ l ];
+                    
+                    var key = ( item.masterOnly ) ? 'master':'nomaster';
+                    if( tasks[ item.name ] !== undefined ){
+
+                         //Use one common "functionName" for every task so we can do 
+                         // async.parallel( this.tasksToRun.master, callback);
+                         t[ key ].push( tasks[ item.name ].startTask ); 
+                    };
+                };
+            }
+
+            this.tasksToRun = t;
+            cback(null);
+        },
+        initMasterLoop: function(  cback ){
+            console.log( "Initiate Master Loop" );
+            this.interval = setInterval( this.proxy( 'mainLoop' ), 15000 );
+            this.mainLoop();
+            cback(null);
         }
     });
