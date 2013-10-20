@@ -38,7 +38,8 @@ module.exports = function(sequelize, DataTypes) {
             defaultValue: false
         },
         accessedAt : {
-            type: DataTypes.DATE
+            type: DataTypes.DATE,
+            allowNull: true
         }
 
     },
