@@ -3,8 +3,8 @@ var cluster = require('cluster')
   , cp = require('child_process')
   , config = require('./config');
 
-//
-process.env.NODE_PATH = process.env.NODE_PATH ? './src/:' + process.env.NODE_PATH : './src';
+// Set the node path - this works only because the other processes are forked.
+process.env.NODE_PATH = process.env.NODE_PATH ? './src/:' + process.env.NODE_PATH : './src/';
 
 if ( cluster.isMaster ) {
     cluster.on('exit', function( worker, code, signal ) {
@@ -27,7 +27,7 @@ if ( cluster.isMaster ) {
     });
 
     // Setup the background tasks worker
-    if ( process.env.NODE_ENV !== 'local' ) {
+    if ( config.background && config.background.on === true ) {
         function setupBackgroundTasks() {
             console.log('Setup background tasks...');
 
