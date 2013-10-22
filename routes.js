@@ -3,12 +3,12 @@ var passport = require('passport');
 module.exports = function( app ) {
     var injector = app.get('injector');
 
-    injector.inject( function ( ExampleController, UserController, MongoController, AccountController, RoleController, PermissionController ) {
+    injector.inject( function ( ExampleController, UserController, /* MongoController, */ AccountController, RoleController, PermissionController ) {
         app.all('/example/:action/:id?', ExampleController.attach());
         app.all('/example/?:action?', ExampleController.attach());
 
-        app.all('/mongo/:action/:id?', MongoController.attach());
-        app.all('/mongo/?:action?', MongoController.attach());
+        // app.all('/mongo/:action/:id?', MongoController.attach());
+        // app.all('/mongo/?:action?', MongoController.attach());
 
         // Some passport use
         // app.get('/auth/facebook', passport.authenticate('facebook', {
