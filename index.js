@@ -7,6 +7,7 @@ var config = require( './config' )
   , modelInjector = require( 'utils' ).modelInjector
   , Sequelize = require( 'sequelize' )
   , Injector = require( 'utils' ).injector
+  , digitalFingerprint = require( 'utils' ).digitalFingerprint
   , passport = require( 'passport' )
   , mongoose = require( 'mongoose' )
   , initializeSecurity = require( './security' )
@@ -52,6 +53,23 @@ app.configure(function() {
 
     // middleware stack
     app.use( express.bodyParser() );
+
+    // security check digital fingerprint matches on every non-static request
+    app.use( function(req, res, next) {
+        if (digitalFingerprint.token && req.body.token) {
+            if (!digitalFingerprint.check(req.body.token)) {
+                res.send(403);
+            }
+        } else if(req.body && req.body.fingerprint) {
+            console.log('new fingerprint...no token...');
+            //new fingerprint stored in token
+            // var req.token = new digitalFingerprint(req.fingerprint, securityConfig.aggression, securityConfig.salt);
+            res.token = new digitalFingerprint(req.body.fingerprint, 1, config.secretKey);
+            next();
+        } else {
+            res.send(403);
+        }
+    });
 
     // session management
     app.use( express.cookieParser() );
