@@ -12,8 +12,21 @@
         },
 
         "cacheControl":{
-        }
+        },
 
+        "digitalFingerprints" : {
+
+            "enabled": "true",
+
+            "prints": {
+
+                  "IP" : "true"
+
+            },
+
+            "aggression" : "1"
+
+        }
     }
 
 }

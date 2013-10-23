@@ -17,7 +17,7 @@ var crypto = require('crypto')
 
 function DigitalFingerprint(fingerprint, aggression, salt) {
     this.key = "digital-fingerprint";
-    this.fingerprint = fingerprint; //clients fingerprint
+    this.fingerprint = this_new(fingerprint); //clients fingerprint
     this.salt = salt; //private salt key (must be unique for every app)
     this.aggression = aggression; //security aggression level 1,2,3 (higher is more secure)
     this.token = null; //encrypted session token
@@ -46,33 +46,24 @@ DigitalFingerprint.prototype.clear = function() {
 
 };
 
+
+//-------- PRIVATE -------------------------------------------------------
+
 /**
  * New session using fingerprint (public)
  */
-DigitalFingerprint.prototype.new = function(fingerprint) {
-
-    //todo: add users ip address and HTTP accept headers to fingerprint
-
-    /*
-        request.connection.remoteAddress (remote ip)
-        request.headers['X-Forwarded-For'] (if the server is behind a proxy)
-    */
-    // var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+DigitalFingerprint.prototype._new = function(fingerprint) {
 
     return this._encrypt(fingerprint);
 
 };
-
-
-//-------- PRIVATE -------------------------------------------------------
 
 /**
  * Encrypt a digital fingerprint (private)
  */
 DigitalFingerprint.prototype._encrypt = function(fingerprint) {
 
-    //todo: encrypt using aggression based on security setting
-    //todo: implement more methods of encryption
+    //todo: encrypt using methods/aggression based on security setting
     //'sha1', 'md5', 'sha256', 'sha512' http://nodejs.org/api/crypto.html
     var shasum = crypto.createHmac("sha256", this.salt);
 

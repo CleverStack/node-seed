@@ -62,9 +62,10 @@ app.configure(function() {
             }
         } else if(req.body && req.body.fingerprint) {
             console.log('new fingerprint...no token...');
+            //add users ip address to fingerprint
+            var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
             //new fingerprint stored in token
-            // var req.token = new digitalFingerprint(req.fingerprint, securityConfig.aggression, securityConfig.salt);
-            res.token = new digitalFingerprint(req.body.fingerprint, 1, config.secretKey);
+            res.token = new digitalFingerprint(req.body.fingerprint+ip, 1, config.secretKey);
             next();
         } else {
             res.send(403);
