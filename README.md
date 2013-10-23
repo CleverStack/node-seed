@@ -97,7 +97,7 @@ Also, note `local.json` is ignored in `.gitignore`, but you have a sample in `lo
     "webPort": 8080, // The port that the application will run on
 
     "numChildren": 1, // The number of children to spawn in the cluster, use N-1 where N is the number of cores in your CPU.
-    
+
     "params": {
         "appName": "" // Name of the application
     },
@@ -105,7 +105,7 @@ Also, note `local.json` is ignored in `.gitignore`, but you have a sample in `lo
     "secretKey": "changeme", // Secret key for sessions
 
     "memcacheHost": "some.host.com:11211", // The memcache server for Background-Tasks
-    
+
     // Redis Configuration
     "redis": {
         "host": "10.0.0.1",
@@ -145,7 +145,7 @@ module.exports = function () {
 #### Setup injector
 ```
 var Injector = require( './src/utils/injector' );
-   
+
 var injector = Injector(  __dirname + '/src/services', __dirname + '/src/controllers' );
    injector.instance( 'config', config );
    injector.instance( 'models', models );
@@ -180,6 +180,15 @@ The following keys can be set on the security object:
  - cacheControl: Cache-Control
 
 We are using [Helmet](https://github.com/evilpacket/helmet). Check it out to learn more.
+
+"digitalFingerprint" : {
+
+    "enabled": "true", //turn on/off digital fingerprinting
+    "IP" : "true" //include the users ip address in thier fingerprint
+    "aggression" : "3",  //algorithm aggression level 1-10 (higher is more secure but may be slower)
+    "salt" : "put_super_secure_salt_token_here"  //secure token for hashing
+
+}
 
 ## 4. Deployment ##
 Needs to be documented.

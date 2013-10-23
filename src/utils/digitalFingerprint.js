@@ -9,7 +9,7 @@ Author: Clevertech.biz
 /**
  * Module dependencies.
  */
-var crypto = require('crypto')
+var cryptojs = require('crypto')
   , fs = require('fs');
 
 
@@ -17,9 +17,9 @@ var crypto = require('crypto')
 
 function DigitalFingerprint(fingerprint, aggression, salt) {
     this.key = "digital-fingerprint";
-    this.fingerprint = this_new(fingerprint); //clients fingerprint
+    this.fingerprint = null; //clients fingerprint
     this.salt = salt; //private salt key (must be unique for every app)
-    this.aggression = aggression; //security aggression level 1,2,3 (higher is more secure)
+    this.aggression = aggression; //security aggression level 1-10 (higher is more secure)
     this.token = null; //encrypted session token
 };
 
@@ -46,17 +46,16 @@ DigitalFingerprint.prototype.clear = function() {
 
 };
 
-
-//-------- PRIVATE -------------------------------------------------------
-
 /**
  * New session using fingerprint (public)
  */
-DigitalFingerprint.prototype._new = function(fingerprint) {
+DigitalFingerprint.prototype.new = function(fingerprint) {
 
     return this._encrypt(fingerprint);
 
 };
+
+//-------- PRIVATE -------------------------------------------------------
 
 /**
  * Encrypt a digital fingerprint (private)
@@ -64,14 +63,18 @@ DigitalFingerprint.prototype._new = function(fingerprint) {
 DigitalFingerprint.prototype._encrypt = function(fingerprint) {
 
     //todo: encrypt using methods/aggression based on security setting
+
     //'sha1', 'md5', 'sha256', 'sha512' http://nodejs.org/api/crypto.html
-    var shasum = crypto.createHmac("sha256", this.salt);
+    var algorithm = 'sha256'
+      , key = this.salt
+      , hash, hmac;
 
-    shasum
-        .update(fingerprint)
-        .digest('hex');
+    hash = cryptojs
+            .createHash(algorithm, key)
+            .update(new Buffer(fingerprint, 'binary'))
+            .digest('hex');
 
-    return shasum;
+    return hash;
 
 };
 

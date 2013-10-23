@@ -14,7 +14,7 @@
         "cacheControl":{
         },
 
-        "digitalFingerprints" : {
+        "digitalFingerprint" : {
 
             "enabled": "true",
 
@@ -24,7 +24,9 @@
 
             },
 
-            "aggression" : "1"
+            "aggression" : "3",
+
+            "salt" : "put_super_secure_salt_token_here"
 
         }
     }

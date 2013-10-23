@@ -54,37 +54,6 @@ app.configure(function() {
     // middleware stack
     app.use( express.bodyParser() );
 
-    // security check digital fingerprint matches on every non-static request
-    app.use( function(req, res, next) {
-        if (digitalFingerprint.token && req.body.token) {
-            if (!digitalFingerprint.check(req.body.token)) {
-                res.send(403);
-            }
-        } else if(req.body && req.body.fingerprint) {
-            console.log('new fingerprint...no token...');
-            //add users ip address to fingerprint
-            var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-            //new fingerprint stored in token
-            res.token = new digitalFingerprint(req.body.fingerprint+ip, 1, config.secretKey);
-            next();
-        } else {
-            res.send(403);
-        }
-    });
-
-    // session management
-    app.use( express.cookieParser() );
-    app.use( express.session({
-        secret: config.secretKey
-        , cookie: { secure: false, maxAge: 86400000 }
-        , store: new RedisStore({
-            host: config.redis.host
-            , port: config.redis.port
-            , prefix: config.redis.prefix+process.env.NODE_ENV+"_"
-            , password: config.redis.key
-        })
-    }));
-
     // Enable CORS
     app.use(function( req, res, next ) {
         res.header("Access-Control-Allow-Origin", req.headers.origin);
@@ -100,6 +69,40 @@ app.configure(function() {
             next();
         }
     });
+
+    // security check digital fingerprint matches on every non-static request
+    app.use( function(req, res, next) {
+        // console.log('digitalFingerprint.token = '+digitalFingerprint.token);
+        // console.log('req.body.token = '+req.body.token);
+        if (digitalFingerprint.token && req.body.token) {
+            if (!digitalFingerprint.check(req.body.token)) {
+                res.send(403, "Your security fingerprint check failed.");
+            }
+        } else if(req.body && req.body.fingerprint) {
+            //add users ip address to fingerprint
+            // console.log(req);
+            var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+            //new fingerprint stored in token
+            res.token = digitalFingerprint.new(req.body.fingerprint+ip, 1, config.secretKey);
+            console.log('Digital fingerprint token generated for client: '+res.token);
+            next();
+        } else {
+            res.send(403, "Your security fingerprint was missing from the request.");
+        }
+    });
+
+    // session management
+    app.use( express.cookieParser() );
+    app.use( express.session({
+        secret: config.secretKey
+        , cookie: { secure: false, maxAge: 86400000 }
+        , store: new RedisStore({
+            host: config.redis.host
+            , port: config.redis.port
+            , prefix: config.redis.prefix+process.env.NODE_ENV+"_"
+            , password: config.redis.key
+        })
+    }));
 
     app.use( express.logger('dev') );
     app.use( express.compress() );
