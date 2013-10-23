@@ -27,7 +27,7 @@ if ( cluster.isMaster ) {
     });
 
     // Setup the background tasks worker
-    if ( config.background && config.background.on === true ) {
+    if ( config.background && config.background.enabled === true ) {
         function setupBackgroundTasks() {
             console.log('Setup background tasks...');
 
