@@ -16,15 +16,15 @@
 
         "digitalFingerprint" : {
 
-            "enabled": "true",
+            "enabled": true,
 
             "prints": {
 
-                  "IP" : "true"
+                  "ip" : true
 
             },
 
-            "aggression" : "3",
+            "aggression" : 1,
 
             "salt" : "put_super_secure_salt_token_here"
 

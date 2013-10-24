@@ -165,6 +165,8 @@ module.exports = function( UserService ) {
 
             handleLocalUser: function ( err, user ) {
                 if (err) return this.handleException(err);
+                console.log(user);
+                console.log('ERR!! handleLocalUser');
                 if (!user) return this.send(403);
                 this.loginUserJson(user);
             },

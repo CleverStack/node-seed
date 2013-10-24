@@ -193,6 +193,7 @@ module.exports = function(AccountService, UserService, RoleService, config) {
         signInAfterConfirmation : function( user ){
 
             this.req.login(user, this.proxy('createUserSession', user));
+
         },
 
         createUserSession: function (user, err) {

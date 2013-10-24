@@ -71,25 +71,29 @@ app.configure(function() {
     });
 
     // security check digital fingerprint matches on every non-static request
-    app.use( function(req, res, next) {
-        // console.log('digitalFingerprint.token = '+digitalFingerprint.token);
-        // console.log('req.body.token = '+req.body.token);
-        if (digitalFingerprint.token && req.body.token) {
-            if (!digitalFingerprint.check(req.body.token)) {
-                res.send(403, "Your security fingerprint check failed.");
+    if (config.security.digitalFingerprint.enabled) {
+        app.use( function( req, res, next ) {
+            if (digitalFingerprint.token && req.body.token) {
+                if (!digitalFingerprint.check( req.body.token )) {
+                    console.log("Your security fingerprint check failed.");
+                    res.send(403);
+                }
+            } else if(req.body && req.body.fingerprint) {
+                //add users ip address to fingerprint
+                var ip = (config.security.digitalFingerprint.prints.ip) ? (req.headers['x-forwarded-for'] || req.connection.remoteAddress) : "";
+                //new fingerprint stored in token
+                // console.log('Your client ip is: '+ip);
+                res.token = digitalFingerprint.new( req.body.fingerprint+ip, config.security.digitalFingerprint.salt, config.security.digitalFingerprint.aggression );
+                // res.token = digitalFingerprint.new(req.body.fingerprint+ip, 1, config.security.digitalFingerprint.salt, security.digitalFingerprint.aggression );
+                console.log('Digital fingerprint token generated for client: '+res.token);
+                // res.send({token:res.token});
+                next();
+            } else {
+                console.log("Your security fingerprint was missing from the request.");
+                res.send(403);
             }
-        } else if(req.body && req.body.fingerprint) {
-            //add users ip address to fingerprint
-            // console.log(req);
-            var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-            //new fingerprint stored in token
-            res.token = digitalFingerprint.new(req.body.fingerprint+ip, 1, config.secretKey);
-            console.log('Digital fingerprint token generated for client: '+res.token);
-            next();
-        } else {
-            res.send(403, "Your security fingerprint was missing from the request.");
-        }
-    });
+        });
+    }
 
     // session management
     app.use( express.cookieParser() );
