@@ -1,7 +1,12 @@
 {
-  "User": [{
-      "username": "admin",
-      "password": "7110eda4d09e062aa5e4a390b0a572ac0d2c0220",
-      "email": "admin@example.com"
-    }]
+    "User": [
+        {
+            "username"      : "admin",
+            "email"         : "admin@clevertech.biz",
+            "password"      : "6367c48dd193d56ea7b0baad25b19455e529f5ee",
+            "active"        : true,
+            "confirmed"     : true,
+            "hasAdminRight" : true
+        }
+    ]
 }

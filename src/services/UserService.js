@@ -19,9 +19,9 @@ module.exports = function( db, UserModel, AccountModel, RoleModel, config ) {
             var deferred = Q.defer()
             ,   service = this;
 
-
             UserModel
-            .find({ where: credentials, include: [ AccountModel, RoleModel ] })
+            .find({ where: credentials })
+            // .find({ where: credentials, include: [ AccountModel, RoleModel ] })
             .success( function( user ){
                 if( !user || !user.active ){ return deferred.resolve( ) };
 

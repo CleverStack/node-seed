@@ -42,15 +42,16 @@ module.exports = function( UserService ) {
                     if (!req.isAuthenticated() ||
                         !req.session.user.roles ||
                         req.session.user.roles.indexOf(roleName) === -1)
-                        return res.send(401);
+                        return res.send(401, "You do not have a role.");
                     next();
                 };
             },
+
             requiresAdminRights: function( req, res, next ) {
-                 if (!req.isAuthenticated() ||
+                if (!req.isAuthenticated() ||
                      !req.session.passport.user ||
                      !req.session.passport.user.hasAdminRight)
-                     return res.send(403);
+                     return res.send(403, "You do not have admin rights.");
                 next();
             },
 
@@ -165,9 +166,7 @@ module.exports = function( UserService ) {
 
             handleLocalUser: function ( err, user ) {
                 if (err) return this.handleException(err);
-                console.log(user);
-                console.log('ERR!! handleLocalUser');
-                if (!user) return this.send(403);
+                if (!user) return this.send(403, "You could not be logged in.");
                 this.loginUserJson(user);
             },
 
@@ -177,7 +176,12 @@ module.exports = function( UserService ) {
 
             handleLoginJson: function ( user, err ) {
                 if (err) return this.handleException(err);
-                this.send(user);
+                if (this.res.token) {
+                    this.send({ token:this.res.token, user:user });
+                }
+                else {
+                    this.send( { user:user } );
+                }
             },
 
             currentAction: function () {
@@ -185,7 +189,7 @@ module.exports = function( UserService ) {
                 if (!user) {
                     return this.send({});
                 }
-                this.send(user);
+                this.loginUserJson(user);
             },
 
             authorizedUser: function( user ) {
@@ -194,7 +198,7 @@ module.exports = function( UserService ) {
                     this.req.login(user);
                     this.res.send(200);
                 } else {
-                    this.res.send(403);
+                    this.res.send(403, "You are unauthorized to login.");
                 }
             },
 
