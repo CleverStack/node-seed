@@ -9,20 +9,20 @@ Author: Clevertech.biz
 /**
  * Module dependencies.
  */
-var cryptojs = require('crypto');
+var cryptojs = require('crypto')
+    , S = require('string');
 
 
 //-------- CONSTRUCTOR -------------------------------------------------------
 
 function DigitalFingerprint() {
+
     this.key = "digital-fingerprint";
-    this.fingerprint = ""; //clients fingerprint
-    this.salt = ""; //private salt (must be unique for every app)
-    this.key = null; //random key generated for each token
-    this.grade = ""; //security grade (aggression level)
-    this.password = ""; //secret strong password
+    this.salt = ""; //private salt (must be unique for every app, set in security config)
+    this.grade = ""; //security grade (aggression level, set in security config)
     this.random = Math.random(); //random number
-    this.token = ""; //encrypted session token
+    this._clear(); //reset variable params
+
 };
 
 /**
@@ -30,36 +30,35 @@ function DigitalFingerprint() {
  */
 DigitalFingerprint.prototype.check = function(token, fingerprint) {
 
-    var tokenCheck = this._encrypt(fingerprint);
-    console.log('tokenCheck = '+tokenCheck);
-    console.log('this.token = '+this.token);
-    console.log('token = '+token);
-    return (this.token === tokenCheck === token); //check they all match
+    var tokenCheck = this._encrypt(fingerprint); //encrypt the fingerprint for checks
+    return ( (this.token == token) && (this.fingerprint == fingerprint) && (this.token == tokenCheck) ); //check they all match
 
 }
-
-/**
- * Clear current fingerprint
- */
-DigitalFingerprint.prototype.clear = function() {
-
-    this.token = null;
-    this.password = null;
-    this.key = null;
-    this.fingerprint = null;
-
-};
 
 /**
  * New session using fingerprint
  */
 DigitalFingerprint.prototype.new = function(fingerprint, salt, grade) {
 
+    this._clear(); //reset
     this.fingerprint = fingerprint;
     this.salt = salt;
     this.grade = grade;
+    this.token = this._encrypt(fingerprint);
 
-    return this._encrypt(fingerprint);
+    return this.token;
+
+};
+
+/**
+ * Clear current fingerprint params
+ */
+DigitalFingerprint.prototype._clear = function() {
+
+    this.token = null; //encrypted session token
+    this.password = null; //secret strong password
+    this.key = null; //random key generated for each token
+    this.fingerprint = null; //random key generated for each token
 
 };
 
@@ -70,18 +69,12 @@ DigitalFingerprint.prototype._encrypt = function(fingerprint) {
 
     var key, hash, cipher, token;
 
-    console.log('this.key='+this.key);
-
     switch(this.grade) {
 
         case "low": {
 
             //generate key
-            //the length of the key (longer = more secure)
-            //todo: performance testing on iterations (higher = more secure)
-            key = this.key ? this.key : this._generateKey(128, 1000);
-
-            console.log('this.key='+this.key);
+            key = this._generateKey(128, 1000);
 
             //generate hashed fingerprint
             token = this._generateHash(fingerprint, key, "sha256"); //SHA2 32-bit (outputs 128 hash)
@@ -92,7 +85,7 @@ DigitalFingerprint.prototype._encrypt = function(fingerprint) {
         case "low-med": {
 
             //generate key
-            key = this.key ? this.key : this._generateKey(128, 1000);
+            key = this._generateKey(128, 1000);
 
             //generate hashed fingerprint
             token = this._generateHash(fingerprint, key, "sha512"); //SHA2 64-bit (outputs 256 hash)
@@ -103,7 +96,7 @@ DigitalFingerprint.prototype._encrypt = function(fingerprint) {
         case "med": {
 
             //generate key
-            key = this.key ? this.key : this._generateKey(256, 1000);
+            key = this._generateKey(256, 1000);
 
             //return ciphered
             cipher = cryptojs.createCipher('aes128', key) //AES The Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS).
@@ -116,7 +109,7 @@ DigitalFingerprint.prototype._encrypt = function(fingerprint) {
         case "med-high": {
 
             //generate key
-            key = this.key ? this.key : this._generateKey(256, 10000);
+            key = this._generateKey(256, 10000);
 
             //return ciphered (after hashed)
             cipher = cryptojs.createCipher('aes256', key) //AES The Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS).
@@ -129,7 +122,7 @@ DigitalFingerprint.prototype._encrypt = function(fingerprint) {
         case "high": {
 
             //generate key
-            key = this.key ? this.key : this._generateKey(512, 100000);
+            key = this._generateKey(512, 100000);
 
             //return ciphered
             cipher = cryptojs.createCipher('aes256', key) //AES The Advanced Encryption Standard (AES) is a U.S. Federal Information Processing Standard (FIPS).
@@ -147,7 +140,7 @@ DigitalFingerprint.prototype._encrypt = function(fingerprint) {
 
     }
 
-    return this.token = token;
+    return S(encodeURIComponent(token)).s;
 
 };
 
@@ -155,6 +148,10 @@ DigitalFingerprint.prototype._encrypt = function(fingerprint) {
  * Generate a new key based on security setting
  */
 DigitalFingerprint.prototype._generateKey = function(length, iterations) {
+
+    if (this.key !== null) {
+        return this.key;
+    }
 
     var salt, key, password, length, iterations;
 
@@ -188,7 +185,7 @@ DigitalFingerprint.prototype._generateHash = function(fingerprint, key, algorith
     // generate a hash from fingerprint
     return cryptojs
             .createHash(algorithm, key)
-            .update(new Buffer(fingerprint, 'base64'))
+            .update(new Buffer(fingerprint, 'utf-8'))
             .digest('hex');
 
 };
