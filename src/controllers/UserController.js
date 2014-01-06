@@ -124,14 +124,27 @@ module.exports = function( UserService ) {
             putAction: function() {
                 var user = this.req.user;
                 var data = this.req.body;
+                delete data.createdAt;
+                delete data.accessedAt;
+                var userId = this.req.params.id;
+
+                if(!userId){
+                    this.send({},400);
+                    return;
+                }
+
                 if ( data.password ) {
                     data.password = crypto.createHash('sha1').update(data.password).digest('hex');
+                }
+
+                if(user && user.account && user.account.id){
+                    data['AccountId'] = user.account.id;
                 }
 
                 if ( data.new_password ) {
                     UserService.find({
                         where: {
-                            id: data.id,
+                            id: userId,
                             password: data.password
                         }
                     })
@@ -139,8 +152,8 @@ module.exports = function( UserService ) {
                         .fail( this.proxy( 'handleException' ) );
                 } else {
                     UserService
-                        .update(user, data)
-                        .then(this.proxy('send'))
+                        .update(userId, data)
+                        .then(this.proxy('send', 200))
                         .fail(this.proxy('handleException'));
                 }
             },

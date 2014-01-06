@@ -145,6 +145,7 @@ module.exports = Class.extend({
             if ( this.Class.Model.ORM ) {
                 this.Class.Model.find(id)
                     .success(function (trainer) {
+                        console.log(id)
                         trainer.updateAttributes(data)
                         .success(deferred.resolve)
                         .error(deferred.reject);
