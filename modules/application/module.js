@@ -1,4 +1,4 @@
-var applicationModule = ( require( './classes/ModuleClass' ) ).extend({
+var applicationModule = require('classes').ModuleClass.extend({
     init: function() {
         console.log( 'Application module initialized' );
     }

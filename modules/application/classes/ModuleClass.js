@@ -53,7 +53,7 @@ module.exports = Class.extend(
     },
 
     addResource: function( pathToInspect, file ) {
-        if ( file.match(/.+\.js$/g) !== null && file !== 'index.js' ) {
+        if ( file.match(/.+\.js$/g) !== null && file !== 'index.js' && file !== 'module.js' ) {
             var name = file.replace( '.js', '' )
               , folder = pathToInspect.split('/').pop();
 

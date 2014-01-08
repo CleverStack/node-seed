@@ -1,4 +1,4 @@
-var backgroundTasksModule = require('application').classes.ModuleClass.extend({
+var backgroundTasksModule = require('classes').ModuleClass.extend({
     init: function() {
         console.log( 'BackgroundTasks module initialized' );
     }

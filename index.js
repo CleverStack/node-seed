@@ -41,8 +41,13 @@ injector.instance( 'config', config );
 injector.instance( 'mongoose', mongoose );
 injector.instance( 'db', sequelize );
 
-// Load our modules
+// Get our module loader
 var moduleLoader = require( 'utils' ).moduleLoader.getInstance();
+
+// Add our moduleLoader to the injector
+injector.instance( 'moduleLoader', moduleLoader );
+
+// Initialize all the modules
 moduleLoader.initializeModules( injector );
 
 // Get our models
@@ -50,7 +55,7 @@ var models = require( 'models' )
 injector.instance( 'models', models );
 
 // Run our model injection service
-modelInjector( models );
+// modelInjector( models );
 
 app.configure(function() {
 
