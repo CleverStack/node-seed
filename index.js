@@ -28,15 +28,22 @@ if ( config.odm && config.odm.enabled ) {
 }
 
 // Bootstrap our DI
-GLOBAL.injector = Injector(  __dirname + '/src/services/', __dirname + '/src/controllers/' );
+// GLOBAL.injector = Injector(  __dirname + '/src/services/', __dirname + '/src/controllers/' );
+GLOBAL.injector = Injector();
 
 app.set( 'port', webPort );
 app.set( 'injector', injector );
 
+injector.instance( 'injector', injector );
+injector.instance( 'app', app );
 injector.instance( 'sequelize', sequelize );
 injector.instance( 'config', config );
 injector.instance( 'mongoose', mongoose );
 injector.instance( 'db', sequelize );
+
+// Load our modules
+var moduleLoader = require( 'utils' ).moduleLoader.getInstance();
+moduleLoader.initializeModules( injector );
 
 // Get our models
 var models = require( 'models' )
@@ -112,7 +119,7 @@ app.configure(function() {
 });
 
 // register application routes
-initializeRoutes( app );
+// initializeRoutes( app );
 
 module.exports = app;
 
