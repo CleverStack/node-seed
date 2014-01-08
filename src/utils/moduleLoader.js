@@ -44,7 +44,7 @@ module.exports = Class.extend(
 
             callback( null );
         } catch( e ) {
-            callback( [ 'Exception while trying to load the', moduleName, 'module. Detail:', e.toString() ].join( ' ' ) );
+            callback( [ 'Exception while trying to load the', moduleName, 'module. Detail:', e.toString(), 'Stack:', e.stack ].join( ' ' ) );
         }
     },
 
@@ -52,7 +52,7 @@ module.exports = Class.extend(
         if ( !err ) {
             debug( 'All modules have been loaded without error' );
         } else {
-            debug( 'Encountered exception while trying to load modules: ' + err );
+            debug( 'Encountered exception while trying to load modules: ', err, 'Stack:', err.stack );
         }
     },
 
@@ -63,7 +63,7 @@ module.exports = Class.extend(
     initModule: function( injector, module ) {
         debug( [ 'Initializing module', module.name ].join( ' ' ) );
 
-        module.module = new module.Class( module.name, injector );
+        // module.module = new module.Class( module.name, injector );
         // console.dir( module.module );
         // module.data.initModule( app );
         // console.dir( require('application'));

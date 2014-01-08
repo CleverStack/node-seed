@@ -44,10 +44,6 @@ module.exports = Class.extend(
         injector._inherited.factoriesDirs.push( p );
     },
 
-    init: function( injector ) {
-        console.log( 'You should implement this function in your module.' );
-    },
-
     loadResources: function() {
         this.paths.forEach( this.proxy( 'inspectPathForResources' ) );
     },

@@ -1,5 +1,7 @@
-module.exports = ( require( './classes/ModuleClass' ) ).extend({
+var applicationModule = ( require( './classes/ModuleClass' ) ).extend({
     init: function() {
-        console.log( 'inside the extending class for the application module' );
+        console.log( 'Application module initialized' );
     }
 });
+
+module.exports = new applicationModule( 'application', injector );
