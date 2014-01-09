@@ -33,7 +33,7 @@ exports.testEnv = function (fn) {
     }
 
     models.ORM.TestModel = db.define('Test', {
-        name: Sequelize.STRING,
+        name: Sequelize.STRING
     }, {
         paranoid: true
     });
