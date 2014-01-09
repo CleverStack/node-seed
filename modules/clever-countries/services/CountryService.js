@@ -1,124 +1,185 @@
-var BaseService    = require('./BaseService')
-,   CountryService = null
-,   Q = require('q');
+var BaseService = require( './BaseService' )
+  , CountryService = null
+  , Q = require( 'q' )
+  ,  _ = require( 'lodash' );
 
-module.exports = function (db, AttributeValueService, AttributeKeyService, AttributeDocumentService, ODMAttributeValueModel) {
-    if (CountryService && CountryService.instance) {
+var categories = [ 'countries', 'statesUSA', 'provincesCanada' ]
+  , errMs = { statuscode: 400, message: "Insufficient data" };
+
+var normalize = function ( data ) {
+    var result;
+    var norm = function ( obj ) {
+        return {
+            id: obj._id || obj.id,
+            name: obj.name,
+            code: obj.code
+        }
+    };
+
+    if ( _.isPlainObject( data ) ) {
+        result = norm ( data );
+    } else if ( _.isArray( data ) ) {
+        result = [];
+        _.forEach( data, function ( obj ) {
+            result.push ( norm ( obj ) );
+        } );
+        result = _.sortBy( result, 'name' );
+    } else {
+        result = data;
+    }
+
+    return result;
+};
+
+var findCategory = function ( category ) {
+    var index = -1;
+    if ( !!category && _.isString( category ) ) {
+        var index = _.findIndex( categories, function ( val ) {
+            return val.toLowerCase() === category.toLowerCase();
+        } );
+    }
+
+    return index === -1 ? categories [ 0 ] : categories [ index ];
+};
+
+module.exports = function ( db, Country ) {
+    if ( CountryService && CountryService.instance ) {
         return CountryService.instance;
     }
 
     CountryService = BaseService.extend( {
 
-        normalize: function (r) {
-            return r.map(function (r) {
-                obj = r.toObject();
-                return {id: r._id, code: obj.code.value, name: obj.name.value};
-            });
-        },
+        findById: function ( id ) {
+            var deferred = Q.defer();
 
-        findById: function (id) {
-            var self     = this
-            ,   deferred = Q.defer();
+            this.findById( id )
+                .then( function ( result ) {
+                    if ( !result ) {
+                        return deferred.resolve( null );
+                    }
 
-            AttributeValueService.findById(id).then(function ( country ) {
-                if (!country) {
-                    return deferred.resolve( null );
-                }
-
-                var country = self.normalize([country]);
-                deferred.resolve(country);
-            } )
-            .fail( deferred.reject );
-
-            return deferred.promise;
-        },
-
-        findByCountryCode: function ( code ) {
-            var self     = this
-            ,   deferred = Q.defer()
-            ,   obj      = {
-                "code.value": code.toUpperCase() || ""
-            };
-
-            self.find( obj )
-            .then( function ( result ) {
-                if (!result) {
-                    return deferred.reject( [] );
-                }
-
-                var result = self.normalize(result);
-                deferred.resolve(result);
-            } )
-            .fail( deferred.reject );
-
-          return deferred.promise;
-        },
-
-        findByCode: function ( code ) {
-            return this.findByCountryCode( code );
-        },
-
-        findByName: function (name) {
-            var self     = this
-            ,   deferred = Q.defer()
-            ,   obj      = {
-                "name.value": name || ""
-            };
-
-            self.find( obj )
-            .then( function ( result ) {
-                if (!result) {
-                    return deferred.reject( [] );
-                }
-
-                var result = self.normalize(result);
-                deferred.resolve(result[0]);
-            } )
-            .fail( deferred.reject );
-
-            return deferred.promise;
-        },
-
-        list: function (orderBy, sort) {
-            var self     = this
-            ,   deferred = Q.defer();
-
-            AttributeKeyService.findByCategory('Countries').then( function ( result ) {
-                var modelKeys = result.map( function ( r ) {
-                    return r.name.toLowerCase();
-                } );
-
-                var _orderBy = !!orderBy && modelKeys.indexOf( orderBy.toLowerCase() ) > -1 ? orderBy : 'name';
-                _orderBy += '.value';
-
-                var _sorted = !!sort && ['desc', 'asc'].indexOf( sort.toLowerCase() ) > -1 ? ( ['desc', 'asc'].indexOf( sort.toLowerCase() ) * 2 - 1 ) : 1;
-                var sortWay = {};
-                sortWay[_orderBy] = _sorted;
-
-                AttributeDocumentService.find( {"name": "Countries"} )
-                .then( function ( country ) {
-                    AttributeValueService
-                    .findExtended( {AttributeDocumentId: country[0]._id}, null, {sort: sortWay} )
-                    .then( function ( result ) {
-                        if (!result.length) {
-                            return deferred.resolve( {} );
-                        }
-
-                        var result = self.normalize( result );
-                        deferred.resolve( result );
-                    } )
-                    .error( deferred.reject );
+                    deferred.resolve( normalize( result ) );
                 } )
-                .error( deferred.reject );
-            } );
+                .fail( deferred.reject );
+
+            return deferred.promise;
+        },
+
+        findByName: function ( name ) {
+            var self = this
+              , deferred = Q.defer();
+
+            self.find( { name: name } )
+                .then( function ( result ) {
+                    if ( !result ) {
+                        return deferred.resolve( null );
+                    }
+
+                    deferred.resolve( normalize( result [ 0 ] ) );
+                } )
+                .fail( deferred.reject );
+
+            return deferred.promise;
+        },
+
+        findByCodeAndCategory: function ( code, category  ) {
+            var deferred = Q.defer();
+
+            if ( !arguments.length ) {
+                deferred.resolve( errMs );
+                return deferred.promise;
+            }
+
+            var obj = {
+                category: findCategory ( category || '' ),
+                code: code.toUpperCase()
+            };
+
+            this.find( obj )
+                .then( function ( result ) {
+                    if ( !result ) {
+                        return deferred.reject( null );
+                    }
+
+                    deferred.resolve( normalize( result [ 0 ] ) );
+                } )
+                .fail( deferred.reject );
+
+            return deferred.promise;
+        },
+
+        findCountryByCode: function ( code ) {
+            return this.findByCodeAndCategory( code );
+        },
+
+        findStateByCode: function ( code ) {
+            return this.findByCodeAndCategory( code, 'statesUSA' );
+        },
+
+        findProvinceByCode: function ( code ) {
+            return this.findByCodeAndCategory( code, 'provincesCanada' );
+        },
+
+        list: function ( category ) {
+            var deferred = Q.defer();
+
+            var obj = {
+                category: findCategory ( category || '' )
+            };
+
+            this.find( obj )
+                .then( function ( result ) {
+                    if ( !result ) {
+                        return deferred.reject( null );
+                    }
+
+                    deferred.resolve( normalize( result ) );
+                } )
+                .fail( deferred.reject );
+
+            return deferred.promise;
+        },
+
+        countryList: function (){
+            var deferred = Q.defer();
+
+            this.list( 'countries' )
+                .then( function ( result ) {
+                    deferred.resolve( result );
+                } )
+                .fail( deferred.reject );
+
+            return deferred.promise;
+        },
+
+        statesList: function (){
+            var deferred = Q.defer();
+
+            this.list( 'statesUSA' )
+                .then( function ( result ) {
+                    deferred.resolve( result );
+                } )
+                .fail( deferred.reject );
+
+            return deferred.promise;
+        },
+
+        provincesList: function (){
+            var deferred = Q.defer();
+
+            this.list( 'provincesCanada' )
+                .then( function ( result ) {
+                    deferred.resolve( result );
+                } )
+                .fail( deferred.reject );
 
             return deferred.promise;
         }
 
     } );
 
-    CountryService.instance = new CountryService(db);
-    CountryService.Model    = ODMAttributeValueModel;
+    CountryService.instance = new CountryService( db );
+    CountryService.Model = Country;
 
     return CountryService.instance;
 };

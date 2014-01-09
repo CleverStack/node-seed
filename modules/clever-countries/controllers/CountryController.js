@@ -1,48 +1,69 @@
-module.exports = function( CountryService ) {
-
-    return (require('classes').Controller).extend(
-    {
-
-        service:CountryService
-    },
-    /* @Prototype */
-    {
-
-        listAction: function() {
-            CountryService.list()
-            .then( this.proxy( 'handleServiceMessage' ) )
-            .fail( this.proxy( 'handleException' ) );
+module.exports = function ( CountryService ) {
+    return (require( 'classes' ).Controller).extend(
+        {
+            service: CountryService
         },
+        /* @Prototype */
+        {
 
-        postAction: function() {
-            if (!!this.req.body.name) {
-                return CountryService.findByName( this.req.body.name )
-                        .then( this.proxy( 'handleServiceMessage' ) )
-                        .fail( this.proxy( 'handleException' ) );
-            }
-            else if (!!this.req.body.code || !!this.req.body.countryCode) {
-                return CountryService.findByCode( this.req.body.code || this.req.body.countryCode )
-                        .then( this.proxy( 'handleServiceMessage' ) )
-                        .fail( this.proxy( 'handleException' ) );
-            }
-            else if (!!this.req.body.id) {
-                return CountryService.findById( this.req.body.id )
-                        .then( this.proxy( 'handleServiceMessage' ) )
-                        .fail( this.proxy( 'handleException' ) );
-            } else {
-                return CountryService.list( this.req.body.order || this.req.body.orderBy, this.req.body.sort || this.req.body.sortBy )
-                        .then( this.proxy( 'handleServiceMessage' ) )
-                        .fail( this.proxy( 'handleException' ) );
-            }
-        },
+            listAction: function () {
+                var query = this.req.query
+                  , action;
 
-        handleServiceMessage : function(obj){
-            if( obj.statuscode ){
-                this.send( obj.message, obj.statuscode );
-            } else {
-                this.send( obj, 200 );
-            }
-        }
+                if ( query.hasOwnProperty( 'state' ) ) {
+                    action = CountryService.statesList()
+                } else if ( query.hasOwnProperty( 'province' ) ) {
+                    action = CountryService.provincesList()
+                } else {
+                    action = CountryService.countryList()
+                }
 
-    });
-}
+                return action
+                    .then( this.proxy( 'handleServiceMessage' ) )
+                    .fail( this.proxy( 'handleException' ) );
+            },
+
+            postAction: function () {
+                var action
+                  , data = this.req.body;
+
+                if ( !!data.name ) {
+                    action = CountryService.findByName( data.name );
+                }
+                else if ( !!data.id ) {
+                    action = CountryService.findById( data.id );
+                }
+                else if ( !!data.countryCode ) {
+                    action = CountryService.findCountryByCode( data.countryCode );
+                }
+                else if ( !!data.stateCode ) {
+                    action = CountryService.findStateByCode( data.stateCode );
+                }
+                else if ( !!data.provinceCode ) {
+                    action = CountryService.findProvinceByCode( data.provinceCode );
+                }
+                else {
+                    return this.send( 'Insufficient data', 400 );
+                }
+
+                return action
+                    .then( this.proxy( 'handleServiceMessage' ) )
+                    .fail( this.proxy( 'handleException' ) );
+            },
+
+            handleServiceMessage: function ( obj ) {
+                if ( obj.statuscode ) {
+                    return this.send( obj.message, obj.statuscode );
+                } else {
+                    return this.send( obj, 200 );
+                }
+            },
+
+            handleException: function ( exception ) {
+                if ( typeof exception !== "object" || !exception.stack ) {
+                    return this.send( 500, exception );
+                }
+                this._super( exception );
+            }
+        } );
+};
