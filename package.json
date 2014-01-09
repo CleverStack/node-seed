@@ -74,6 +74,7 @@
   },
   "bundledDependencies": [
     "application",
-    "background-tasks"
+    "background-tasks",
+    "clever-countries"
   ]
 }

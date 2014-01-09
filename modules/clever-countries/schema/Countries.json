@@ -1,0 +1,57 @@
+[
+    {
+        "category": "countries",
+        "name": "Afghanistan",
+        "code": "AF"
+    },
+    {
+        "category": "countries",
+        "name": "Aland Islands",
+        "code": "AX"
+    },
+    {
+        "category": "countries",
+        "name": "Albania",
+        "code": "AL"
+    },
+    {
+        "category": "countries",
+        "name": "Algeria",
+        "code": "DZ"
+    },
+    {
+        "category": "countries",
+        "name": "American Samoa",
+        "code": "AS"
+    },
+    {
+        "category": "countries",
+        "name": "Andorra",
+        "code": "AD"
+    },
+    {
+        "category": "countries",
+        "name": "Angola",
+        "code": "AO"
+    },
+    {
+        "category": "countries",
+        "name": "Anguilla",
+        "code": "AI"
+    },
+    {
+        "category": "countries",
+        "name": "Antarctica",
+        "code": "AQ"
+    },
+    {
+        "category": "countries",
+        "name": "Antigua And Barbuda",
+        "code": "AG"
+    },
+    {
+        "category": "countries",
+        "name": "Argentina",
+        "code": "AR"
+    }
+]

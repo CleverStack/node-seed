@@ -1,6 +1,6 @@
 {
 	"odm": {
-	    "enabled": false,
+	    "enabled": true,
 
 	    "models": [
 	        "Mongo"
