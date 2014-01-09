@@ -5,7 +5,6 @@ var config = require( './config' )
   , env = process.env.NODE_ENV || config.environmentName || 'development'
   , initializeRoutes = require( './routes' )
   , modelInjector = require( 'utils' ).modelInjector
-  , Sequelize = require( 'sequelize' )
   , Injector = require( 'utils' ).injector
   , passport = require( 'passport' )
   , mongoose = require( 'mongoose' )
@@ -13,14 +12,6 @@ var config = require( './config' )
   , app = express();
 
 var RedisStore = require( 'connect-redis' )( express );
-
-// Setup ORM
-var sequelize = new Sequelize(
-    config.db.database,
-    config.db.username,
-    config.db.password,
-    config.db.options
-);
 
 // Setup ODM
 if ( config.odm && config.odm.enabled ) {
@@ -36,10 +27,8 @@ app.set( 'injector', injector );
 
 injector.instance( 'injector', injector );
 injector.instance( 'app', app );
-injector.instance( 'sequelize', sequelize );
 injector.instance( 'config', config );
 injector.instance( 'mongoose', mongoose );
-injector.instance( 'db', sequelize );
 
 // Get our module loader
 var moduleLoader = require( 'utils' ).moduleLoader.getInstance();
@@ -49,13 +38,6 @@ injector.instance( 'moduleLoader', moduleLoader );
 
 // Initialize all the modules
 moduleLoader.initializeModules( injector );
-
-// Get our models
-var models = require( 'models' )
-injector.instance( 'models', models );
-
-// Run our model injection service
-// modelInjector( models );
 
 app.configure(function() {
 

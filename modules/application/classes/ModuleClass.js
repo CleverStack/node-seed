@@ -5,11 +5,19 @@ var Class = require( 'uberclass' )
 module.exports = Class.extend(
 {
     moduleFolders: [
-        'controllers',
-        'models',
+        'classes',
+        'models/orm',
+        'models/odm',
         'services',
+        'controllers',
         'tasks',
-        'classes'
+        'bin'
+    ],
+
+    moduleHooks: [
+        'initInjector',
+        'initModels',
+        'initViews'
     ]
 },
 {
@@ -17,7 +25,7 @@ module.exports = Class.extend(
 
     paths: null,
 
-    setup: function( name, injector ) {
+    init: function( name, injector ) {
         // Set our module name
         this.name = name;
 
@@ -30,16 +38,47 @@ module.exports = Class.extend(
         // Add our moduleFolders to the list of paths, and our injector paths
         this.Class.moduleFolders.forEach( this.proxy( 'addFolderToPath', injector ) );
 
+        // Run our hooks
+        this.runHooks( injector );
+
+        // Initialize the routes, they should ALWAYS come last
+        this.initRoutes( injector );
+
         // Actually load the resources
         this.loadResources();
-
-        // Initialize the routes
-        this.initRoutes( injector );
     },
 
     addFolderToPath: function( injector, folder ) {
-        var p = [ this.modulePath, folder ].join( path.sep );
-        this[ folder ] = {};
+        var p = [ this.modulePath, folder ].join( path.sep )
+          , obj = {}
+          , folders = p.split( '/' )
+          , currentFolder = null
+          , rootFolder = null
+          , lastFolder = obj
+          , foundModuleDir = false
+          , insideModule = false;
+
+        while ( folders.length > 0 ) {
+            currentFolder = folders.shift();
+            if ( currentFolder === 'modules' ) {
+                foundModuleDir = true;
+            } else if ( insideModule === false && foundModuleDir === true && currentFolder === this.name ) {
+                insideModule = true;
+            } else if ( foundModuleDir === true && insideModule === true ) {
+                if ( rootFolder === null ) {
+                    rootFolder = currentFolder;
+                    if ( this[ rootFolder ] !== undefined  ) {
+                        lastFolder = obj = this[ rootFolder ];
+                    }
+                } else {
+                    if ( lastFolder[ currentFolder ] === undefined ) {
+                        lastFolder[ currentFolder ] = {};
+                    }
+                    lastFolder = lastFolder[ currentFolder ];
+                }
+            }
+        }
+        this[ rootFolder ] = obj;
         this.paths.push( p );
         injector._inherited.factoriesDirs.push( p );
     },
@@ -49,18 +88,43 @@ module.exports = Class.extend(
     },
 
     inspectPathForResources: function( pathToInspect ) {
-        fs.readdirSync( pathToInspect + '/' ).forEach( this.proxy( 'addResource', pathToInspect ) );
+        if ( fs.existsSync( pathToInspect + '/' ) ) {
+            fs.readdirSync( pathToInspect + '/' ).forEach( this.proxy( 'addResource', pathToInspect ) );
+        }
     },
 
     addResource: function( pathToInspect, file ) {
         if ( file.match(/.+\.js$/g) !== null && file !== 'index.js' && file !== 'module.js' ) {
-            var name = file.replace( '.js', '' )
-              , folder = pathToInspect.split('/').pop();
+            var folders = pathToInspect.split('/')
+              , name = file.replace( '.js', '' )
+              , currentFolder = null
+              , rootFolder = null
+              , lastFolder = this
+              , foundModuleDir = false
+              , insideModule = false;
 
-            if ( this.Class.moduleFolders.indexOf( folder ) !== -1 ) {
-                this[ folder ][ name ] = require( [ pathToInspect, '/', file ].join( '' ) );
+            while ( folders.length > 0 ) {
+                currentFolder = folders.shift();
+                if ( currentFolder === 'modules' ) {
+                    foundModuleDir = true;
+                } else if ( insideModule === false && foundModuleDir === true && currentFolder === this.name ) {
+                    insideModule = true;
+                } else if ( foundModuleDir === true && insideModule === true ) {
+                    if ( rootFolder === null ) {
+                        rootFolder = currentFolder;
+                        if ( this[ rootFolder ] !== undefined  ) {
+                            lastFolder = this[ rootFolder ];
+                        }
+                    } else {
+                        lastFolder = lastFolder[ currentFolder ];
+                    }
+                }
+            }
+
+            if ( rootFolder === 'models' ) {
+                lastFolder[ name ] = require( currentFolder ).loadModel( [ pathToInspect, '/', file ].join( '' ) );
             } else {
-                this[ name ] = require( [ pathToInspect, '/', file ].join( '' ) );
+                lastFolder[ name ] = require( [ pathToInspect, '/', file ].join( '' ) );
             }
         }
     },
@@ -68,6 +132,16 @@ module.exports = Class.extend(
     initRoutes: function( injector ) {
         if ( typeof this.routes === 'function' ) {
             injector.inject( this.routes );
+        }
+    },
+
+    runHooks: function( injector ) {
+        this.Class.moduleHooks.forEach( this.proxy( 'runHook', injector ) );
+    },
+
+    runHook: function( injector, hook ) {
+        if ( typeof this[ hook ] === 'function' ) {
+            this[ hook ]( injector );
         }
     }
 });
