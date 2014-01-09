@@ -9,3 +9,4 @@ test-results.xml
 !.gitignore
 .*.swp
 docs
+local.json
