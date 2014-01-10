@@ -81,7 +81,11 @@ module.exports = Class.extend(
         }
         this[ rootFolder ] = obj;
         this.paths.push( p );
-        injector._inherited.factoriesDirs.push( p );
+
+        // No loading models directly through the injector
+        if ( !/model/ig.test( p ) ) {
+            injector._inherited.factoriesDirs.push( p );
+        }
     },
 
     loadResources: function() {
@@ -131,8 +135,8 @@ module.exports = Class.extend(
     },
 
     initRoutes: function( injector ) {
-        debug( 'initRoutes for module ' + this.name );
         if ( typeof this.routes === 'function' ) {
+            debug( 'initRoutes for module ' + this.name );
             injector.inject( this.routes );
         }
     },
