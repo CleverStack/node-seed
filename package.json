@@ -73,6 +73,7 @@
     "application",
     "orm",
     "clever-countries",
+    "clever-role",
     "example-module"
   ]
 }
