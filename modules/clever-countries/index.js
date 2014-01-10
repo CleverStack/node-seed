@@ -1,7 +1,7 @@
-var applicationModule = require( 'classes' ).ModuleClass.extend( {
+var cleverCountryModule = require( 'classes' ).ModuleClass.extend( {
     init: function () {
         console.log( 'Clever-countries module initialized' );
     }
 } );
 
-module.exports = new applicationModule( 'clever-countries', injector );
+module.exports = new cleverCountryModule( 'clever-countries', injector );
