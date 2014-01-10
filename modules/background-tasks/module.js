@@ -1,5 +1,5 @@
-var backgroundTasksModule = require( 'classes' ).ModuleClass.extend({
+var Module = require( 'classes' ).ModuleClass.extend({
 	
 });
 
-module.exports = new backgroundTasksModule( 'application', injector );
+module.exports = new Module( 'application', injector );
