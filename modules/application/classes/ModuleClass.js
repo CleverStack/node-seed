@@ -1,7 +1,10 @@
 var Class = require( 'uberclass' )
   , path = require( 'path' )
   , fs = require( 'fs' )
-  , debug = require( 'debug' )( 'Modules' );
+  , debug = require( 'debug' )( 'Modules' )
+  , config = injector.getInstance( 'config' )
+  , app = injector.getInstance( 'app' )
+  , express = injector.getInstance( 'express' );
 
 module.exports = Class.extend(
 {
@@ -14,12 +17,6 @@ module.exports = Class.extend(
         'controllers',
         'tasks',
         'bin'
-    ],
-
-    moduleHooks: [
-        'initInjector',
-        'initModels',
-        'initViews'
     ]
 },
 {
@@ -27,11 +24,21 @@ module.exports = Class.extend(
 
     paths: null,
 
-    init: function( name, injector ) {
-        debug( 'Init called for module ' + name );
+    config: null,
 
+    setup: function( name, injector ) {
+        debug( 'setup called for module ' + name );
+        
         // Set our module name
         this.name = name;
+
+        // Allow some code to be executed before the main setup
+        this.hook( 'preSetup' );
+
+        // Set our config if there is any
+        this.config = typeof config[ name ] === 'object'
+            ? config[ name ]
+            : {};
 
         // Set the modules location
         this.modulePath = [ path.dirname( path.dirname( __dirname ) ), this.name ].join( path.sep );
@@ -42,11 +49,23 @@ module.exports = Class.extend(
         // Add our moduleFolders to the list of paths, and our injector paths
         this.Class.moduleFolders.forEach( this.proxy( 'addFolderToPath', injector ) );
 
-        // Run our hooks
-        this.runHooks( injector );
-
-        // Actually load the resources
+        this.hook( 'preResources' );
+        
         this.loadResources();
+
+        if ( typeof this.configureApp === 'function' ) {
+            debug( 'configureApp hook called for module ' + this.name );
+            app.configure( this.proxy( 'configureApp', app, express ) );
+        }
+
+        this.hook( 'preInit' );
+    },
+
+    hook: function( hookName ) {
+        if ( typeof this[ hookName ] === 'function' ) {
+            debug( hookName + ' hook called for module ' + this.name );
+            this[ hookName ]( injector );
+        }
     },
 
     addFolderToPath: function( injector, folder ) {
@@ -81,7 +100,11 @@ module.exports = Class.extend(
         }
         this[ rootFolder ] = obj;
         this.paths.push( p );
-        injector._inherited.factoriesDirs.push( p );
+
+        // No loading models directly through the injector
+        if ( !/model/ig.test( p ) ) {
+            injector._inherited.factoriesDirs.push( p );
+        }
     },
 
     loadResources: function() {
@@ -131,20 +154,9 @@ module.exports = Class.extend(
     },
 
     initRoutes: function( injector ) {
-        debug( 'initRoutes for module ' + this.name );
         if ( typeof this.routes === 'function' ) {
+            debug( 'initRoutes for module ' + this.name );
             injector.inject( this.routes );
-        }
-    },
-
-    runHooks: function( injector ) {
-        this.Class.moduleHooks.forEach( this.proxy( 'runHook', injector ) );
-    },
-
-    runHook: function( injector, hook ) {
-        if ( typeof this[ hook ] === 'function' ) {
-            debug( [ 'runHook', hook, 'for module', this.name ].join( ' ' ) );
-            this[ hook ]( injector );
         }
     }
 });

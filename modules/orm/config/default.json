@@ -1,0 +1,17 @@
+{
+    "orm": {
+        "db": {
+            "username": "john",
+            "password": "secret",
+            "database": "nodeseed",
+            "options": {
+                "host": "localhost",
+                "dialect": "mysql",
+                "port": 3306
+            }
+        },
+        "modelAssociations": {
+            "Example": {}
+        }
+    }
+}

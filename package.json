@@ -7,21 +7,17 @@
     "setup": "npm i; grunt db;"
   },
   "dependencies": {
+    "express": "",
     "async": "",
     "clever-controller": "",
     "connect-redis": "~1.4.5",
     "dehumanize-date": "",
-    "ejs": "",
-    "express": "",
     "i": "",
     "i18n": "",
     "jasmine-node": "",
     "memcached": "",
     "moment": "",
     "nconf": "",
-    "passport": "*",
-    "passport-facebook": "",
-    "passport-local": "*",
     "pg": "",
     "q": "",
     "supervisor": "",
@@ -32,7 +28,6 @@
     "validator": "",
     "matchdep": "~0.1.2",
     "colors": "~0.6.1",
-    "mongoose": "~3.6.20",
     "helmet": "~0.1.0",
     "debug": "~0.7.2",
     "sendgrid": "~0.3.1"
@@ -71,7 +66,9 @@
   },
   "bundledDependencies": [
     "application",
+    "auth",
     "orm",
+    "odm",
     "clever-countries",
     "clever-role",
     "example-module"

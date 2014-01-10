@@ -1,37 +1,19 @@
-// Get everything ready
 var config = require( './config' )
   , express = require( 'express' )
   , webPort = process.env.NODE_WWW_PORT || config.webPort || 8080
-  , env = process.env.NODE_ENV || config.environmentName || 'development'
-  , initializeRoutes = require( './routes' )
-  , modelInjector = require( 'utils' ).modelInjector
-  , Injector = require( 'utils' ).injector
-  , passport = require( 'passport' )
-  , mongoose = require( 'mongoose' )
-  , initializeSecurity = require( './security' )
-  , app = express();
-
-var RedisStore = require( 'connect-redis' )( express );
-
-// Setup ODM
-if ( config.odm && config.odm.enabled ) {
-  mongoose.connect(config.mongoose.uri);
-}
+  // , initializeSecurity = require( './security' )
+  , app = module.exports = express()
+  , moduleLoader;
 
 // Bootstrap our DI
-// GLOBAL.injector = Injector(  __dirname + '/src/services/', __dirname + '/src/controllers/' );
-GLOBAL.injector = Injector();
+GLOBAL.injector = require( 'utils' ).injector();
 
-app.set( 'port', webPort );
-app.set( 'injector', injector );
-
-injector.instance( 'injector', injector );
+injector.instance( 'express', express );
 injector.instance( 'app', app );
 injector.instance( 'config', config );
-injector.instance( 'mongoose', mongoose );
 
-// Get our module loader
-var moduleLoader = require( 'utils' ).moduleLoader.getInstance();
+// Load our modules and initialize them
+moduleLoader = require( 'utils' ).moduleLoader.getInstance();
 
 // Add our moduleLoader to the injector
 injector.instance( 'moduleLoader', moduleLoader );
@@ -40,60 +22,8 @@ injector.instance( 'moduleLoader', moduleLoader );
 moduleLoader.initializeModules( injector );
 
 app.configure(function() {
-
-    // static file delivery
-    app.use( express[ 'static' ]( __dirname + '/public' ) );
-
-    // middleware stack
-    app.use( express.bodyParser() );
-
-    // session management
-    app.use( express.cookieParser() );
-    app.use( express.session({
-        secret: config.secretKey
-        , cookie: { secure: false, maxAge: 86400000 }
-        , store: new RedisStore({
-            host: config.redis.host
-            , port: config.redis.port
-            , prefix: config.redis.prefix+process.env.NODE_ENV+"_"
-            , password: config.redis.key
-        })
-    }));
-
-    // Enable CORS
-    app.use(function( req, res, next ) {
-        res.header("Access-Control-Allow-Origin", req.headers.origin);
-        res.header("Access-Control-Allow-Headers", "x-requested-with, content-type");
-        res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
-        res.header("Access-Control-Allow-Credentials", "true");
-        res.header("Access-Control-Max-Age", "1000000000");
-        // intercept OPTIONS method
-        if ('OPTIONS' == req.method) {
-            res.send(200);
-        }
-        else {
-            next();
-        }
-    });
-
-    app.use( express.logger('dev') );
-    app.use( express.compress() );
-    app.use( express.favicon() );
-    app.use( express.methodOverride() );
-
-    app.use( passport.initialize() );
-    app.use( passport.session() );
-
-    // register middleware for security headers
-    initializeSecurity( app, config );
-
+    // Attach our router
     app.use( app.router );
-
-    app.set( 'views', __dirname + '/src/views' );
-    app.set( 'view engine', 'ejs' );
-    app.set( 'view options', {
-        layout: false
-    });
 
     // error handler, outputs json since that's usually
     // what comes out of this thing
@@ -105,13 +35,7 @@ app.configure(function() {
     });
 });
 
-// register application routes
-// initializeRoutes( app );
-
-module.exports = app;
-
-// if (require.main == module) {
+// Listen for requests
 app.listen(webPort, function() {
     console.log("Starting server on port " + webPort + " in " + config.environmentName + " mode");
 });
-// }
