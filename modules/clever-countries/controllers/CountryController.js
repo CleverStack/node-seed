@@ -1,3 +1,5 @@
+var config = require( '../config' );
+
 module.exports = function ( CountryService ) {
     return (require( 'classes' ).Controller).extend(
         {
@@ -10,9 +12,9 @@ module.exports = function ( CountryService ) {
                 var query = this.req.query
                   , action;
 
-                if ( query.hasOwnProperty( 'state' ) ) {
+                if ( config.statesUSA && query.hasOwnProperty( 'state' ) ) {
                     action = CountryService.statesList()
-                } else if ( query.hasOwnProperty( 'province' ) ) {
+                } else if ( config.provincesCanada && query.hasOwnProperty( 'province' ) ) {
                     action = CountryService.provincesList()
                 } else {
                     action = CountryService.countryList()
@@ -36,10 +38,10 @@ module.exports = function ( CountryService ) {
                 else if ( !!data.countryCode ) {
                     action = CountryService.findCountryByCode( data.countryCode );
                 }
-                else if ( !!data.stateCode ) {
+                else if ( config.statesUSA && !!data.stateCode ) {
                     action = CountryService.findStateByCode( data.stateCode );
                 }
-                else if ( !!data.provinceCode ) {
+                else if ( config.provincesCanada && !!data.provinceCode ) {
                     action = CountryService.findProvinceByCode( data.provinceCode );
                 }
                 else {
@@ -52,7 +54,7 @@ module.exports = function ( CountryService ) {
             },
 
             handleServiceMessage: function ( obj ) {
-                if ( obj.statuscode ) {
+                if ( !!obj && obj.statuscode ) {
                     return this.send( obj.message, obj.statuscode );
                 } else {
                     return this.send( obj, 200 );

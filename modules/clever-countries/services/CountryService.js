@@ -1,7 +1,8 @@
 var BaseService = require( './BaseService' )
   , CountryService = null
   , Q = require( 'q' )
-  ,  _ = require( 'lodash' );
+  , _ = require( 'lodash' )
+  , config = require( '../config' );;
 
 var categories = [ 'countries', 'statesUSA', 'provincesCanada' ]
   , errMs = { statuscode: 400, message: "Insufficient data" };
@@ -12,18 +13,19 @@ var normalize = function ( data ) {
         return {
             id: obj._id || obj.id,
             name: obj.name,
-            code: obj.code
+            code: obj.code,
+            category: obj.category
         }
     };
 
-    if ( _.isPlainObject( data ) ) {
-        result = norm ( data );
-    } else if ( _.isArray( data ) ) {
+    if ( _.isArray( data ) ) {
         result = [];
         _.forEach( data, function ( obj ) {
             result.push ( norm ( obj ) );
         } );
         result = _.sortBy( result, 'name' );
+    } else if ( _.isObject( data ) ) {
+        result = norm ( data );
     } else {
         result = data;
     }
@@ -42,7 +44,7 @@ var findCategory = function ( category ) {
     return index === -1 ? categories [ 0 ] : categories [ index ];
 };
 
-module.exports = function ( db, Country ) {
+module.exports = function ( db, CountryModel ) {
     if ( CountryService && CountryService.instance ) {
         return CountryService.instance;
     }
@@ -50,15 +52,16 @@ module.exports = function ( db, Country ) {
     CountryService = BaseService.extend( {
 
         findById: function ( id ) {
-            var deferred = Q.defer();
+            var deferred = Q.defer()
+              , query = config.mongo ? { _id: id } : { where: { id: id } };
 
-            this.findById( id )
+            this.find( query )
                 .then( function ( result ) {
                     if ( !result ) {
                         return deferred.resolve( null );
                     }
 
-                    deferred.resolve( normalize( result ) );
+                    deferred.resolve( normalize( result[0] ) );
                 } )
                 .fail( deferred.reject );
 
@@ -67,9 +70,10 @@ module.exports = function ( db, Country ) {
 
         findByName: function ( name ) {
             var self = this
-              , deferred = Q.defer();
+              , deferred = Q.defer()
+              , query = config.mongo ? { name: name } : { where: { name: name } };
 
-            self.find( { name: name } )
+            self.find( query )
                 .then( function ( result ) {
                     if ( !result ) {
                         return deferred.resolve( null );
@@ -95,7 +99,9 @@ module.exports = function ( db, Country ) {
                 code: code.toUpperCase()
             };
 
-            this.find( obj )
+            var query = config.mongo ? obj : { where: obj };
+
+            this.find( query )
                 .then( function ( result ) {
                     if ( !result ) {
                         return deferred.reject( null );
@@ -126,8 +132,9 @@ module.exports = function ( db, Country ) {
             var obj = {
                 category: findCategory ( category || '' )
             };
+            var query = config.mongo ? obj : { where: obj };
 
-            this.find( obj )
+            this.find( query )
                 .then( function ( result ) {
                     if ( !result ) {
                         return deferred.reject( null );
@@ -179,7 +186,7 @@ module.exports = function ( db, Country ) {
     } );
 
     CountryService.instance = new CountryService( db );
-    CountryService.Model = Country;
+    CountryService.Model = CountryModel;
 
     return CountryService.instance;
 };

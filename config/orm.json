@@ -6,7 +6,8 @@
             "Account",
             "Role",
             "Permission",
-            "User"
+            "User",
+            "Country"
         ],
 
         "modelAssociations": {
