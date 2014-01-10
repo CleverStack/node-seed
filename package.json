@@ -43,7 +43,7 @@
     "grunt-docular": "",
     "matchdep": "",
     "mocha": "",
-    "should": "",
+    "chai": "",
     "sinon": "",
     "karma": "",
     "supertest": "",

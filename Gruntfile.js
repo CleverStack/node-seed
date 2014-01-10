@@ -13,7 +13,7 @@ module.exports = function( grunt ) {
             tests: {
                 files: ['src/**/*', 'test/unit/**/*', 'test/integration/**/*'],
                 tasks: ['mochaTest:ci']
-            },
+            }
         },
         docular: {
             baseUrl: 'http://localhost:8888',
@@ -31,30 +31,30 @@ module.exports = function( grunt ) {
                             id: "controllers",
                             title: "Controllers",
                             scripts: [
-                                "src/controllers",
+                                "src/controllers"
                             ]
                         },
                         {
                             id: "model",
                             title: "Models",
                             scripts: [
-                                "src/model",
+                                "src/model"
                             ]
                         },
                         {
                             id: "services",
                             title: "Services",
                             scripts: [
-                                "src/service",
+                                "src/service"
                             ]
                         },
                         {
                             id: "utils",
                             title: "Utils",
                             scripts: [
-                                "src/utils",
+                                "src/utils"
                             ]
-                        },
+                        }
                     ]
                 }
             ]
@@ -89,21 +89,21 @@ module.exports = function( grunt ) {
         mochaTest: {
             unit: {
                 options: {
-                    require: 'should',
+                    require: 'chai',
                     reporter: 'spec'
                 },
                 src: ['test/server/unit/**/*.js']
             },
             e2e: {
                 options: {
-                    require: 'should',
+                    require: 'chai',
                     reporter: 'spec'
                 },
                 src: ['test/server/integration/**/*.js']
             },
             ci: {
                 options: {
-                    require: 'should',
+                    require: 'chai',
                     reporter: 'min'
                 },
                 src: ['test/server/integration/**/*.js', 'test/server/unit/**/*.js']
@@ -115,7 +115,7 @@ module.exports = function( grunt ) {
                 options: {
                     logConcurrentOutput: true
                 }
-            },
+            }
         },
         exec: {
             rebase: {
