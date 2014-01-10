@@ -1,10 +1,12 @@
 var Class = require( 'uberclass' )
   , path = require( 'path' )
-  , fs = require( 'fs' );
+  , fs = require( 'fs' )
+  , debug = require( 'debug' )( 'Modules' );
 
 module.exports = Class.extend(
 {
     moduleFolders: [
+        'exceptions',
         'classes',
         'models/orm',
         'models/odm',
@@ -26,6 +28,8 @@ module.exports = Class.extend(
     paths: null,
 
     init: function( name, injector ) {
+        debug( 'Init called for module ' + name );
+
         // Set our module name
         this.name = name;
 
@@ -40,9 +44,6 @@ module.exports = Class.extend(
 
         // Run our hooks
         this.runHooks( injector );
-
-        // Initialize the routes, they should ALWAYS come last
-        this.initRoutes( injector );
 
         // Actually load the resources
         this.loadResources();
@@ -130,6 +131,7 @@ module.exports = Class.extend(
     },
 
     initRoutes: function( injector ) {
+        debug( 'initRoutes for module ' + this.name );
         if ( typeof this.routes === 'function' ) {
             injector.inject( this.routes );
         }
@@ -141,6 +143,7 @@ module.exports = Class.extend(
 
     runHook: function( injector, hook ) {
         if ( typeof this[ hook ] === 'function' ) {
+            debug( [ 'runHook', hook, 'for module', this.name ].join( ' ' ) );
             this[ hook ]( injector );
         }
     }

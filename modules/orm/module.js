@@ -7,7 +7,6 @@ var Sequelize = require( 'sequelize' )
   , Module;
 
 Module = ModuleClass.extend({
-
     setup: function() {
         debug( 'Opening connection to database' );
 
@@ -35,7 +34,7 @@ Module = ModuleClass.extend({
         modelInjector( models );
 
         // Add it to our injector instace
-        injector.instance( 'models', require( 'models' ) );
+        injector.instance( 'models', models );
     },
 
     loadModel: function( modelPath ) {
