@@ -1,5 +1,5 @@
 module.exports = function( sequelize, DataTypes ) {
-    return sequelize.define("Test", {
+    return sequelize.define("Example", {
         id: {
             type: DataTypes.INTEGER,
             primaryKey: true,

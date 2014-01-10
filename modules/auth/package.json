@@ -1,10 +1,14 @@
 {
-  "name": "orm",
+  "name": "auth",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "mysql": "2.0.0-rc2",
-    "sequelize": "1.7.0-beta8"
+    "passport": "~0.1.18",
+    "passport-facebook": "~1.0.2",
+    "passport-local": "~0.1.6",
+    "connect-redis": "~1.4.6",
+    "connect": "~2.12.0",
+    "redis": "~0.10.0"
   },
   "author": {
     "name": "Clevertech",
@@ -14,12 +18,10 @@
   "collaborators": [
     "Richard Gustin <richard@clevertech.biz>"
   ],
-  "description": "Clevertech ORM (SQL) Module",
+  "description": "Clevertech Authentication Module",
   "keywords": [
     ""
   ],
   "main": "module.js",
-  "devDependencies": {
-
-  }
+  "devDependencies": {}
 }

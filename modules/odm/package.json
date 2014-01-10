@@ -1,10 +1,9 @@
 {
-  "name": "orm",
+  "name": "odm",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    "mysql": "2.0.0-rc2",
-    "sequelize": "1.7.0-beta8"
+    "mongoose": "~3.6.20"
   },
   "author": {
     "name": "Clevertech",
@@ -14,7 +13,7 @@
   "collaborators": [
     "Richard Gustin <richard@clevertech.biz>"
   ],
-  "description": "Clevertech ORM (SQL) Module",
+  "description": "Clevertech ODM (NoSQL) Module",
   "keywords": [
     ""
   ],

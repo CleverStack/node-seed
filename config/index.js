@@ -1,28 +1,31 @@
-var files = [ __dirname + '/global.json', __dirname + '/security.json' ]
-  , ormJson = __dirname + '/orm.json'
-  , odmJson = __dirname + '/odm.json'
+var path = require( 'path' )
   , fs = require( 'fs' )
-  , envConfigOverride = __dirname + '/' + (process.env.NODE_ENV ? process.env.NODE_ENV.toLowerCase() : 'local') + '.json';
+  , debug = require( 'debug' )( 'Config' )
+  , envOverride = process.env.NODE_ENV
+        ? process.env.NODE_ENV.toLowerCase()
+        : null
+  , fileNames = [ 'global', 'default' ]
+  , packageJson = require( path.resolve( __dirname + '/../' ) + '/package.json' )
+  , configFiles = {
+        global: [ __dirname + '/global.json' ],
+        env: [ __dirname + '/' + envOverride + '.json' ]
+    };
 
-// Load ORM.json if its available and configured
-if ( fs.existsSync( ormJson ) ) {
-  files.push( ormJson );
+if ( envOverride === null ) {
+    debug( 'No environment based config found' );
 } else {
-  console.info( 'ORM.json not found, no ORM loaded.' );
+    fileNames.push( envOverride );
 }
 
-// Load ODM.json if its available and configured
-if ( fs.existsSync( odmJson ) ) {
-  files.push( odmJson );
-} else {
-  console.info( 'ODM.json not found, no ODM loaded.' );
-}
+packageJson.bundledDependencies.forEach(function( moduleName ) {
+    var moduleConfigPath = [ path.resolve( __dirname + '/../modules' ), moduleName, 'config', '' ].join( path.sep );
 
-if ( fs.existsSync( envConfigOverride ) ) {
-	files.push( envConfigOverride );
-} else {
-	throw new Error( 'Error: No configuration for environment: ' + process.env.NODE_ENV );
-}
+    fileNames.forEach(function( fileName ) {
+        var filePath = moduleConfigPath + fileName + '.json';
+        if ( fs.existsSync( filePath ) ) {
+            configFiles[ fileName == 'default' ? 'global' : fileName ].push( filePath );
+        }
+    });
+});
 
-var config = require( 'nconf' ).loadFilesSync( files );
-module.exports = config;
+module.exports = require( 'nconf' ).loadFilesSync( [].concat( configFiles.global, configFiles.env ) );

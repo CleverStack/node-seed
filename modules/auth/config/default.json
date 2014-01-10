@@ -1,0 +1,12 @@
+{
+    "auth": {
+        "secretKey": "youMustChangeMe",
+
+        "redis": {
+            "host": "localhost",
+            "port": "6379",
+            "prefix": "",
+            "key": ""
+        }
+    }
+}
