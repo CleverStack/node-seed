@@ -1,10 +1,11 @@
-var cluster = require('cluster')
+var cluster = require( 'cluster' )
+  , cp = require( 'child_process' )
+  , config = require( './config' )
+  , packageJson = require( './package.json' )
   , backgroundTasks = null
-  , cp = require('child_process')
-  , config = require('./config');
 
 // Set the node path - this works only because the other processes are forked.
-// process.env.NODE_PATH = process.env.NODE_PATH ? './src/:' + process.env.NODE_PATH : './src/';
+process.env.NODE_PATH = process.env.NODE_PATH ? './lib/:./modules/:' + process.env.NODE_PATH : './lib/:./modules/';
 
 if ( cluster.isMaster ) {
     cluster.on('exit', function( worker, code, signal ) {
@@ -26,21 +27,22 @@ if ( cluster.isMaster ) {
         });
     });
 
-    // Setup the background tasks worker
-    if ( config.background && config.background.enabled === true ) {
-        function setupBackgroundTasks() {
-            console.log('Setup background tasks...');
+    if ( packageJson.bundledDependencies.indexOf( 'background-tasks' ) !== -1 ) {
+        if ( config[ 'background-tasks' ] && config[ 'background-tasks' ].enabled === true ) {
+            function setupBackgroundTasks() {
+                console.log('Setup background tasks...');
 
-            backgroundTasks = cp.fork('./bin/backgroundTasks.js');
-            backgroundTasks.on('exit', setupBackgroundTasks);
-            backgroundTasks.on('message', function( msg ){
-                console.log('\nMaster ' + process.pid + ' received message from Background Task Process ' + this.pid + '.', msg);
-                msg['cmd'] = 'master';
-                
-                ( !msg.wrkid ) ? backgroundTasks.send( msg ) : cluster.workers[ msg.wrkid ].send( msg ) ;
-            });
+                backgroundTasks = cp.fork('./modules/background-tasks/bin/backgroundTasks.js');
+                backgroundTasks.on('exit', setupBackgroundTasks);
+                backgroundTasks.on('message', function( msg ){
+                    console.log('\nMaster ' + process.pid + ' received message from Background Task Process ' + this.pid + '.', msg);
+                    msg['cmd'] = 'master';
+                    
+                    ( !msg.wrkid ) ? backgroundTasks.send( msg ) : cluster.workers[ msg.wrkid ].send( msg ) ;
+                });
+            }
+            setupBackgroundTasks();
         }
-        setupBackgroundTasks();
     }
 
 } else {

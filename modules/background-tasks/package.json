@@ -1,0 +1,23 @@
+{
+  "name": "background-tasks",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "memcached": "~0.2.6",
+    "moment": "~2.5.0"
+  },
+  "author": {
+    "name": "Clevertech",
+    "email": "info@clevertech.biz",
+    "web": "http://www.clevertech.biz"
+  },
+  "collaborators": [
+    "Richard Gustin <richard@clevertech.biz>"
+  ],
+  "description": "",
+  "keywords": [
+    ""
+  ],
+  "main": "module.js",
+  "devDependencies": {}
+}

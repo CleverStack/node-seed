@@ -1,0 +1,25 @@
+{
+  "name": "orm",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "mysql": "2.0.0-rc2",
+    "sequelize": "1.7.0-beta8"
+  },
+  "author": {
+    "name": "Clevertech",
+    "email": "info@clevertech.biz",
+    "web": "http://www.clevertech.biz"
+  },
+  "collaborators": [
+    "Richard Gustin <richard@clevertech.biz>"
+  ],
+  "description": "Clevertech ORM (SQL) Module",
+  "keywords": [
+    ""
+  ],
+  "main": "module.js",
+  "devDependencies": {
+
+  }
+}

@@ -92,21 +92,21 @@ module.exports = function( grunt ) {
                     require: 'chai',
                     reporter: 'spec'
                 },
-                src: ['test/server/unit/**/*.js']
+                src: ['modules/**/tests/unit/*.js']
             },
             e2e: {
                 options: {
                     require: 'chai',
                     reporter: 'spec'
                 },
-                src: ['test/server/integration/**/*.js']
+                src: ['modules/**/tests/integration/**/*.js']
             },
             ci: {
                 options: {
                     require: 'chai',
                     reporter: 'min'
                 },
-                src: ['test/server/integration/**/*.js', 'test/server/unit/**/*.js']
+                src: ['modules/**/tests/integration/**/*.js', 'modules/**/tests/unit/**/*.js']
             }
         },
         concurrent: {
@@ -119,10 +119,10 @@ module.exports = function( grunt ) {
         },
         exec: {
             rebase: {
-                cmd: "node bin/rebase.js"
+                cmd: "NODE_PATH=./lib/:./modules/; node bin/rebase.js"
             },
             seed: {
-                cmd: "node bin/seedModels.js"
+                cmd: "NODE_PATH=./lib/:./modules/; node bin/seedModels.js"
             }
         }
     });

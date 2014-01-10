@@ -1,45 +1,7 @@
 {
+  "main": "app.js",
   "name": "cleverstack-node-seed",
   "version": "0.0.2",
-  "private": true,
-  "scripts": {
-    "start": "grunt",
-    "setup": "npm i; grunt db;"
-  },
-  "dependencies": {
-    "async": "",
-    "clever-controller": "",
-    "connect-redis": "~1.4.5",
-    "dehumanize-date": "",
-    "ejs": "",
-    "express": "",
-    "i": "",
-    "i18n": "",
-    "jasmine-node": "",
-    "memcached": "",
-    "moment": "",
-    "mysql": "*",
-    "nconf": "",
-    "passport": "*",
-    "passport-facebook": "",
-    "passport-local": "*",
-    "pg": "",
-    "q": "",
-    "sequelize": "",
-    "squel": "",
-    "supervisor": "",
-    "time": "",
-    "uberclass": "",
-    "underscore": "",
-    "vague-time": "~0.5.4",
-    "validator": "",
-    "matchdep": "~0.1.2",
-    "colors": "~0.6.1",
-    "mongoose": "~3.6.20",
-    "helmet": "~0.1.0",
-    "debug": "~0.7.2",
-    "sendgrid": "~0.3.1"
-  },
   "author": {
     "name": "Clevertech",
     "email": "info@clevertech.biz",
@@ -50,11 +12,27 @@
     "Dmitry Bashkatov <dmitry@clevertech.biz>",
     "Leandro Ostera <leostera@gmail.com>"
   ],
-  "description": "",
+  "private": true,
+  "description": "Cleverstack Node-Seed",
   "keywords": [
     ""
   ],
-  "main": "app.js",
+  "scripts": {
+    "start": "grunt",
+    "setup": "npm i; grunt db;"
+  },
+  "dependencies": {
+    "express": "~3.4.7",
+    "clever-controller": "~1.0.2",
+    "nconf": "~0.6.9",
+    "uberclass": "~1.0.1",
+    "debug": "~0.7.2",
+    "sendgrid": "~0.3.1",
+    "matchdep": "~0.3.0",
+    "async": "~0.2.9",
+    "underscore": "~1.5.2",
+    "q": "~1.0.0"
+  },
   "devDependencies": {
     "grunt-contrib-watch": "",
     "grunt-contrib-clean": "",
@@ -71,5 +49,13 @@
     "supertest": "",
     "grunt-concurrent": "~0.3.0",
     "grunt-exec": "~0.4.2"
-  }
+  },
+  "bundledDependencies": [
+    "application",
+    "background-tasks",
+    "auth",
+    "orm",
+    "odm",
+    "example-module"
+  ]
 }
