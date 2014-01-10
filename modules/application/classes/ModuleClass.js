@@ -2,7 +2,8 @@ var Class = require( 'uberclass' )
   , path = require( 'path' )
   , fs = require( 'fs' )
   , debug = require( 'debug' )( 'Modules' )
-  , config = injector.getInstance( 'config' );
+  , config = injector.getInstance( 'config' )
+  , app = injector.getInstance( 'app' );
 
 module.exports = Class.extend(
 {
@@ -50,6 +51,10 @@ module.exports = Class.extend(
         this.hook( 'preResources' );
         
         this.loadResources();
+
+        if ( typeof this.configureApp === 'function' ) {
+            app.use( this.proxy( 'configureApp' ) );
+        }
 
         this.hook( 'preInit' );
     },

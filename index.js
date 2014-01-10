@@ -1,28 +1,20 @@
-// Get everything ready
 var config = require( './config' )
   , express = require( 'express' )
   , webPort = process.env.NODE_WWW_PORT || config.webPort || 8080
-  , modelInjector = require( 'utils' ).modelInjector
-  , Injector = require( 'utils' ).injector
   , passport = require( 'passport' )
   // , initializeSecurity = require( './security' )
-  , app = express();
+  , app = module.exports = express()
+  , moduleLoader;
 
 var RedisStore = require( 'connect-redis' )( express );
 
 // Bootstrap our DI
-// GLOBAL.injector = Injector(  __dirname + '/src/services/', __dirname + '/src/controllers/' );
-GLOBAL.injector = Injector();
-
-app.set( 'port', webPort );
-app.set( 'injector', injector );
-
-injector.instance( 'injector', injector );
+GLOBAL.injector = require( 'utils' ).injector();
 injector.instance( 'app', app );
 injector.instance( 'config', config );
 
-// Get our module loader
-var moduleLoader = require( 'utils' ).moduleLoader.getInstance();
+// Load our modules and initialize them
+moduleLoader = require( 'utils' ).moduleLoader.getInstance();
 
 // Add our moduleLoader to the injector
 injector.instance( 'moduleLoader', moduleLoader );
@@ -31,10 +23,6 @@ injector.instance( 'moduleLoader', moduleLoader );
 moduleLoader.initializeModules( injector );
 
 app.configure(function() {
-
-    // static file delivery
-    app.use( express[ 'static' ]( __dirname + '/public' ) );
-
     // middleware stack
     app.use( express.bodyParser() );
 
@@ -80,12 +68,6 @@ app.configure(function() {
 
     app.use( app.router );
 
-    app.set( 'views', __dirname + '/src/views' );
-    app.set( 'view engine', 'ejs' );
-    app.set( 'view options', {
-        layout: false
-    });
-
     // error handler, outputs json since that's usually
     // what comes out of this thing
     app.use(function( err, req, res, next ) {
@@ -96,13 +78,6 @@ app.configure(function() {
     });
 });
 
-// register application routes
-// initializeRoutes( app );
-
-module.exports = app;
-
-// if (require.main == module) {
 app.listen(webPort, function() {
     console.log("Starting server on port " + webPort + " in " + config.environmentName + " mode");
 });
-// }
