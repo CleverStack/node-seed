@@ -1,5 +1,5 @@
 var expect = require ( 'chai' ).expect
-  , testEnv = require ( './utils' ).testEnv
+  , testEnv = require ( 'utils' ).testEnv
   , BaseService = require ( 'services' ).BaseService;
 
 describe ( 'service.BaseService', function () {

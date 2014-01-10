@@ -1,6 +1,6 @@
 var expect = require ( 'chai' ).expect
   , sinon = require ( 'sinon' )
-  , testEnv = require ( './utils' ).testEnv
+  , testEnv = require ( 'utils' ).testEnv
   , BaseController = require ( 'classes' ).Controller
   , BaseService = require ( 'services' ).BaseService;
 
