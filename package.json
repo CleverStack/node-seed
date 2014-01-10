@@ -7,21 +7,17 @@
     "setup": "npm i; grunt db;"
   },
   "dependencies": {
+    "express": "",
     "async": "",
     "clever-controller": "",
     "connect-redis": "~1.4.5",
     "dehumanize-date": "",
-    "ejs": "",
-    "express": "",
     "i": "",
     "i18n": "",
     "jasmine-node": "",
     "memcached": "",
     "moment": "",
     "nconf": "",
-    "passport": "*",
-    "passport-facebook": "",
-    "passport-local": "*",
     "pg": "",
     "q": "",
     "supervisor": "",
@@ -70,6 +66,7 @@
   },
   "bundledDependencies": [
     "application",
+    "auth",
     "orm",
     "odm",
     "example-module"

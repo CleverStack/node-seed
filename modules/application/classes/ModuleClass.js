@@ -3,7 +3,8 @@ var Class = require( 'uberclass' )
   , fs = require( 'fs' )
   , debug = require( 'debug' )( 'Modules' )
   , config = injector.getInstance( 'config' )
-  , app = injector.getInstance( 'app' );
+  , app = injector.getInstance( 'app' )
+  , express = injector.getInstance( 'express' );
 
 module.exports = Class.extend(
 {
@@ -53,7 +54,8 @@ module.exports = Class.extend(
         this.loadResources();
 
         if ( typeof this.configureApp === 'function' ) {
-            app.use( this.proxy( 'configureApp' ) );
+            debug( 'configureApp hook called for module ' + this.name );
+            app.configure( this.proxy( 'configureApp', app, express ) );
         }
 
         this.hook( 'preInit' );
