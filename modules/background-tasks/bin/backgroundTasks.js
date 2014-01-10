@@ -1,24 +1,18 @@
-// // Get the application config
-// GLOBAL.config = require('./../config');
-// var Injector = require( './../src/utils' ).injector;
+var path = require( 'path' );
 
-// // Setup ORM
-// var Sequelize = require('sequelize');
-// var sequelize = new Sequelize(
-//     config.db.database,
-//     config.db.username,
-//     config.db.password,
-//     config.db.options
-// );
-// GLOBAL.db = sequelize;
+GLOBAL.config = require( 'config' )
+GLOBAL.injector = require( 'utils' ).injector();
 
-// GLOBAL.injector = Injector(  __dirname + '/src/services', __dirname + '/src/controllers' );
-// injector.instance( 'sequelize', sequelize );
-// injector.instance( 'config', config );
+injector.instance( 'config', config );
 
-// // Get our models
-// var models = require('./../src/models');
+// Load our modules and initialize them
+var moduleLoader = require( 'utils' ).moduleLoader.getInstance();
 
-// // Launch our background process class
-// GLOBAL.backgroundTasksClass = require('./../src/classes/BackgroundTasks.js');
-// GLOBAL.backgroundTasks = new backgroundTasksClass(config, models);
+// Add our moduleLoader to the injector
+injector.instance( 'moduleLoader', moduleLoader );
+
+var models = require( 'models' );
+
+// Launch our background process class
+GLOBAL.backgroundTasksClass = require( path.resolve( __dirname + '/../classes' ) + '/BackgroundTasks.js' );
+GLOBAL.backgroundTasks = new backgroundTasksClass(config, models);

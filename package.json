@@ -52,6 +52,7 @@
   },
   "bundledDependencies": [
     "application",
+    "background-tasks",
     "auth",
     "orm",
     "odm",
