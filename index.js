@@ -5,16 +5,10 @@ var config = require( './config' )
   , modelInjector = require( 'utils' ).modelInjector
   , Injector = require( 'utils' ).injector
   , passport = require( 'passport' )
-  , mongoose = require( 'mongoose' )
   // , initializeSecurity = require( './security' )
   , app = express();
 
 var RedisStore = require( 'connect-redis' )( express );
-
-// Setup ODM
-if ( config.odm && config.odm.enabled ) {
-  mongoose.connect(config.mongoose.uri);
-}
 
 // Bootstrap our DI
 // GLOBAL.injector = Injector(  __dirname + '/src/services/', __dirname + '/src/controllers/' );
@@ -26,7 +20,6 @@ app.set( 'injector', injector );
 injector.instance( 'injector', injector );
 injector.instance( 'app', app );
 injector.instance( 'config', config );
-injector.instance( 'mongoose', mongoose );
 
 // Get our module loader
 var moduleLoader = require( 'utils' ).moduleLoader.getInstance();
