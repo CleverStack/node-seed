@@ -1,6 +1,5 @@
 var Sequelize = require( 'sequelize' )
   , debug = require( 'debug' )( 'ORM' )
-  , config = injector.getInstance( 'config' )
   , modelInjector = require( 'utils' ).modelInjector
   , ModuleClass = require( 'classes' ).ModuleClass
   , sequelize
@@ -10,18 +9,16 @@ Module = ModuleClass.extend({
 
     loadedModels: null,
 
-    setup: function() {
+    preResources: function() {
         debug( 'Opening connection to database' );
 
         sequelize = new Sequelize(
-            config.db.database,
-            config.db.username,
-            config.db.password,
-            config.db.options
+            this.config.db.database,
+            this.config.db.username,
+            this.config.db.password,
+            this.config.db.options
         );
-    },
-    
-    initInjector: function() {
+
         injector.instance( 'Sequelize', Sequelize );
         injector.instance( 'DataTypes', Sequelize );
         injector.instance( 'sequelize', sequelize );

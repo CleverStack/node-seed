@@ -1,7 +1,8 @@
 var Class = require( 'uberclass' )
   , path = require( 'path' )
   , fs = require( 'fs' )
-  , debug = require( 'debug' )( 'Modules' );
+  , debug = require( 'debug' )( 'Modules' )
+  , config = injector.getInstance( 'config' );
 
 module.exports = Class.extend(
 {
@@ -14,12 +15,6 @@ module.exports = Class.extend(
         'controllers',
         'tasks',
         'bin'
-    ],
-
-    moduleHooks: [
-        'initInjector',
-        'initModels',
-        'initViews'
     ]
 },
 {
@@ -27,11 +22,21 @@ module.exports = Class.extend(
 
     paths: null,
 
-    init: function( name, injector ) {
-        debug( 'Init called for module ' + name );
+    config: null,
 
+    setup: function( name, injector ) {
+        debug( 'setup called for module ' + name );
+        
         // Set our module name
         this.name = name;
+
+        // Allow some code to be executed before the main setup
+        this.hook( 'preSetup' );
+
+        // Set our config if there is any
+        this.config = typeof config[ name ] === 'object'
+            ? config[ name ]
+            : {};
 
         // Set the modules location
         this.modulePath = [ path.dirname( path.dirname( __dirname ) ), this.name ].join( path.sep );
@@ -42,11 +47,18 @@ module.exports = Class.extend(
         // Add our moduleFolders to the list of paths, and our injector paths
         this.Class.moduleFolders.forEach( this.proxy( 'addFolderToPath', injector ) );
 
-        // Run our hooks
-        this.runHooks( injector );
-
-        // Actually load the resources
+        this.hook( 'preResources' );
+        
         this.loadResources();
+
+        this.hook( 'preInit' );
+    },
+
+    hook: function( hookName ) {
+        if ( typeof this[ hookName ] === 'function' ) {
+            debug( hookName + ' hook called for module ' + this.name );
+            this[ hookName ]( injector );
+        }
     },
 
     addFolderToPath: function( injector, folder ) {
@@ -138,17 +150,6 @@ module.exports = Class.extend(
         if ( typeof this.routes === 'function' ) {
             debug( 'initRoutes for module ' + this.name );
             injector.inject( this.routes );
-        }
-    },
-
-    runHooks: function( injector ) {
-        this.Class.moduleHooks.forEach( this.proxy( 'runHook', injector ) );
-    },
-
-    runHook: function( injector, hook ) {
-        if ( typeof this[ hook ] === 'function' ) {
-            debug( [ 'runHook', hook, 'for module', this.name ].join( ' ' ) );
-            this[ hook ]( injector );
         }
     }
 });
