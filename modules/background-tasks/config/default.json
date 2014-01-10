@@ -1,8 +1,17 @@
 {
-	"background":{
+	"background-tasks": {
         "on" : true,
+
+        "interval": 2500,
+
         "tasks":[
         	
-        ]
+        ],
+
+        "driver": "memcache",
+
+        "memcache": {
+        	"host": "localhost:11211"
+        }
     }
 }
