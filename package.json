@@ -75,6 +75,8 @@
   "bundledDependencies": [
     "application",
     "background-tasks",
-    "clever-countries"
+    "clever-countries",
+    "orm",
+    "test-module"
   ]
 }

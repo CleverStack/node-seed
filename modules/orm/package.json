@@ -1,9 +1,10 @@
 {
-  "name": "application",
+  "name": "orm",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    
+    "mysql": "2.0.0-rc2",
+    "sequelize": "1.7.0-beta8"
   },
   "author": {
     "name": "Clevertech",
