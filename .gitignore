@@ -2,7 +2,6 @@
 .DS_Store
 npm-debug.log
 .netbeans.xml
-node_modules
 .idea
 config/local.json
 test-results.xml
@@ -10,3 +9,4 @@ test-results.xml
 .*.swp
 docs
 local.json
+node_modules

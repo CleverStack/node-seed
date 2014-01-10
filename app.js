@@ -4,7 +4,7 @@ var cluster = require('cluster')
   , config = require('./config');
 
 // Set the node path - this works only because the other processes are forked.
-// process.env.NODE_PATH = process.env.NODE_PATH ? './src/:' + process.env.NODE_PATH : './src/';
+// process.env.NODE_PATH = process.env.NODE_PATH ? './lib/:./modules/:' + process.env.NODE_PATH : './lib/:./modules/';
 
 if ( cluster.isMaster ) {
     cluster.on('exit', function( worker, code, signal ) {

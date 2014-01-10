@@ -1,5 +1,5 @@
-var applicationModule = require( 'classes' ).ModuleClass.extend({
-    
+var Module = require( 'classes' ).ModuleClass.extend({
+
 });
 
-module.exports = new applicationModule( 'application', injector );
+module.exports = new Module( 'application', injector );
