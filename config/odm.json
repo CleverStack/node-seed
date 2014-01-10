@@ -3,7 +3,8 @@
 	    "enabled": true,
 
 	    "models": [
-	        "Mongo"
+	        "Mongo",
+            "Country"
 	    ]
 	}
 }

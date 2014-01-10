@@ -3,11 +3,7 @@
         "enabled": true,
 
         "models": [
-            "Account",
-            "Role",
-            "Permission",
-            "User",
-            "Country"
+
         ],
 
         "modelAssociations": {
