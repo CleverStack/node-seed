@@ -2,7 +2,7 @@ var BaseService = require( './BaseService' )
   , CountryService = null
   , Q = require( 'q' )
   , _ = require( 'lodash' )
-  , config = require( '../config' );;
+  , config = require( '../config' );
 
 var categories = [ 'countries', 'statesUSA', 'provincesCanada' ]
   , errMs = { statuscode: 400, message: "Insufficient data" };
@@ -44,7 +44,7 @@ var findCategory = function ( category ) {
     return index === -1 ? categories [ 0 ] : categories [ index ];
 };
 
-module.exports = function ( db, CountryModel ) {
+module.exports = function ( db, Country ) {
     if ( CountryService && CountryService.instance ) {
         return CountryService.instance;
     }
@@ -186,7 +186,7 @@ module.exports = function ( db, CountryModel ) {
     } );
 
     CountryService.instance = new CountryService( db );
-    CountryService.Model = CountryModel;
+    CountryService.Model = Country;
 
     return CountryService.instance;
 };
