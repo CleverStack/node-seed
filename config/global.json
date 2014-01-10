@@ -8,32 +8,11 @@
     },
 
     "secretKey": "youMustChangeMe",
+
     "redis": {
         "host": "localhost",
         "port": "6379",
         "prefix": "",
         "key": ""
-    },
-
-    "sendgrid":{
-        "apiUser": "",
-        "apiKey" : "",
-        "defaults": {
-          "noReply":  "",
-          "from":     "",
-          "subject":  ""
-        },
-        "account": {
-          "activation": {
-            "subject": ""
-          },
-          "registration": {
-            "forward": ""
-          }
-        }
-    },
-
-    "db": {},
-    "background":{},
-    "mongoose": {}
+    }
 }

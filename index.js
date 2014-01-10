@@ -2,13 +2,11 @@
 var config = require( './config' )
   , express = require( 'express' )
   , webPort = process.env.NODE_WWW_PORT || config.webPort || 8080
-  , env = process.env.NODE_ENV || config.environmentName || 'development'
-  , initializeRoutes = require( './routes' )
   , modelInjector = require( 'utils' ).modelInjector
   , Injector = require( 'utils' ).injector
   , passport = require( 'passport' )
   , mongoose = require( 'mongoose' )
-  , initializeSecurity = require( './security' )
+  // , initializeSecurity = require( './security' )
   , app = express();
 
 var RedisStore = require( 'connect-redis' )( express );
@@ -85,7 +83,7 @@ app.configure(function() {
     app.use( passport.session() );
 
     // register middleware for security headers
-    initializeSecurity( app, config );
+    // initializeSecurity( app, config );
 
     app.use( app.router );
 
