@@ -28,7 +28,7 @@ if ( cluster.isMaster ) {
     });
 
     if ( packageJson.bundledDependencies.indexOf( 'background-tasks' ) !== -1 ) {
-        if ( config[ 'background-tasks' ] && config[ 'background-tasks' ].enabled === true ) {
+        if ( config[ 'background-tasks' ] && config[ 'background-tasks' ].on === true ) {
             function setupBackgroundTasks() {
                 console.log('Setup background tasks...');
 
