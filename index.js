@@ -7,7 +7,7 @@ var env = utils.bootstrapEnv();
 env.moduleLoader.loadModules();
 
 // Initialize all the modules
-env.moduleLoader.initializeModules( injector );
+env.moduleLoader.initializeRoutes( injector );
 
 // Add our standard configuration
 env.app.configure(function() {
@@ -28,3 +28,6 @@ env.app.configure(function() {
 env.app.listen( env.webPort, function() {
     console.log("Starting server on port " + env.webPort + " in " + env.config.environmentName + " mode");
 });
+
+// Export the Express app
+module.exports = env.app;

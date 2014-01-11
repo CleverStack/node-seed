@@ -15,8 +15,7 @@ module.exports = Class.extend(
         'models/odm',
         'services',
         'controllers',
-        'tasks',
-        'bin'
+        'tasks'
     ]
 },
 {

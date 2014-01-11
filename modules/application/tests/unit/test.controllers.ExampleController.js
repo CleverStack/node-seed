@@ -1,5 +1,5 @@
 // Bootstrap the testing environmen
-require ( 'utils' ).testEnv();
+var testEnv = require ( 'utils' ).testEnv();
 
 var expect = require ( 'chai' ).expect
   , models = require( 'models' )
@@ -9,20 +9,22 @@ describe ( 'controllers.ExampleController', function () {
     var ctrl;
 
     beforeEach ( function ( done ) {
-        var req = {
-            params: { action: 'fakeAction'},
-            method: 'GET',
-            query: {}
-        };
-        var res = {
-            json: function () {
-            }
-        };
-        var next = function () {
-        };
-        ctrl = new controllers.ExampleController ( req, res, next );
+        testEnv ( function ( ExampleController ) {
+            var req = {
+                params: { action: 'fakeAction'},
+                method: 'GET',
+                query: {}
+            };
+            var res = {
+                json: function () {
+                }
+            };
+            var next = function () {
+            };
+            ctrl = new ExampleController ( req, res, next );
 
-        done ();
+            done ();
+        } );
     } );
 
 

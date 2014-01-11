@@ -7,11 +7,11 @@ module.exports = function( grunt ) {
     grunt.initConfig({
         watch: {
             docs: {
-                files: ['src/**/*'],
+                files: ['modules/**/*'],
                 tasks: ['docular']
             },
             tests: {
-                files: ['src/**/*', 'test/unit/**/*', 'test/integration/**/*'],
+                files: ['lib/**/*.js', 'modules/**/*.js'],
                 tasks: ['mochaTest:ci']
             }
         },
@@ -31,28 +31,28 @@ module.exports = function( grunt ) {
                             id: "controllers",
                             title: "Controllers",
                             scripts: [
-                                "src/controllers"
+                                "modules/**/controllers/**/*.js"
                             ]
                         },
                         {
-                            id: "model",
+                            id: "models",
                             title: "Models",
                             scripts: [
-                                "src/model"
+                                "modules/**/models/**/*.js"
                             ]
                         },
                         {
                             id: "services",
                             title: "Services",
                             scripts: [
-                                "src/service"
+                                "modules/**/services/**/*.js"
                             ]
                         },
                         {
                             id: "utils",
                             title: "Utils",
                             scripts: [
-                                "src/utils"
+                                "lib/utils/**/*.js"
                             ]
                         }
                     ]
@@ -80,7 +80,7 @@ module.exports = function( grunt ) {
                     file: 'app.js',
                     ignoredFiles: ['README.md', 'node_modules/**', 'docs'],
                     watchedExtensions: ['js'],
-                    watchedFolders: ['src'],
+                    watchedFolders: ['lib','modules'],
                     delayTime: 1,
                     cwd: __dirname
                 }
@@ -119,10 +119,10 @@ module.exports = function( grunt ) {
         },
         exec: {
             rebase: {
-                cmd: "NODE_PATH=./lib/:./modules/; node bin/rebase.js"
+                cmd: "NODE_PATH=./lib/:./modules/; node modules/orm/bin/rebase.js"
             },
             seed: {
-                cmd: "NODE_PATH=./lib/:./modules/; node bin/seedModels.js"
+                cmd: "NODE_PATH=./lib/:./modules/; node modules/orm/bin/seedModels.js"
             }
         }
     });
