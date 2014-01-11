@@ -7,7 +7,7 @@ var env = utils.bootstrapEnv();
 env.moduleLoader.loadModules();
 
 // Initialize all the modules
-env.moduleLoader.initializeModules( injector );
+env.moduleLoader.initializeModuleRoutes( injector );
 
 // Add our standard configuration
 env.app.configure(function() {
