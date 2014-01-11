@@ -1,5 +1,5 @@
 // Bootstrap the testing environmen
-require( 'utils' ).testEnv();
+var testEnv = require( 'utils' ).testEnv();
 
 var expect = require ( 'chai' ).expect
   , BaseService = require ( 'services' ).BaseService
@@ -11,11 +11,13 @@ describe ( 'service.BaseService', function () {
     var service, Service, Model;
 
     beforeEach ( function ( done ) {
-        Service = BaseService.extend ();
-        Model = models.orm.TestModel;
-        Service.Model = Model;
-        service = new Service ();
-        done ();
+        testEnv( function() {
+            Service = BaseService.extend ();
+            Model = models.orm.TestModel;
+            Service.Model = Model;
+            service = new Service ();
+            done ();
+        });
     } );
 
     describe ( '.setup(dbAdapter)', function () {

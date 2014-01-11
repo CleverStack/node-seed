@@ -31,7 +31,8 @@
     "matchdep": "~0.3.0",
     "async": "~0.2.9",
     "underscore": "~1.5.2",
-    "q": "~1.0.0"
+    "q": "~1.0.0",
+    "i": "~0.3.2"
   },
   "devDependencies": {
     "grunt-contrib-watch": "",
