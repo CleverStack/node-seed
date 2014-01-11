@@ -8,7 +8,7 @@ var Sequelize = require( 'sequelize' )
 Module = ModuleClass.extend({
     preResources: function() {
         debug( 'Opening connection to database' );
-
+        
         sequelize = new Sequelize(
             this.config.db.database,
             this.config.db.username,

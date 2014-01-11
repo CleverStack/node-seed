@@ -1,8 +1,13 @@
+// Bootstrap the testing environmen
+require ( 'utils' ).testEnv();
+
 var expect = require ( 'chai' ).expect
   , sinon = require ( 'sinon' )
-  , testEnv = require ( './utils' ).testEnv
   , BaseController = require ( 'classes' ).Controller
-  , BaseService = require ( 'services' ).BaseService;
+  , BaseService = require ( 'services' ).BaseService
+  , models = require( 'models' )
+  , sequelize = injector.getInstance( 'sequelize' )
+  , Sequelize =  injector.getInstance( 'Sequelize' );
 
 describe ( 'classes.Controller', function () {
     var Service,
@@ -12,42 +17,40 @@ describe ( 'classes.Controller', function () {
         objs = [];
 
     beforeEach ( function ( done ) {
-        testEnv ( function ( models ) {
-            Service = BaseService.extend ();
-            Service.Model = models.ORM.TestModel;
-            service = new Service ();
+        Service = BaseService.extend ();
+        Service.Model = models.orm.TestModel;
+        service = new Service ();
 
-            Controller = BaseController.extend ();
-            Controller.service = service;
-            Controller.prototype.fakeAction = function () {
-            };
+        Controller = BaseController.extend ();
+        Controller.service = service;
+        Controller.prototype.fakeAction = function () {
+        };
 
-            var req = {
-                params: { action: 'fakeAction' },
-                method: 'GET',
-                query: {}
-            };
-            var res = { send: function () { } };
-            var next = function () {
-            };
-            ctrl = new Controller ( req, res, next );
+        var req = {
+            params: { action: 'fakeAction' },
+            method: 'GET',
+            query: {}
+        };
+        var res = { send: function () { } };
+        var next = function () {
+        };
+        ctrl = new Controller ( req, res, next );
 
-            service
-                .create ( {
-                    name: 'Joe'
-                } )
-                .then ( function ( obj ) {
-                    objs.push ( obj );
-                    return service.create ( {
-                        name: 'Rachel'
-                    } );
-                } )
-                .then ( function ( obj ) {
-                    objs.push ( obj );
-                    done ();
-                } )
-                .fail ( done );
-        } );
+        service
+            .create ( {
+                name: 'Joe'
+            } )
+            .then ( function ( obj ) {
+                objs.push ( obj );
+                return service.create ( {
+                    name: 'Rachel'
+                } );
+            } )
+            .then ( function ( obj ) {
+                objs.push ( obj );
+                done ();
+            } )
+            .fail ( done );
     } );
 
     describe ( '.listAction()', function () {
