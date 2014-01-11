@@ -1,19 +1,21 @@
+// Bootstrap the testing environmen
+require( 'utils' ).testEnv();
+
 var expect = require ( 'chai' ).expect
-  , testEnv = require ( 'utils' ).testEnv
-  , BaseService = require ( 'services' ).BaseService;
+  , BaseService = require ( 'services' ).BaseService
+  , models = require( 'models' )
+  , sequelize = injector.getInstance( 'sequelize' )
+  , Sequelize =  injector.getInstance( 'Sequelize' );
 
 describe ( 'service.BaseService', function () {
     var service, Service, Model;
 
     beforeEach ( function ( done ) {
-        testEnv ( function ( models ) {
-
-            Service = BaseService.extend ();
-            Model = models.ORM.TestModel;
-            Service.Model = Model;
-            service = new Service ();
-            done ();
-        } );
+        Service = BaseService.extend ();
+        Model = models.orm.TestModel;
+        Service.Model = Model;
+        service = new Service ();
+        done ();
     } );
 
     describe ( '.setup(dbAdapter)', function () {
