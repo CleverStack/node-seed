@@ -59,7 +59,9 @@ module.exports = function() {
          * 'GET/PUT/POST/DELETE /example/custom'
          */
         customAction: function() {
-            this.render('example/custom.ejs', { message: 'Hello from custom action controller' });
+            this.send({
+                message: "Hello from customAction inside ExampleController"
+            });
         },
 
         /**
