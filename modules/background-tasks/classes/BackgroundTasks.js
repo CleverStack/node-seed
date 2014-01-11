@@ -7,9 +7,6 @@ var Class = require( 'uberclass' )
 
 module.exports = Class.extend(
 {
-
-},
-{
     isMaster: null,
 
     masterTasksAreRunning: null,
@@ -29,14 +26,20 @@ module.exports = Class.extend(
         nomaster: []
     },
 
-    init: function() {
+    env: null,
+
+    config: null,
+
+    init: function( env ) {
         debug( 'Constructor called' );
+        this.env = env;
+        this.config = env.config['background-tasks'];
         this.isMaster = false;
         this.masterTasksAreRunning = false;
         this.nonMastermasterTasksAreRunning = false;
         this.masterKey = process.env.NODE_ENV + '_backgroundTasks';
         this.serverKey = Date.now() + Math.floor(Math.random()*1001); // @TODO - implement storing the server key in /tmp/serverKey
-        this.memcache = new MemCached( config[ 'background-tasks' ].memcache.host )
+        this.memcache = new MemCached( this.config.memcache.host )
 
         //Process Messages coming from the cluster
         process.on('message', this.proxy('handleMessage'));
@@ -54,24 +57,19 @@ module.exports = Class.extend(
 
     setupBackgroundTasks : function( callback ){
         debug( "Checking which tasks needs to run where" );
-        var t = null
-          , cbt = config[ 'background-tasks' ];
 
-        if( cbt.enabled ){
-            async.forEach(
-                cbt.tasks,
-                this.proxy( 'prepareTask', cbt, t ),
-                callback
-            );
-        } else {
-            callback(null);
-        }
+        async.forEach(
+            this.config.tasks,
+            this.proxy( 'prepareTask', this.config ),
+            callback
+        );
     },
 
-    prepareTask: function( cbt, t, item, callback ) {
+    prepareTask: function( cbt, item, callback ) {
         var key = ( item.masterOnly && item.masterOnly === true ) ? 'master' : 'nomaster';
         if( tasks[ item.name ] !== undefined ){
-            var taskClassName = item.name
+            debug( 'Enabling task with name of ' + item.name );
+            var taskClassName = item.name;
 
              // Wrap each class in a function that creates a new instance of that class with the required callback so we can do
              // async.parallel( this.tasksToRun.master, callback);
@@ -83,9 +81,9 @@ module.exports = Class.extend(
         callback( null );
     },
 
-    initMainLoop: function(  callback ){
+    initMainLoop: function(  callback ) {
         debug( "Initiate Main Loop" );
-        this.interval = setInterval( this.proxy( 'mainLoop' ), config[ 'background-tasks' ].interval );
+        this.interval = setInterval( this.proxy( 'mainLoop' ), this.config.interval );
         callback(null);
     },
 
@@ -101,11 +99,11 @@ module.exports = Class.extend(
         };
         
         if( this.tasksToRun !== null ){
-            if( config[ 'background-tasks' ].on ){
-                var l = config[ 'background-tasks' ].tasks.length, item;
+            if( this.config.on ){
+                var l = this.config.tasks.length, item;
 
                 while ( l-- ) {
-                    item = config[ 'background-tasks' ].tasks[ l ];
+                    item = this.config.tasks[ l ];
                     if( ( item.name == msg.task ) && ( tasks[ item.name ] !== undefined ) ){
                          taskObj = tasks[ item.name ];
                     };
@@ -177,7 +175,7 @@ module.exports = Class.extend(
             debug( 'Unable to gets the lock from memcache. Err: %s Result: %s', err, result );
             this.runMainLoop();
         } else if ( result === false ) {
-            this.memcache.add( this.masterKey, this.serverKey, ( ( config[ 'background-tasks' ].interval / 100 ) * 2 ), function( addErr, addResult ) {
+            this.memcache.add( this.masterKey, this.serverKey, ( ( this.config.interval / 100 ) * 2 ), function( addErr, addResult ) {
                 if ( addResult && !addErr ) {
                     debug( 'Got master lock.' );
                     this.isMaster = true;
