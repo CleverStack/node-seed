@@ -5,6 +5,8 @@ var mongoose = require( 'mongoose' )
   , Module;
 
 Module = ModuleClass.extend({
+    models: [],
+
     preResources: function() {
         debug( 'Opening connection to database' );
         

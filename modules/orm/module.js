@@ -6,6 +6,8 @@ var Sequelize = require( 'sequelize' )
   , Module;
 
 Module = ModuleClass.extend({
+    models: [],
+
     preResources: function() {
         debug( 'Opening connection to database' );
         
