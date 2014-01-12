@@ -51,10 +51,10 @@ Module = ModuleClass.extend({
         // Support second argument
         if ( assocTo instanceof Array ) {
             debug( '%s %s %s with second argument of ', modelName, assocType, assocTo[0], assocTo[1] );
-            m['ORM'][ modelName ][ assocType ](m['ORM'][ assocTo[0] ], assocTo[1] );
+            this.models[ modelName ][ assocType ]( this.models[ assocTo[0] ], assocTo[1] );
         } else {
             debug( '%s %s %s', modelName, assocType, assocTo );
-            m['ORM'][ modelName ][ assocType ]( m['ORM'][assocTo] );
+            this.models[ modelName ][ assocType ]( this.models[assocTo] );
         }
     },
 
