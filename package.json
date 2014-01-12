@@ -56,6 +56,7 @@
     "background-tasks",
     "auth",
     "orm",
+    "clever-countries",
     "odm",
     "example-module"
   ]

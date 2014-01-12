@@ -7,12 +7,12 @@ module.exports = function( grunt ) {
     grunt.initConfig({
         watch: {
             docs: {
-                files: ['modules/**/*'],
-                tasks: ['docular']
+                files: [ 'lib/**/*.js', 'modules/**/*.js' ],
+                tasks: [ 'docular' ]
             },
             tests: {
-                files: ['lib/**/*.js', 'modules/**/*.js'],
-                tasks: ['mochaTest:ci']
+                files: [ 'lib/**/*.js', 'modules/**/*.js' ],
+                tasks: [ 'mochaTest:ci' ]
             }
         },
         docular: {
@@ -20,7 +20,7 @@ module.exports = function( grunt ) {
             showAngularDocs: false,
             showDocularDocs: false,
             copyDocDir: '/docs',
-            docAPIOrder : ['doc'],
+            docAPIOrder : [ 'doc' ],
             groups: [
                 {
                     groupTitle: 'CleverStack Seed',
@@ -31,6 +31,7 @@ module.exports = function( grunt ) {
                             id: "controllers",
                             title: "Controllers",
                             scripts: [
+                                "lib/controllers/**/*.js",
                                 "modules/**/controllers/**/*.js"
                             ]
                         },
@@ -38,6 +39,7 @@ module.exports = function( grunt ) {
                             id: "models",
                             title: "Models",
                             scripts: [
+                                "lib/models/**/*.js",
                                 "modules/**/models/**/*.js"
                             ]
                         },
@@ -45,6 +47,7 @@ module.exports = function( grunt ) {
                             id: "services",
                             title: "Services",
                             scripts: [
+                                "lib/services/**/*.js",
                                 "modules/**/services/**/*.js"
                             ]
                         },
@@ -52,7 +55,24 @@ module.exports = function( grunt ) {
                             id: "utils",
                             title: "Utils",
                             scripts: [
-                                "lib/utils/**/*.js"
+                                "lib/utils/**/*.js",
+                                "modules/**/utils/**/*.js"
+                            ]
+                        },
+                        {
+                            id: "classes",
+                            title: "Classes",
+                            scripts: [
+                                "lib/classes/**/*.js",
+                                "modules/**/classes/**/*.js"
+                            ]
+                        },
+                        {
+                            id: "tasks",
+                            title: "Tasks",
+                            scripts: [
+                                "lib/tasks/**/*.js",
+                                "modules/**/tasks/**/*.js"
                             ]
                         }
                     ]
@@ -78,9 +98,9 @@ module.exports = function( grunt ) {
             web: {
                 options: {
                     file: 'app.js',
-                    ignoredFiles: ['README.md', 'node_modules/**', 'docs'],
-                    watchedExtensions: ['js'],
-                    watchedFolders: ['lib','modules'],
+                    ignoredFiles: [ 'README.md', 'node_modules/**', 'docs' ],
+                    watchedExtensions: [ 'js' ],
+                    watchedFolders: [ 'lib','modules' ],
                     delayTime: 1,
                     cwd: __dirname
                 }
