@@ -1,217 +1,251 @@
-var Class = require('uberclass')
-  , async = require('async')
-  , MemCached = require('memcached')
-  , moment = require('moment');
+var Class = require( 'uberclass' )
+  , async = require( 'async' )
+  , MemCached = require( 'memcached' )
+  , moment = require( 'moment' )
+  , tasks = require( 'tasks' )
+  , debug = require( 'debug' )( 'BackgroundTasks');
 
 module.exports = Class.extend(
-    {
+{
+    isMaster: null,
 
+    masterTasksAreRunning: null,
+
+    nonMastermasterTasksAreRunning: null,
+
+    masterKey: null,
+
+    serverKey: null,
+
+    memcache: null,
+
+    interval: null,
+
+    tasksToRun: {
+        master: [],
+        nomaster: []
     },
-    {
-        isMaster: null,
 
-        isMasterScanning: null,
+    env: null,
 
-        masterKey: null,
+    config: null,
 
-        serverKey: null,
+    init: function( env ) {
+        debug( 'Constructor called' );
+        this.env = env;
+        this.config = env.config['background-tasks'];
+        this.isMaster = false;
+        this.masterTasksAreRunning = false;
+        this.nonMastermasterTasksAreRunning = false;
+        this.masterKey = process.env.NODE_ENV + '_backgroundTasks';
+        this.serverKey = Date.now() + Math.floor(Math.random()*1001); // @TODO - implement storing the server key in /tmp/serverKey
+        this.memcache = new MemCached( this.config.memcache.host )
 
-        memcache: null,
+        //Process Messages coming from the cluster
+        process.on('message', this.proxy('handleMessage'));
 
-        interval: null,
+        // Setup and get processing
+        this.setupTasksAndStartMasterLoop();
+    },
 
-        tasksToRun: null,
+    setupTasksAndStartMasterLoop : function( ){
+        async.series([
+            this.proxy( 'setupBackgroundTasks' ),
+            this.proxy( 'initMainLoop' )
+        ]);
+    },
 
-        init: function() {
-            this.isMaster = false;
-            this.isMasterScanning = false;
-            this.masterKey = process.env.NODE_ENV + '_backgroundTasks';
-            this.serverKey = Date.now() + Math.floor(Math.random()*1001); // @TODO - implement storing the server key in /tmp/serverKey
-            this.memcache = new MemCached( config.memcacheHost )
-            this.setupTasksAndStartMasterLoop();
-            //Process Messages coming from the cluster
-            process.on('message', this.proxy('handleMessage'));
-        },
+    setupBackgroundTasks : function( callback ){
+        debug( "Checking which tasks needs to run where" );
 
-        handleMessage: function( msg ){
-            var taskObj;
-            var m = { 
-                type   : 'error'
-            ,   result : 'invalid'
-            ,   wrkid  : ( !msg.wrkid ) ? null : msg.wrkid
-            ,   pid    : process.pid
-            };
-            
-            if( this.tasksToRun !== null ){
-                if( config.background.on ){
-                    var l = config.background.tasks.length, item;
+        async.forEach(
+            this.config.tasks,
+            this.proxy( 'prepareTask', this.config ),
+            callback
+        );
+    },
 
-                    while ( l-- ) {
-                        item = config.background.tasks[ l ];
-                        if( ( item.name == msg.task ) && ( tasks[ item.name ] !== undefined ) ){
-                             taskObj = tasks[ item.name ];
-                        };
-                    };
-                }
+    prepareTask: function( cbt, item, callback ) {
+        var key = ( item.masterOnly && item.masterOnly === true ) ? 'master' : 'nomaster';
+        if( tasks[ item.name ] !== undefined ){
+            debug( 'Enabling task with name of ' + item.name );
+            var taskClassName = item.name;
 
-            }
+             // Wrap each class in a function that creates a new instance of that class with the required callback so we can do
+             // async.parallel( this.tasksToRun.master, callback);
+             this.tasksToRun[ key ].push( function( callback ) {
+                new ( tasks[ taskClassName ] )( callback );
+             }); 
+        };
 
-            if( taskObj ){
-                taskObj.startTask(function( err, result ){
-                    
-                    if( !err ){
-                        m['type'] = 'success';
-                        m['result'] = result;
-                    }else{
-                        m['type'] = 'error';
-                        m['result'] = err;
-                    }
-                    
-                    process.send(m);
-                });
-            }else{
-                process.send(m);
-            }
-        },
+        callback( null );
+    },
 
-        mainLoop: function() {
-            if ( this.isMasterScanning === false ) {
-                this.isMasterScanning = true;
+    initMainLoop: function(  callback ) {
+        debug( "Initiate Main Loop" );
+        this.interval = setInterval( this.proxy( 'mainLoop' ), this.config.interval );
+        callback(null);
+    },
 
-                if ( this.isMaster !== true ) {
-                    this.getMasterLock();
-                } else {
-                    
-                    async.parallel([
-                        this.runMasterTasks
-                    ,   this.runTasks
-                    ],
-                        this.proxy( 'tasksAreCompleted' )
-                    );
-
-                }
-
-            } else {
-                this.holdMasterLock();
-                console.log('already scanning');
-            }
-        },
-
-        getMasterLock: function() {
-            this.memcache.gets( this.masterKey, this.proxy('handleGetMasterLock') );
-        },
-
-        handleGetMasterLock: function( err, result ) {
-            if ( err ) {
-                console.error( 'Unable to gets the lock from memcache. Err:' + err + ' Result:' + result );
-                this.tasksAreRunning = false;
-            } else if ( result === false ) {
-                this.memcache.add( this.masterKey, this.serverKey, 30, function( addErr, addResult ) {
-                    if ( addResult && !addErr ) {
-                        console.log( 'Got master lock.' );
-                        this.isMaster = true;
-                        this.runMasterTasks();
-                    } else {
-                        console.error( 'Unable to add the lock key into memcache. Err:' + addErr + ' Result:' + addResult );
-                        this.tasksAreRunning = false;
-                    }
-                }.bind(this));
-            } else {
-                if ( result && result[this.masterKey] === this.serverKey ) {
-                    console.log( 'Discovered that im the master.' );
-                    this.isMaster = true;
-                    this.runMasterTasks();
-                } else {
-                    console.log( 'There is already a master holding the lock!' );
-                    this.tasksAreRunning = false;
-                }
-            }
-        },
-
-        holdMasterLock: function() {
-            if ( this.isMaster ) {
-                this.memcache.gets( this.masterKey, function( err, result ) {
-                    if ( !err && result && result.cas ) {
-                        this.memcache.cas( this.masterKey, this.serverKey, result.cas, 30, function( casErr, casResult ) {
-                            if ( casErr ) {
-                                console.log( 'Cannot hold onto master lock.' );
-                            } else {
-                                console.log( 'Held onto master lock.');
-                            }
-                        }.bind( this ));
-                    }
-                }.bind( this ));
-            }
-        },
-
-        // should go to memcache to try and keep a key using CAS (should check the value matches the randomly generated master id of this process)
-        runMasterTasks: function() {
-            this.holdMasterLock();
-
-            console.log( 'Run master tasks.' );
-            async.parallel(
-                this.tasksToRun.master,
-                this.proxy( 'tasksAreCompleted' )
-            );
-        },
-
-        runTasks : function( ){
-            console.log( 'Run non master tasks.' );
-            async.series(
-                this.tasksToRun.nomaster,
-                this.proxy( 'tasksAreCompleted' )
-            ); 
-        },
-
-        tasksAreCompleted : function(){
-            console.log( 'tasksAreCompleted', err );
-            if ( err ) {
-                console.dir(err.stack);
-            }
-
-            this.tasksAreRunning = false;
-        },
-
-        setupTasksAndStartMasterLoop : function( ){
-            async.series([
-                this.proxy( 'setupBackgroundTask' )
-            ,   this.proxy( 'initMasterLoop' )
-            ]);
-
-        },
-
-        setupBackgroundTask : function( cback ){
-            console.log( "Check which tasks needs to run" );
-            var t = null
-            ,   cbt = config.background;
-
-            if( cbt.on ){
-                var l = cbt.tasks.length, item;
-                t = {
-                    master:[]
-                ,   nomaster:[]
-                };
+    handleMessage: function( msg ){
+        // @TODO this needs to be refactored so it works, right now its not actually active or used
+        debug( 'Message from worker' );
+        var taskObj;
+        var m = { 
+            type   : 'error'
+        ,   result : 'invalid'
+        ,   wrkid  : ( !msg.wrkid ) ? null : msg.wrkid
+        ,   pid    : process.pid
+        };
+        
+        if( this.tasksToRun !== null ){
+            if( this.config.on ){
+                var l = this.config.tasks.length, item;
 
                 while ( l-- ) {
-                    item = cbt.tasks[ l ];
-                    
-                    var key = ( item.masterOnly ) ? 'master':'nomaster';
-                    if( tasks[ item.name ] !== undefined ){
-
-                         //Use one common "functionName" for every task so we can do 
-                         // async.parallel( this.tasksToRun.master, callback);
-                         t[ key ].push( tasks[ item.name ].startTask ); 
+                    item = this.config.tasks[ l ];
+                    if( ( item.name == msg.task ) && ( tasks[ item.name ] !== undefined ) ){
+                         taskObj = tasks[ item.name ];
                     };
                 };
             }
 
-            this.tasksToRun = t;
-            cback(null);
-        },
-        initMasterLoop: function(  cback ){
-            console.log( "Initiate Master Loop" );
-            this.interval = setInterval( this.proxy( 'mainLoop' ), 15000 );
-            this.mainLoop();
-            cback(null);
         }
-    });
+
+        if( taskObj ){
+            taskObj.startTask(function( err, result ){
+                
+                if( !err ){
+                    m['type'] = 'success';
+                    m['result'] = result;
+                }else{
+                    m['type'] = 'error';
+                    m['result'] = err;
+                }
+                
+                process.send(m);
+            });
+        }else{
+            process.send(m);
+        }
+    },
+
+    mainLoop: function() {
+        // Handle non master tasks
+        if ( this.nonMastermasterTasksAreRunning === false ) {
+            this.nonMastermasterTasksAreRunning = true;
+            this.runTasks( this.proxy( 'nonMasterTasksAreCompleted' ) );
+        } else {
+            debug( 'Non master tasks have not finished running yet, waiting for them to finish');
+        }
+
+        if ( this.masterTasksAreRunning === false ) {
+            this.masterTasksAreRunning = true;
+
+            if ( this.isMaster !== true ) {
+                this.getMasterLock();
+            } else {
+                this.runMainLoop();
+            }
+
+        } else {
+            this.holdMasterLock();
+            debug( 'Master Tasks have not finished running yet, waiting for them to finish');
+        }
+    },
+
+    runMainLoop: function() {
+        debug( 'Running master tasks' );
+        
+        async.parallel(
+            [
+                this.proxy( 'runMasterTasks' )//,
+                // this.proxy( 'runTasks' )
+            ],
+            this.proxy( 'tasksAreCompleted' )
+        );
+    },
+
+    getMasterLock: function() {
+        this.memcache.gets( this.masterKey, this.proxy('handleGetMasterLock') );
+    },
+
+    handleGetMasterLock: function( err, result ) {
+        if ( err ) {
+            debug( 'Unable to gets the lock from memcache. Err: %s Result: %s', err, result );
+            this.runMainLoop();
+        } else if ( result === false ) {
+            this.memcache.add( this.masterKey, this.serverKey, ( ( this.config.interval / 100 ) * 2 ), function( addErr, addResult ) {
+                if ( addResult && !addErr ) {
+                    debug( 'Got master lock.' );
+                    this.isMaster = true;
+                } else {
+                    debug( 'Unable to add the lock key into memcache. Err: %s Result: %s', addErr, addResult );
+                }
+                this.runMainLoop();
+
+            }.bind(this));
+        } else {
+            if ( result && result[this.masterKey] === this.serverKey ) {
+                debug( 'Discovered that im the master.' );
+                this.isMaster = true;
+            } else {
+                debug( 'There is already a master holding the lock!' );
+            }
+            
+            this.runMainLoop();
+        }
+    },
+
+    holdMasterLock: function() {
+        if ( this.isMaster ) {
+            this.memcache.gets( this.masterKey, function( err, result ) {
+                if ( !err && result && result.cas ) {
+                    this.memcache.cas( this.masterKey, this.serverKey, result.cas, 30, function( casErr, casResult ) {
+                        if ( casErr ) {
+                            debug( 'Cannot hold onto master lock.' );
+                        } else {
+                            debug( 'Held onto master lock.');
+                        }
+                    }.bind( this ));
+                }
+            }.bind( this ));
+        }
+    },
+
+    runMasterTasks: function( callback ) {
+        if ( this.isMaster === true ) {
+            this.holdMasterLock();
+
+            debug( 'Run %s master tasks.', this.tasksToRun.master.length );
+            async.parallel(
+                this.tasksToRun.master,
+                callback
+            );
+        } else {
+            callback( null );
+        }
+    },
+
+    runTasks : function( callback ){
+        debug( 'Run %s non master tasks.', this.tasksToRun.nomaster.length );
+        async.parallel(
+            this.tasksToRun.nomaster,
+            callback
+        ); 
+    },
+
+    tasksAreCompleted : function( err ){
+        debug( 'Master tasks have completed: %s', err );
+        if ( err ) {
+           debug( err.stack );
+        }
+
+        this.masterTasksAreRunning = false;
+    },
+
+    nonMasterTasksAreCompleted: function( err ) {
+        debug( 'Non master tasks have finished running with error: %s', err );
+        this.nonMastermasterTasksAreRunning = false;
+    }
+});

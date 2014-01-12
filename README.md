@@ -36,12 +36,13 @@ We also provide database tasks to `rebase` and `seed` very quickly.
 3. `grunt db:seed` will `seed` with the data inside the `schema/seedData.json` file.
 
 ## 2. Setup ##
-Just run `npm run-script setup`.
+First you will need to set your NODE_PATH environment variable to ./lib/:./modules/ ( export NODE_PATH=./lib/:./modules/ )
+Then just run `npm run-script setup`.
 
 #### 2.1. Prerequisites ####
 Only `grunt-cli` is required.
 
-#### 2.2 Known Issues ####
+#### 2.3 Known Issues ####
 None so far :)
 
 ## 3. Usage ##

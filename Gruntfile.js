@@ -7,20 +7,20 @@ module.exports = function( grunt ) {
     grunt.initConfig({
         watch: {
             docs: {
-                files: ['src/**/*'],
-                tasks: ['docular']
+                files: [ 'lib/**/*.js', 'modules/**/*.js' ],
+                tasks: [ 'docular' ]
             },
             tests: {
-                files: ['src/**/*', 'test/unit/**/*', 'test/integration/**/*'],
-                tasks: ['mochaTest:ci']
-            },
+                files: [ 'lib/**/*.js', 'modules/**/*.js' ],
+                tasks: [ 'mochaTest:ci' ]
+            }
         },
         docular: {
             baseUrl: 'http://localhost:8888',
             showAngularDocs: false,
             showDocularDocs: false,
             copyDocDir: '/docs',
-            docAPIOrder : ['doc'],
+            docAPIOrder : [ 'doc' ],
             groups: [
                 {
                     groupTitle: 'CleverStack Seed',
@@ -31,30 +31,50 @@ module.exports = function( grunt ) {
                             id: "controllers",
                             title: "Controllers",
                             scripts: [
-                                "src/controllers",
+                                "lib/controllers/**/*.js",
+                                "modules/**/controllers/**/*.js"
                             ]
                         },
                         {
-                            id: "model",
+                            id: "models",
                             title: "Models",
                             scripts: [
-                                "src/model",
+                                "lib/models/**/*.js",
+                                "modules/**/models/**/*.js"
                             ]
                         },
                         {
                             id: "services",
                             title: "Services",
                             scripts: [
-                                "src/service",
+                                "lib/services/**/*.js",
+                                "modules/**/services/**/*.js"
                             ]
                         },
                         {
                             id: "utils",
                             title: "Utils",
                             scripts: [
-                                "src/utils",
+                                "lib/utils/**/*.js",
+                                "modules/**/utils/**/*.js"
                             ]
                         },
+                        {
+                            id: "classes",
+                            title: "Classes",
+                            scripts: [
+                                "lib/classes/**/*.js",
+                                "modules/**/classes/**/*.js"
+                            ]
+                        },
+                        {
+                            id: "tasks",
+                            title: "Tasks",
+                            scripts: [
+                                "lib/tasks/**/*.js",
+                                "modules/**/tasks/**/*.js"
+                            ]
+                        }
                     ]
                 }
             ]
@@ -78,9 +98,9 @@ module.exports = function( grunt ) {
             web: {
                 options: {
                     file: 'app.js',
-                    ignoredFiles: ['README.md', 'node_modules/**', 'docs'],
-                    watchedExtensions: ['js'],
-                    watchedFolders: ['src'],
+                    ignoredFiles: [ 'README.md', 'node_modules/**', 'docs' ],
+                    watchedExtensions: [ 'js' ],
+                    watchedFolders: [ 'lib','modules' ],
                     delayTime: 1,
                     cwd: __dirname
                 }
@@ -89,24 +109,24 @@ module.exports = function( grunt ) {
         mochaTest: {
             unit: {
                 options: {
-                    require: 'should',
+                    require: 'chai',
                     reporter: 'spec'
                 },
-                src: ['test/server/unit/**/*.js']
+                src: ['modules/**/tests/unit/*.js']
             },
             e2e: {
                 options: {
-                    require: 'should',
+                    require: 'chai',
                     reporter: 'spec'
                 },
-                src: ['test/server/integration/**/*.js']
+                src: ['modules/**/tests/integration/**/*.js']
             },
             ci: {
                 options: {
-                    require: 'should',
+                    require: 'chai',
                     reporter: 'min'
                 },
-                src: ['test/server/integration/**/*.js', 'test/server/unit/**/*.js']
+                src: ['modules/**/tests/integration/**/*.js', 'modules/**/tests/unit/**/*.js']
             }
         },
         concurrent: {
@@ -115,14 +135,14 @@ module.exports = function( grunt ) {
                 options: {
                     logConcurrentOutput: true
                 }
-            },
+            }
         },
         exec: {
             rebase: {
-                cmd: "node bin/rebase.js"
+                cmd: "NODE_PATH=./lib/:./modules/; node modules/orm/bin/rebase.js"
             },
             seed: {
-                cmd: "node bin/seedModels.js"
+                cmd: "NODE_PATH=./lib/:./modules/; node modules/orm/bin/seedModels.js"
             }
         }
     });

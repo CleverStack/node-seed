@@ -1,0 +1,9 @@
+{
+	"background-tasks": {
+        "on" : true,
+
+        "tasks":[
+            { "name": "ExampleTask", "masterOnly": true }
+        ]
+    }
+}

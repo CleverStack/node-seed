@@ -1,33 +1,22 @@
-var config = require( './config' )
-  , express = require( 'express' )
-  , webPort = process.env.NODE_WWW_PORT || config.webPort || 8080
-  // , initializeSecurity = require( './security' )
-  , app = module.exports = express()
-  , moduleLoader;
+var utils = require( 'utils' );
 
-// Bootstrap our DI
-GLOBAL.injector = require( 'utils' ).injector();
+// Bootstrap the environment
+var env = utils.bootstrapEnv();
 
-injector.instance( 'express', express );
-injector.instance( 'app', app );
-injector.instance( 'config', config );
-
-// Load our modules and initialize them
-moduleLoader = require( 'utils' ).moduleLoader.getInstance();
-
-// Add our moduleLoader to the injector
-injector.instance( 'moduleLoader', moduleLoader );
+// Load all the modules
+env.moduleLoader.loadModules();
 
 // Initialize all the modules
-moduleLoader.initializeModules( injector );
+env.moduleLoader.initializeRoutes( injector );
 
-app.configure(function() {
+// Add our standard configuration
+env.app.configure(function() {
     // Attach our router
-    app.use( app.router );
+    env.app.use( env.app.router );
 
     // error handler, outputs json since that's usually
     // what comes out of this thing
-    app.use(function( err, req, res, next ) {
+    env.app.use(function( err, req, res, next ) {
         console.log('Express error catch', err);
         res.json(500, {
             error: err.toString()
@@ -36,6 +25,9 @@ app.configure(function() {
 });
 
 // Listen for requests
-app.listen(webPort, function() {
-    console.log("Starting server on port " + webPort + " in " + config.environmentName + " mode");
+env.app.listen( env.webPort, function() {
+    console.log("Starting server on port " + env.webPort + " in " + env.config.environmentName + " mode");
 });
+
+// Export the Express app
+module.exports = env.app;
