@@ -145,14 +145,14 @@ module.exports = Class.extend(
             }
 
             if ( rootFolder === 'models' ) {
-                lastFolder[ name ] = require( currentFolder ).loadModel( [ pathToInspect, '/', file ].join( '' ) );
+                lastFolder[ name ] = require( currentFolder ).getModel( [ pathToInspect, '/', file ].join( '' ) );
             } else {
                 lastFolder[ name ] = require( [ pathToInspect, '/', file ].join( '' ) );
             }
         }
     },
 
-    initRoutes: function( injector ) {
+    initRoutes: function() {
         if ( typeof this.routes === 'function' ) {
             debug( 'initRoutes for module ' + this.name );
             injector.inject( this.routes );
