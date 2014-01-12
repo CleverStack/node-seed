@@ -10,11 +10,9 @@
         "email": "info@clevertech.biz",
         "web": "http://www.clevertech.biz"
     },
-    "main": "./index",
+    "main": "module.js",
     "description": "",
     "devDependencies": {
-        "mocha": "*",
-        "chai": "*",
-        "sinon": "*"
+
     }
 }

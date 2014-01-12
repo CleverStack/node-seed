@@ -1,0 +1,1555 @@
+{
+    "countries": [
+        {
+            "category": "countries",
+            "name": "Afghanistan",
+            "code": "AF"
+        },
+        {
+            "category": "countries",
+            "name": "Aland Islands",
+            "code": "AX"
+        },
+        {
+            "category": "countries",
+            "name": "Albania",
+            "code": "AL"
+        },
+        {
+            "category": "countries",
+            "name": "Algeria",
+            "code": "DZ"
+        },
+        {
+            "category": "countries",
+            "name": "American Samoa",
+            "code": "AS"
+        },
+        {
+            "category": "countries",
+            "name": "Andorra",
+            "code": "AD"
+        },
+        {
+            "category": "countries",
+            "name": "Angola",
+            "code": "AO"
+        },
+        {
+            "category": "countries",
+            "name": "Anguilla",
+            "code": "AI"
+        },
+        {
+            "category": "countries",
+            "name": "Antarctica",
+            "code": "AQ"
+        },
+        {
+            "category": "countries",
+            "name": "Antigua and Barbuda",
+            "code": "AG"
+        },
+        {
+            "category": "countries",
+            "name": "Argentina",
+            "code": "AR"
+        },
+        {
+            "category": "countries",
+            "name": "Armenia",
+            "code": "AM"
+        },
+        {
+            "category": "countries",
+            "name": "Aruba",
+            "code": "AW"
+        },
+        {
+            "category": "countries",
+            "name": "Australia",
+            "code": "AU"
+        },
+        {
+            "category": "countries",
+            "name": "Austria",
+            "code": "AT"
+        },
+        {
+            "category": "countries",
+            "name": "Azerbaijan",
+            "code": "AZ"
+        },
+        {
+            "category": "countries",
+            "name": "Bahamas",
+            "code": "BS"
+        },
+        {
+            "category": "countries",
+            "name": "Bahrain",
+            "code": "BH"
+        },
+        {
+            "category": "countries",
+            "name": "Bangladesh",
+            "code": "BD"
+        },
+        {
+            "category": "countries",
+            "name": "Barbados",
+            "code": "BB"
+        },
+        {
+            "category": "countries",
+            "name": "Belarus",
+            "code": "BY"
+        },
+        {
+            "category": "countries",
+            "name": "Belgium",
+            "code": "BE"
+        },
+        {
+            "category": "countries",
+            "name": "Belize",
+            "code": "BZ"
+        },
+        {
+            "category": "countries",
+            "name": "Benin",
+            "code": "BJ"
+        },
+        {
+            "category": "countries",
+            "name": "Bermuda",
+            "code": "BM"
+        },
+        {
+            "category": "countries",
+            "name": "Bhutan",
+            "code": "BT"
+        },
+        {
+            "category": "countries",
+            "name": "Bolivia, Plurinational State of",
+            "code": "BO"
+        },
+        {
+            "category": "countries",
+            "name": "Bonaire, Sint Eustatius and Saba",
+            "code": "BQ"
+        },
+        {
+            "category": "countries",
+            "name": "Bosnia and Herzegovina",
+            "code": "BA"
+        },
+        {
+            "category": "countries",
+            "name": "Botswana",
+            "code": "BW"
+        },
+        {
+            "category": "countries",
+            "name": "Bouvet Island",
+            "code": "BV"
+        },
+        {
+            "category": "countries",
+            "name": "Brazil",
+            "code": "BR"
+        },
+        {
+            "category": "countries",
+            "name": "British Indian Ocean Territory",
+            "code": "IO"
+        },
+        {
+            "category": "countries",
+            "name": "Brunei Darussalam",
+            "code": "BN"
+        },
+        {
+            "category": "countries",
+            "name": "Bulgaria",
+            "code": "BG"
+        },
+        {
+            "category": "countries",
+            "name": "Burkina Faso",
+            "code": "BF"
+        },
+        {
+            "category": "countries",
+            "name": "Burundi",
+            "code": "BI"
+        },
+        {
+            "category": "countries",
+            "name": "Cambodia",
+            "code": "KH"
+        },
+        {
+            "category": "countries",
+            "name": "Cameroon",
+            "code": "CM"
+        },
+        {
+            "category": "countries",
+            "name": "Canada",
+            "code": "CA"
+        },
+        {
+            "category": "countries",
+            "name": "Cape Verde",
+            "code": "CV"
+        },
+        {
+            "category": "countries",
+            "name": "Cayman Islands",
+            "code": "KY"
+        },
+        {
+            "category": "countries",
+            "name": "Central African Republic",
+            "code": "CF"
+        },
+        {
+            "category": "countries",
+            "name": "Chad",
+            "code": "TD"
+        },
+        {
+            "category": "countries",
+            "name": "Chile",
+            "code": "CL"
+        },
+        {
+            "category": "countries",
+            "name": "China",
+            "code": "CN"
+        },
+        {
+            "category": "countries",
+            "name": "Christmas Island",
+            "code": "CX"
+        },
+        {
+            "category": "countries",
+            "name": "Cocos (Keeling) Islands",
+            "code": "CC"
+        },
+        {
+            "category": "countries",
+            "name": "Colombia",
+            "code": "CO"
+        },
+        {
+            "category": "countries",
+            "name": "Comoros",
+            "code": "KM"
+        },
+        {
+            "category": "countries",
+            "name": "Congo",
+            "code": "CG"
+        },
+        {
+            "category": "countries",
+            "name": "Congo, the Democratic Republic of the",
+            "code": "CD"
+        },
+        {
+            "category": "countries",
+            "name": "Cook Islands",
+            "code": "CK"
+        },
+        {
+            "category": "countries",
+            "name": "Costa Rica",
+            "code": "CR"
+        },
+        {
+            "category": "countries",
+            "name": "Côte d'Ivoire",
+            "code": "CI"
+        },
+        {
+            "category": "countries",
+            "name": "Croatia",
+            "code": "HR"
+        },
+        {
+            "category": "countries",
+            "name": "Cuba",
+            "code": "CU"
+        },
+        {
+            "category": "countries",
+            "name": "Curaçao",
+            "code": "CW"
+        },
+        {
+            "category": "countries",
+            "name": "Cyprus",
+            "code": "CY"
+        },
+        {
+            "category": "countries",
+            "name": "Czech Republic",
+            "code": "CZ"
+        },
+        {
+            "category": "countries",
+            "name": "Denmark",
+            "code": "DK"
+        },
+        {
+            "category": "countries",
+            "name": "Djibouti",
+            "code": "DJ"
+        },
+        {
+            "category": "countries",
+            "name": "Dominica",
+            "code": "DM"
+        },
+        {
+            "category": "countries",
+            "name": "Dominican Republic",
+            "code": "DO"
+        },
+        {
+            "category": "countries",
+            "name": "Ecuador",
+            "code": "EC"
+        },
+        {
+            "category": "countries",
+            "name": "Egypt",
+            "code": "EG"
+        },
+        {
+            "category": "countries",
+            "name": "El Salvador",
+            "code": "SV"
+        },
+        {
+            "category": "countries",
+            "name": "Equatorial Guinea",
+            "code": "GQ"
+        },
+        {
+            "category": "countries",
+            "name": "Eritrea",
+            "code": "ER"
+        },
+        {
+            "category": "countries",
+            "name": "Estonia",
+            "code": "EE"
+        },
+        {
+            "category": "countries",
+            "name": "Ethiopia",
+            "code": "ET"
+        },
+        {
+            "category": "countries",
+            "name": "Falkland Islands (Malvinas)",
+            "code": "FK"
+        },
+        {
+            "category": "countries",
+            "name": "Faroe Islands",
+            "code": "FO"
+        },
+        {
+            "category": "countries",
+            "name": "Fiji",
+            "code": "FJ"
+        },
+        {
+            "category": "countries",
+            "name": "Finland",
+            "code": "FI"
+        },
+        {
+            "category": "countries",
+            "name": "France",
+            "code": "FR"
+        },
+        {
+            "category": "countries",
+            "name": "French Guiana",
+            "code": "GF"
+        },
+        {
+            "category": "countries",
+            "name": "French Polynesia",
+            "code": "PF"
+        },
+        {
+            "category": "countries",
+            "name": "French Southern Territories",
+            "code": "TF"
+        },
+        {
+            "category": "countries",
+            "name": "Gabon",
+            "code": "GA"
+        },
+        {
+            "category": "countries",
+            "name": "Gambia",
+            "code": "GM"
+        },
+        {
+            "category": "countries",
+            "name": "Republic of Georgia",
+            "code": "GE"
+        },
+        {
+            "category": "countries",
+            "name": "Germany",
+            "code": "DE"
+        },
+        {
+            "category": "countries",
+            "name": "Ghana",
+            "code": "GH"
+        },
+        {
+            "category": "countries",
+            "name": "Gibraltar",
+            "code": "GI"
+        },
+        {
+            "category": "countries",
+            "name": "Greece",
+            "code": "GR"
+        },
+        {
+            "category": "countries",
+            "name": "Greenland",
+            "code": "GL"
+        },
+        {
+            "category": "countries",
+            "name": "Grenada",
+            "code": "GD"
+        },
+        {
+            "category": "countries",
+            "name": "Guadeloupe",
+            "code": "GP"
+        },
+        {
+            "category": "countries",
+            "name": "Guam",
+            "code": "GU"
+        },
+        {
+            "category": "countries",
+            "name": "Guatemala",
+            "code": "GT"
+        },
+        {
+            "category": "countries",
+            "name": "Guernsey",
+            "code": "GG"
+        },
+        {
+            "category": "countries",
+            "name": "Guinea",
+            "code": "GN"
+        },
+        {
+            "category": "countries",
+            "name": "Guinea-Bissau",
+            "code": "GW"
+        },
+        {
+            "category": "countries",
+            "name": "Guyana",
+            "code": "GY"
+        },
+        {
+            "category": "countries",
+            "name": "Haiti",
+            "code": "HT"
+        },
+        {
+            "category": "countries",
+            "name": "Heard Island and McDonald Islands",
+            "code": "HM"
+        },
+        {
+            "category": "countries",
+            "name": "Holy See (Vatican City State)",
+            "code": "VA"
+        },
+        {
+            "category": "countries",
+            "name": "Honduras",
+            "code": "HN"
+        },
+        {
+            "category": "countries",
+            "name": "Hong Kong",
+            "code": "HK"
+        },
+        {
+            "category": "countries",
+            "name": "Hungary",
+            "code": "HU"
+        },
+        {
+            "category": "countries",
+            "name": "Iceland",
+            "code": "IS"
+        },
+        {
+            "category": "countries",
+            "name": "India",
+            "code": "IN"
+        },
+        {
+            "category": "countries",
+            "name": "Indonesia",
+            "code": "ID"
+        },
+        {
+            "category": "countries",
+            "name": "Iran, Islamic Republic of",
+            "code": "IR"
+        },
+        {
+            "category": "countries",
+            "name": "Iraq",
+            "code": "IQ"
+        },
+        {
+            "category": "countries",
+            "name": "Ireland",
+            "code": "IE"
+        },
+        {
+            "category": "countries",
+            "name": "Isle of Man",
+            "code": "IM"
+        },
+        {
+            "category": "countries",
+            "name": "Israel",
+            "code": "IL"
+        },
+        {
+            "category": "countries",
+            "name": "Italy",
+            "code": "IT"
+        },
+        {
+            "category": "countries",
+            "name": "Jamaica",
+            "code": "JM"
+        },
+        {
+            "category": "countries",
+            "name": "Japan",
+            "code": "JP"
+        },
+        {
+            "category": "countries",
+            "name": "Jersey",
+            "code": "JE"
+        },
+        {
+            "category": "countries",
+            "name": "Jordan",
+            "code": "JO"
+        },
+        {
+            "category": "countries",
+            "name": "Kazakhstan",
+            "code": "KZ"
+        },
+        {
+            "category": "countries",
+            "name": "Kenya",
+            "code": "KE"
+        },
+        {
+            "category": "countries",
+            "name": "Kiribati",
+            "code": "KI"
+        },
+        {
+            "category": "countries",
+            "name": "Korea, Democratic People's Republic of",
+            "code": "KP"
+        },
+        {
+            "category": "countries",
+            "name": "Korea, Republic of",
+            "code": "KR"
+        },
+        {
+            "category": "countries",
+            "name": "Kuwait",
+            "code": "KW"
+        },
+        {
+            "category": "countries",
+            "name": "Kyrgyzstan",
+            "code": "KG"
+        },
+        {
+            "category": "countries",
+            "name": "Lao People's Democratic Republic",
+            "code": "LA"
+        },
+        {
+            "category": "countries",
+            "name": "Latvia",
+            "code": "LV"
+        },
+        {
+            "category": "countries",
+            "name": "Lebanon",
+            "code": "LB"
+        },
+        {
+            "category": "countries",
+            "name": "Lesotho",
+            "code": "LS"
+        },
+        {
+            "category": "countries",
+            "name": "Liberia",
+            "code": "LR"
+        },
+        {
+            "category": "countries",
+            "name": "Libya",
+            "code": "LY"
+        },
+        {
+            "category": "countries",
+            "name": "Liechtenstein",
+            "code": "LI"
+        },
+        {
+            "category": "countries",
+            "name": "Lithuania",
+            "code": "LT"
+        },
+        {
+            "category": "countries",
+            "name": "Luxembourg",
+            "code": "LU"
+        },
+        {
+            "category": "countries",
+            "name": "Macao",
+            "code": "MO"
+        },
+        {
+            "category": "countries",
+            "name": "Macedonia, the former Yugoslav Republic of",
+            "code": "MK"
+        },
+        {
+            "category": "countries",
+            "name": "Madagascar",
+            "code": "MG"
+        },
+        {
+            "category": "countries",
+            "name": "Malawi",
+            "code": "MW"
+        },
+        {
+            "category": "countries",
+            "name": "Malaysia",
+            "code": "MY"
+        },
+        {
+            "category": "countries",
+            "name": "Maldives",
+            "code": "MV"
+        },
+        {
+            "category": "countries",
+            "name": "Mali",
+            "code": "ML"
+        },
+        {
+            "category": "countries",
+            "name": "Malta",
+            "code": "MT"
+        },
+        {
+            "category": "countries",
+            "name": "Marshall Islands",
+            "code": "MH"
+        },
+        {
+            "category": "countries",
+            "name": "Martinique",
+            "code": "MQ"
+        },
+        {
+            "category": "countries",
+            "name": "Mauritania",
+            "code": "MR"
+        },
+        {
+            "category": "countries",
+            "name": "Mauritius",
+            "code": "MU"
+        },
+        {
+            "category": "countries",
+            "name": "Mayotte",
+            "code": "YT"
+        },
+        {
+            "category": "countries",
+            "name": "Mexico",
+            "code": "MX"
+        },
+        {
+            "category": "countries",
+            "name": "Micronesia, Federated States of",
+            "code": "FM"
+        },
+        {
+            "category": "countries",
+            "name": "Moldova, Republic of",
+            "code": "MD"
+        },
+        {
+            "category": "countries",
+            "name": "Monaco",
+            "code": "MC"
+        },
+        {
+            "category": "countries",
+            "name": "Mongolia",
+            "code": "MN"
+        },
+        {
+            "category": "countries",
+            "name": "Montenegro",
+            "code": "ME"
+        },
+        {
+            "category": "countries",
+            "name": "Montserrat",
+            "code": "MS"
+        },
+        {
+            "category": "countries",
+            "name": "Morocco",
+            "code": "MA"
+        },
+        {
+            "category": "countries",
+            "name": "Mozambique",
+            "code": "MZ"
+        },
+        {
+            "category": "countries",
+            "name": "Myanmar",
+            "code": "MM"
+        },
+        {
+            "category": "countries",
+            "name": "Namibia",
+            "code": "NA"
+        },
+        {
+            "category": "countries",
+            "name": "Nauru",
+            "code": "NR"
+        },
+        {
+            "category": "countries",
+            "name": "Nepal",
+            "code": "NP"
+        },
+        {
+            "category": "countries",
+            "name": "Netherlands",
+            "code": "NL"
+        },
+        {
+            "category": "countries",
+            "name": "New Caledonia",
+            "code": "NC"
+        },
+        {
+            "category": "countries",
+            "name": "New Zealand",
+            "code": "NZ"
+        },
+        {
+            "category": "countries",
+            "name": "Nicaragua",
+            "code": "NI"
+        },
+        {
+            "category": "countries",
+            "name": "Niger",
+            "code": "NE"
+        },
+        {
+            "category": "countries",
+            "name": "Nigeria",
+            "code": "NG"
+        },
+        {
+            "category": "countries",
+            "name": "Niue",
+            "code": "NU"
+        },
+        {
+            "category": "countries",
+            "name": "Norfolk Island",
+            "code": "NF"
+        },
+        {
+            "category": "countries",
+            "name": "Northern Mariana Islands",
+            "code": "MP"
+        },
+        {
+            "category": "countries",
+            "name": "Norway",
+            "code": "NO"
+        },
+        {
+            "category": "countries",
+            "name": "Oman",
+            "code": "OM"
+        },
+        {
+            "category": "countries",
+            "name": "Pakistan",
+            "code": "PK"
+        },
+        {
+            "category": "countries",
+            "name": "Palau",
+            "code": "PW"
+        },
+        {
+            "category": "countries",
+            "name": "Palestine, State of",
+            "code": "PS"
+        },
+        {
+            "category": "countries",
+            "name": "Panama",
+            "code": "PA"
+        },
+        {
+            "category": "countries",
+            "name": "Papua New Guinea",
+            "code": "PG"
+        },
+        {
+            "category": "countries",
+            "name": "Paraguay",
+            "code": "PY"
+        },
+        {
+            "category": "countries",
+            "name": "Peru",
+            "code": "PE"
+        },
+        {
+            "category": "countries",
+            "name": "Philippines",
+            "code": "PH"
+        },
+        {
+            "category": "countries",
+            "name": "Pitcairn",
+            "code": "PN"
+        },
+        {
+            "category": "countries",
+            "name": "Poland",
+            "code": "PL"
+        },
+        {
+            "category": "countries",
+            "name": "Portugal",
+            "code": "PT"
+        },
+        {
+            "category": "countries",
+            "name": "Puerto Rico",
+            "code": "PR"
+        },
+        {
+            "category": "countries",
+            "name": "Qatar",
+            "code": "QA"
+        },
+        {
+            "category": "countries",
+            "name": "Réunion",
+            "code": "RE"
+        },
+        {
+            "category": "countries",
+            "name": "Romania",
+            "code": "RO"
+        },
+        {
+            "category": "countries",
+            "name": "Russian Federation",
+            "code": "RU"
+        },
+        {
+            "category": "countries",
+            "name": "Rwanda",
+            "code": "RW"
+        },
+        {
+            "category": "countries",
+            "name": "Saint Barthélemy",
+            "code": "BL"
+        },
+        {
+            "category": "countries",
+            "name": "Saint Helena, Ascension and Tristan da Cunha",
+            "code": "SH"
+        },
+        {
+            "category": "countries",
+            "name": "Saint Kitts and Nevis",
+            "code": "KN"
+        },
+        {
+            "category": "countries",
+            "name": "Saint Lucia",
+            "code": "LC"
+        },
+        {
+            "category": "countries",
+            "name": "Saint Martin (French part)",
+            "code": "MF"
+        },
+        {
+            "category": "countries",
+            "name": "Saint Pierre and Miquelon",
+            "code": "PM"
+        },
+        {
+            "category": "countries",
+            "name": "Saint Vincent and the Grenadines",
+            "code": "VC"
+        },
+        {
+            "category": "countries",
+            "name": "Samoa",
+            "code": "WS"
+        },
+        {
+            "category": "countries",
+            "name": "San Marino",
+            "code": "SM"
+        },
+        {
+            "category": "countries",
+            "name": "Sao Tome and Principe",
+            "code": "ST"
+        },
+        {
+            "category": "countries",
+            "name": "Saudi Arabia",
+            "code": "SA"
+        },
+        {
+            "category": "countries",
+            "name": "Senegal",
+            "code": "SN"
+        },
+        {
+            "category": "countries",
+            "name": "Serbia",
+            "code": "RS"
+        },
+        {
+            "category": "countries",
+            "name": "Seychelles",
+            "code": "SC"
+        },
+        {
+            "category": "countries",
+            "name": "Sierra Leone",
+            "code": "SL"
+        },
+        {
+            "category": "countries",
+            "name": "Singapore",
+            "code": "SG"
+        },
+        {
+            "category": "countries",
+            "name": "Sint Maarten (Dutch part)",
+            "code": "SX"
+        },
+        {
+            "category": "countries",
+            "name": "Slovakia",
+            "code": "SK"
+        },
+        {
+            "category": "countries",
+            "name": "Slovenia",
+            "code": "SI"
+        },
+        {
+            "category": "countries",
+            "name": "Solomon Islands",
+            "code": "SB"
+        },
+        {
+            "category": "countries",
+            "name": "Somalia",
+            "code": "SO"
+        },
+        {
+            "category": "countries",
+            "name": "South Africa",
+            "code": "ZA"
+        },
+        {
+            "category": "countries",
+            "name": "South Georgia and the South Sandwich Islands",
+            "code": "GS"
+        },
+        {
+            "category": "countries",
+            "name": "South Sudan",
+            "code": "SS"
+        },
+        {
+            "category": "countries",
+            "name": "Spain",
+            "code": "ES"
+        },
+        {
+            "category": "countries",
+            "name": "Sri Lanka",
+            "code": "LK"
+        },
+        {
+            "category": "countries",
+            "name": "Sudan",
+            "code": "SD"
+        },
+        {
+            "category": "countries",
+            "name": "Suriname",
+            "code": "SR"
+        },
+        {
+            "category": "countries",
+            "name": "Svalbard and Jan Mayen",
+            "code": "SJ"
+        },
+        {
+            "category": "countries",
+            "name": "Swaziland",
+            "code": "SZ"
+        },
+        {
+            "category": "countries",
+            "name": "Sweden",
+            "code": "SE"
+        },
+        {
+            "category": "countries",
+            "name": "Switzerland",
+            "code": "CH"
+        },
+        {
+            "category": "countries",
+            "name": "Syrian Arab Republic",
+            "code": "SY"
+        },
+        {
+            "category": "countries",
+            "name": "Taiwan, Province of China",
+            "code": "TW"
+        },
+        {
+            "category": "countries",
+            "name": "Tajikistan",
+            "code": "TJ"
+        },
+        {
+            "category": "countries",
+            "name": "Tanzania, United Republic of",
+            "code": "TZ"
+        },
+        {
+            "category": "countries",
+            "name": "Thailand",
+            "code": "TH"
+        },
+        {
+            "category": "countries",
+            "name": "Timor-Leste",
+            "code": "TL"
+        },
+        {
+            "category": "countries",
+            "name": "Togo",
+            "code": "TG"
+        },
+        {
+            "category": "countries",
+            "name": "Tokelau",
+            "code": "TK"
+        },
+        {
+            "category": "countries",
+            "name": "Tonga",
+            "code": "TO"
+        },
+        {
+            "category": "countries",
+            "name": "Trinidad and Tobago",
+            "code": "TT"
+        },
+        {
+            "category": "countries",
+            "name": "Tunisia",
+            "code": "TN"
+        },
+        {
+            "category": "countries",
+            "name": "Turkey",
+            "code": "TR"
+        },
+        {
+            "category": "countries",
+            "name": "Turkmenistan",
+            "code": "TM"
+        },
+        {
+            "category": "countries",
+            "name": "Turks and Caicos Islands",
+            "code": "TC"
+        },
+        {
+            "category": "countries",
+            "name": "Tuvalu",
+            "code": "TV"
+        },
+        {
+            "category": "countries",
+            "name": "Uganda",
+            "code": "UG"
+        },
+        {
+            "category": "countries",
+            "name": "Ukraine",
+            "code": "UA"
+        },
+        {
+            "category": "countries",
+            "name": "United Arab Emirates",
+            "code": "AE"
+        },
+        {
+            "category": "countries",
+            "name": "United Kingdom",
+            "code": "GB"
+        },
+        {
+            "category": "countries",
+            "name": "United States",
+            "code": "US"
+        },
+        {
+            "category": "countries",
+            "name": "United States Minor Outlying Islands",
+            "code": "UM"
+        },
+        {
+            "category": "countries",
+            "name": "Uruguay",
+            "code": "UY"
+        },
+        {
+            "category": "countries",
+            "name": "Uzbekistan",
+            "code": "UZ"
+        },
+        {
+            "category": "countries",
+            "name": "Vanuatu",
+            "code": "VU"
+        },
+        {
+            "category": "countries",
+            "name": "Venezuela, Bolivarian Republic of",
+            "code": "VE"
+        },
+        {
+            "category": "countries",
+            "name": "Viet Nam",
+            "code": "VN"
+        },
+        {
+            "category": "countries",
+            "name": "Virgin Islands, British",
+            "code": "VG"
+        },
+        {
+            "category": "countries",
+            "name": "Virgin Islands, U.S.",
+            "code": "VI"
+        },
+        {
+            "category": "countries",
+            "name": "Wallis and Futuna",
+            "code": "WF"
+        },
+        {
+            "category": "countries",
+            "name": "Western Sahara",
+            "code": "EH"
+        },
+        {
+            "category": "countries",
+            "name": "Yemen",
+            "code": "YE"
+        },
+        {
+            "category": "countries",
+            "name": "Zambia",
+            "code": "ZM"
+        },
+        {
+            "category": "countries",
+            "name": "Zimbabwe",
+            "code": "ZW"
+        }
+    ],
+
+    "provinces": [
+        {
+            "category": "provincesCanada",
+            "name": "Ontario",
+            "code": "ON"
+        },
+        {
+            "category": "provincesCanada",
+            "name": "Quebec",
+            "code": "QC"
+        },
+        {
+            "category": "provincesCanada",
+            "name": "Nova Scotia",
+            "code": "NS"
+        },
+        {
+            "category": "provincesCanada",
+            "name": "New Brunswick",
+            "code": "NB"
+        },
+        {
+            "category": "provincesCanada",
+            "name": "Manitoba",
+            "code": "MB"
+        },
+        {
+            "category": "provincesCanada",
+            "name": "British Columbia",
+            "code": "BC"
+        },
+        {
+            "category": "provincesCanada",
+            "name": "Prince Edward Island",
+            "code": "PE"
+        },
+        {
+            "category": "provincesCanada",
+            "name": "Saskatchewan",
+            "code": "SK"
+        },
+        {
+            "category": "provincesCanada",
+            "name": "Alberta",
+            "code": "AB"
+        },
+        {
+            "category": "provincesCanada",
+            "name": "Newfoundland and Labrador",
+            "code": "NL"
+        }
+    ],
+
+    "statesUSA": [
+        {
+            "category": "statesUSA",
+            "name": "Alabama",
+            "code": "AL"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Alaska",
+            "code": "AK"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Arizona",
+            "code": "AZ"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Arkansas",
+            "code": "AR"
+        },
+        {
+            "category": "statesUSA",
+            "name": "California",
+            "code": "CA"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Colorado",
+            "code": "CO"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Connecticut",
+            "code": "CT"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Delaware",
+            "code": "DE"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Florida",
+            "code": "FL"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Georgia",
+            "code": "GA"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Hawaii",
+            "code": "HI"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Idaho",
+            "code": "ID"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Illinois",
+            "code": "IL"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Indiana",
+            "code": "IN"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Iowa",
+            "code": "IA"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Kansas",
+            "code": "KS"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Kentucky",
+            "code": "KY"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Louisiana",
+            "code": "LA"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Maine",
+            "code": "ME"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Maryland",
+            "code": "MD"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Massachusetts",
+            "code": "MA"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Michigan",
+            "code": "MI"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Minnesota",
+            "code": "MN"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Mississippi",
+            "code": "MS"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Missouri",
+            "code": "MO"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Montana",
+            "code": "MT"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Nebraska",
+            "code": "NE"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Nevada",
+            "code": "NV"
+        },
+        {
+            "category": "statesUSA",
+            "name": "New Hampshire",
+            "code": "NH"
+        },
+        {
+            "category": "statesUSA",
+            "name": "New Jersey",
+            "code": "NJ"
+        },
+        {
+            "category": "statesUSA",
+            "name": "New Mexico",
+            "code": "NM"
+        },
+        {
+            "category": "statesUSA",
+            "name": "New York",
+            "code": "NY"
+        },
+        {
+            "category": "statesUSA",
+            "name": "North Carolina",
+            "code": "NC"
+        },
+        {
+            "category": "statesUSA",
+            "name": "North Dakota",
+            "code": "ND"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Ohio",
+            "code": "OH"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Oklahoma",
+            "code": "OK"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Oregon",
+            "code": "OR"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Pennsylvania",
+            "code": "PA"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Rhode Island",
+            "code": "RI"
+        },
+        {
+            "category": "statesUSA",
+            "name": "South Carolina",
+            "code": "SC"
+        },
+        {
+            "category": "statesUSA",
+            "name": "South Dakota",
+            "code": "SD"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Tennessee",
+            "code": "TN"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Texas",
+            "code": "TX"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Utah",
+            "code": "UT"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Vermont",
+            "code": "VT"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Virginia",
+            "code": "VA"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Washington",
+            "code": "WA"
+        },
+        {
+            "category": "statesUSA",
+            "name": "West Virginia",
+            "code": "WV"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Wisconsin",
+            "code": "WI"
+        },
+        {
+            "category": "statesUSA",
+            "name": "Wyoming",
+            "code": "WY"
+        }
+    ]
+}

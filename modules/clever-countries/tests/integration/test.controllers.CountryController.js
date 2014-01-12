@@ -1,10 +1,10 @@
-var expect = require( 'chai' ).expect
-  , sinon = require( 'sinon' )
-  , request = require( 'supertest' )
-  , app = require( './../../../index' )
-  , testEnv = require( './utils' ).testEnv;
-
-var countryId, stateId, provinceId;
+var expect = require ( 'chai' ).expect
+  , request = require ( 'supertest' )
+  , path = require( 'path' )
+  , app = require ( path.resolve( __dirname + '/../../../../' ) + '/index.js' )
+  , provinceId
+  , countryId
+  , stateId;
 
 describe('controllers.CountryController', function () {
 
