@@ -152,7 +152,7 @@ module.exports = Class.extend(
         }
     },
 
-    initRoutes: function( injector ) {
+    initRoutes: function() {
         if ( typeof this.routes === 'function' ) {
             debug( 'initRoutes for module ' + this.name );
             injector.inject( this.routes );

@@ -23,7 +23,7 @@ Module = ModuleClass.extend({
         injector.instance( 'sequelize', sequelize );
     },
 
-    preRoute: function() {
+    modulesLoaded: function() {
         this.models = require( 'models' ).orm;
     },
 

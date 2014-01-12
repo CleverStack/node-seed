@@ -14,7 +14,7 @@ Module = ModuleClass.extend({
         injector.instance( 'mongoose', mongoose );
     },
 
-    preRoute: function() {
+    modulesLoaded: function() {
         this.models = require( 'models' ).odm;
     },
 
