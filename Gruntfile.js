@@ -82,7 +82,7 @@ module.exports = function( grunt ) {
             callbacks.push( gruntfile[ 1 ] );
         }
     });
-console.dir(gruntConfig.concurrent.servers);
+
     // Initialize the config
     grunt.initConfig( gruntConfig );
 
