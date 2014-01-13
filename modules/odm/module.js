@@ -38,6 +38,10 @@ Module = ModuleClass.extend({
         }
 
         return model;
+    },
+
+    preShutdown: function() {
+        mongoose.disconnect();
     }
 });
 
