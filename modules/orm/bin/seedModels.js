@@ -94,8 +94,6 @@ async.forEachSeries(
     },
     function forEachModelTypeComplete( err ) {
         console.log(err ? 'Error: ' : 'Seed completed with no errors', err);
-        if ( config.odm && config.odm.enabled ) {
-          mongoose.disconnect();
-        }
+        env.moduleLoader.shutdown();
     }
 );
