@@ -2,14 +2,14 @@ var BaseService = require( './BaseService' )
   , Q = require( 'q' )
   , PermissionService = null;
 
-module.exports = function ( db, Permission, Role ) {
+module.exports = function ( db, PermissionModel, RoleModel ) {
     if ( PermissionService && PermissionService.instance ) {
         return PermissionService.instance;
     }
 
     PermissionService = BaseService.extend( {
         list: function () {
-            return Permission.all();
+            return PermissionModel.all();
         },
 
         hasPermissions: function ( req, permissions, booleanLogic, fn ) {
@@ -18,10 +18,6 @@ module.exports = function ( db, Permission, Role ) {
             if ( typeof booleanLogic === "function" ) {
                 fn = booleanLogic;
                 booleanLogic = 'all';
-            }
-
-            if ( !permissions.length ) {
-                return fn( null, true );
             }
 
             booleanLogic = booleanLogic === "any" ? 'any' : 'all';
@@ -37,11 +33,15 @@ module.exports = function ( db, Permission, Role ) {
                 return fn( null, true );
             }
 
-            Role.find( {
+            if ( !permissions.length ) {
+                return fn( null, true );
+            }
+
+            RoleModel.find( {
                 where: {
                     id: req.user.role.id
                 },
-                include: [ Permission ]
+                include: [PermissionModel]
             } )
                 .success( function ( userPermissions ) {
                     if ( !userPermissions.permissions.length ) {
@@ -65,7 +65,7 @@ module.exports = function ( db, Permission, Role ) {
     } );
 
     PermissionService.instance = new PermissionService( db );
-    PermissionService.Model = Permission;
+    PermissionService.Model = PermissionModel;
 
     return PermissionService.instance;
 };
