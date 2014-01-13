@@ -32,7 +32,7 @@
     "underscore": "~1.5.2",
     "q": "~1.0.0",
     "i": "~0.3.2",
-    "deepmerge": "~0.2.7",
+    "deepmerge": "~0.2.7"
   },
   "devDependencies": {
     "grunt-contrib-watch": "",
@@ -41,7 +41,6 @@
     "grunt-contrib-connect": "~0.3.0",
     "grunt-mocha-test": "",
     "grunt-nodemon": "",
-    "grunt-docular": "",
     "matchdep": "",
     "mocha": "",
     "chai": "",
