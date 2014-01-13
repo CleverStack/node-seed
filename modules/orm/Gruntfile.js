@@ -1,7 +1,15 @@
 'use strict';
 
 module.exports = function( grunt ) {
-    grunt.initConfig({
+    // Register each command
+    grunt.registerTask( 'db:rebase', [ 'exec:rebase' ] );
+    grunt.registerTask( 'db:seed', [ 'exec:seed' ] );
+
+    // Register db command (runs one after the other)
+    grunt.registerTask( 'db', [ 'db:rebase', 'db:seed' ] );
+
+    // Return the config
+    return {
         exec: {
             rebase: {
                 cmd: "NODE_PATH=./lib/:./modules/; node modules/orm/bin/rebase.js"
@@ -10,12 +18,5 @@ module.exports = function( grunt ) {
                 cmd: "NODE_PATH=./lib/:./modules/; node modules/orm/bin/seedModels.js"
             }
         }
-    });
-
-    // Register each command
-    grunt.registerTask('db:rebase', ['exec:rebase']);
-    grunt.registerTask('db:seed', ['exec:seed']);
-
-    // Register db command (runs one after the other)
-    grunt.registerTask('db', ['db:rebase', 'db:seed']);
+    };
 };

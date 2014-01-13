@@ -2,13 +2,15 @@
 
 var path = require( 'path' )
   , fs = require( 'fs' )
-  , packageJson = require( __dirname + '/package.json' );
+  , packageJson = require( __dirname + '/package.json' )
+  , merge = require('deepmerge');
 
 module.exports = function( grunt ) {
     // load all grunt tasks
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
-    grunt.initConfig({
+    // Create the project wide 
+    var gruntConfig = {
         watch: {
             docs: {
                 files: [ 'lib/**/*.js', 'modules/**/*.js' ],
@@ -141,26 +143,28 @@ module.exports = function( grunt ) {
                 }
             }
         }
-    });
+    };
 
-    grunt.registerTask('docs', ['clean:docs','docular']);
-
-    grunt.registerTask('test', ['mochaTest:unit']);
-    grunt.registerTask('test:unit', ['mochaTest:unit']);
-    grunt.registerTask('test:e2e', ['mochaTest:e2e']);
-    grunt.registerTask('test:ci', ['watch:tests']);
-
-    grunt.registerTask('server', ['concurrent:servers']);
-    grunt.registerTask('server:web', ['nodemon:web']);
-    grunt.registerTask('server:docs', ['connect:docs', 'watch:docs']);
-
-    grunt.registerTask('default', ['server']);
+    // Register all project wide tasks with grunt
+    grunt.registerTask( 'docs', [ 'clean:docs', 'docular' ] );
+    grunt.registerTask( 'test', [ 'mochaTest:unit' ] );
+    grunt.registerTask( 'test:unit', [ 'mochaTest:unit' ] );
+    grunt.registerTask( 'test:e2e', [ 'mochaTest:e2e' ] );
+    grunt.registerTask( 'test:ci', [ 'watch:tests' ] );
+    grunt.registerTask( 'server', [ 'concurrent:servers' ] );
+    grunt.registerTask( 'server:web', [ 'nodemon:web' ] );
+    grunt.registerTask( 'server:docs', [ 'connect:docs', 'watch:docs' ] );
+    grunt.registerTask( 'default', [ 'server'] );
 
     // Load all modules Gruntfiles.js
     packageJson.bundledDependencies.forEach(function( moduleName ) {
         var moduleGruntfile = [ path.resolve( __dirname ), 'modules', moduleName, 'Gruntfile.js' ].join( path.sep );
         if ( fs.existsSync( moduleGruntfile ) ) {
-            require( moduleGruntfile )( grunt );
+            // Merge (deep) the grunt config objects
+            gruntConfig = merge( gruntConfig, require( moduleGruntfile )( grunt ) );
         }
     });
+
+    // Initialize the config
+    grunt.initConfig( gruntConfig );
 };
