@@ -1,5 +1,9 @@
 'use strict';
 
+var path = require( 'path' )
+  , fs = require( 'fs' )
+  , packageJson = require( __dirname + '/package.json' );
+
 module.exports = function( grunt ) {
     // load all grunt tasks
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
@@ -136,14 +140,6 @@ module.exports = function( grunt ) {
                     logConcurrentOutput: true
                 }
             }
-        },
-        exec: {
-            rebase: {
-                cmd: "NODE_PATH=./lib/:./modules/; node modules/orm/bin/rebase.js"
-            },
-            seed: {
-                cmd: "NODE_PATH=./lib/:./modules/; node modules/orm/bin/seedModels.js"
-            }
         }
     });
 
@@ -158,11 +154,13 @@ module.exports = function( grunt ) {
     grunt.registerTask('server:web', ['nodemon:web']);
     grunt.registerTask('server:docs', ['connect:docs', 'watch:docs']);
 
-    grunt.registerTask('db:rebase', ['exec:rebase']);
-    grunt.registerTask('db:seed', ['exec:seed']);
-
-    grunt.registerTask('db', ['db:rebase', 'db:seed']);
-
-
     grunt.registerTask('default', ['server']);
+
+    // Load all modules Gruntfiles.js
+    packageJson.bundledDependencies.forEach(function( moduleName ) {
+        var moduleGruntfile = [ path.resolve( __dirname ), 'modules', moduleName, 'Gruntfile.js' ].join( path.sep );
+        if ( fs.existsSync( moduleGruntfile ) ) {
+            require( moduleGruntfile )( grunt );
+        }
+    });
 };
