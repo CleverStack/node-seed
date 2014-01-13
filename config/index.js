@@ -16,7 +16,7 @@ if ( envOverride === null ) {
     envOverride = 'local';
 }
 
-fileNames.push( envOverride );
+configFiles.env.push( [ __dirname, envOverride ].join( path.sep ) + '.json' );
 
 packageJson.bundledDependencies.forEach(function( moduleName ) {
     var moduleConfigPath = [ path.resolve( __dirname + '/../modules' ), moduleName, 'config', '' ].join( path.sep );
