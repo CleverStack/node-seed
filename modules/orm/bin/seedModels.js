@@ -25,7 +25,11 @@ async.forEachSeries(
     Object.keys(seedData),
     function forEachModelType( modelName, cb ) {
         var ModelType = models.orm[modelName]
-            , Models = seedData[modelName];
+          , Models = seedData[modelName];
+
+        if ( !ModelType || !Models ) {
+            return cb();
+        }
 
         async.forEachSeries(
             Models,
