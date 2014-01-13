@@ -27,7 +27,6 @@
     "nconf": "~0.6.9",
     "uberclass": "~1.0.1",
     "debug": "~0.7.2",
-    "sendgrid": "~0.3.1",
     "matchdep": "~0.3.0",
     "async": "~0.2.9",
     "underscore": "~1.5.2",
