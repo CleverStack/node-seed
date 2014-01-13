@@ -3,11 +3,11 @@
 var path = require( 'path' )
   , fs = require( 'fs' )
   , packageJson = require( __dirname + '/package.json' )
-  , merge = require('deepmerge');
+  , merge = require( 'deepmerge' );
 
 module.exports = function( grunt ) {
     // load all grunt tasks
-    require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+    require( 'matchdep' ).filterDev( 'grunt-*' ).forEach( grunt.loadNpmTasks );
 
     // Create the project wide 
     var gruntConfig = {
@@ -29,7 +29,7 @@ module.exports = function( grunt ) {
             docAPIOrder : [ 'doc' ],
             groups: [
                 {
-                    groupTitle: 'CleverStack Seed',
+                    groupTitle: 'CleverStack Node Seed',
                     groupId: 'cleverstack',
                     groupIcon: 'icon-book',
                     sections: [
@@ -115,29 +115,29 @@ module.exports = function( grunt ) {
         mochaTest: {
             unit: {
                 options: {
-                    require: 'chai',
+                    require: [ 'chai' ],
                     reporter: 'spec'
                 },
-                src: ['modules/**/tests/unit/*.js']
+                src: [ 'tests/unit/*.js', 'modules/**/tests/unit/*.js' ]
             },
             e2e: {
                 options: {
                     require: 'chai',
                     reporter: 'spec'
                 },
-                src: ['modules/**/tests/integration/**/*.js']
+                src: [ 'tests/integration/*.js', 'modules/**/tests/integration/*.js' ]
             },
             ci: {
                 options: {
                     require: 'chai',
                     reporter: 'min'
                 },
-                src: ['modules/**/tests/integration/**/*.js', 'modules/**/tests/unit/**/*.js']
+                src: [ 'tests/**/*.js', 'modules/**/tests/**/*.js' ]
             }
         },
         concurrent: {
             servers: {
-                tasks: ['server:web', 'server:docs', 'watch:docs'],
+                tasks: [ 'server:web', 'server:docs', 'watch:docs' ],
                 options: {
                     logConcurrentOutput: true
                 }
@@ -147,7 +147,7 @@ module.exports = function( grunt ) {
 
     // Register all project wide tasks with grunt
     grunt.registerTask( 'docs', [ 'clean:docs', 'docular' ] );
-    grunt.registerTask( 'test', [ 'mochaTest:unit' ] );
+    grunt.registerTask( 'test', [ 'mochaTest:unit', 'mochaTest:e2e' ] );
     grunt.registerTask( 'test:unit', [ 'mochaTest:unit' ] );
     grunt.registerTask( 'test:e2e', [ 'mochaTest:e2e' ] );
     grunt.registerTask( 'test:ci', [ 'watch:tests' ] );
