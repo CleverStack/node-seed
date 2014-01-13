@@ -5,6 +5,9 @@ var path = require( 'path' )
   , packageJson = require( __dirname + '/package.json' )
   , merge = require( 'deepmerge' );
 
+// Set the node path - this works only because the other processes are forked.
+process.env.NODE_PATH = process.env.NODE_PATH ? './lib/:./modules/:' + process.env.NODE_PATH : './lib/:./modules/';
+
 module.exports = function( grunt ) {
     // load all grunt tasks
     require( 'matchdep' ).filterDev( 'grunt-*' ).forEach( grunt.loadNpmTasks );
