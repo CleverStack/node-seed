@@ -58,6 +58,7 @@ module.exports = function( grunt ) {
         },
         concurrent: {
             servers: {
+                tasks: [ 'server:web' ],
                 options: {
                     logConcurrentOutput: true
                 }
@@ -81,7 +82,7 @@ module.exports = function( grunt ) {
             callbacks.push( gruntfile[ 1 ] );
         }
     });
-
+console.dir(gruntConfig.concurrent.servers);
     // Initialize the config
     grunt.initConfig( gruntConfig );
 
