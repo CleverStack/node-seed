@@ -5,6 +5,17 @@ var path = require( 'path' )
   , packageJson = require( __dirname + '/package.json' )
   , merge = require( 'deepmerge' );
 
+function getModulePaths() {
+    var paths = []
+      , args = [].slice.call(arguments);
+
+    packageJson.bundledDependencies.forEach( function( name ) {
+        paths.push( [ 'modules', name ].concat( args ).join( path.sep ) + path.sep + '**/*.js' );
+    });
+
+    return paths;
+}
+
 // Set the node path - this works only because the other processes are forked.
 process.env.NODE_PATH = process.env.NODE_PATH ? './lib/:./modules/:' + process.env.NODE_PATH : './lib/:./modules/';
 
@@ -39,50 +50,32 @@ module.exports = function( grunt ) {
                         {
                             id: "controllers",
                             title: "Controllers",
-                            scripts: [
-                                "lib/controllers/**/*.js",
-                                "modules/**/controllers/**/*.js"
-                            ]
+                            scripts: [ "lib/controllers/**/*.js" ].concat( getModulePaths( 'controllers' ) )
                         },
                         {
                             id: "models",
                             title: "Models",
-                            scripts: [
-                                "lib/models/**/*.js",
-                                "modules/**/models/**/*.js"
-                            ]
+                            scripts: [ "lib/models/**/*.js" ].concat( getModulePaths( 'models' ) )
                         },
                         {
                             id: "services",
                             title: "Services",
-                            scripts: [
-                                "lib/services/**/*.js",
-                                "modules/**/services/**/*.js"
-                            ]
+                            scripts: [ "lib/services/**/*.js" ].concat( getModulePaths( 'services' ) )
                         },
                         {
                             id: "utils",
                             title: "Utils",
-                            scripts: [
-                                "lib/utils/**/*.js",
-                                "modules/**/utils/**/*.js"
-                            ]
+                            scripts: [ "lib/utils/**/*.js" ].concat( getModulePaths( 'utils' ) )
                         },
                         {
                             id: "classes",
                             title: "Classes",
-                            scripts: [
-                                "lib/classes/**/*.js",
-                                "modules/**/classes/**/*.js"
-                            ]
+                            scripts: [ "lib/classes/**/*.js" ].concat( getModulePaths( 'classes' ) )
                         },
                         {
                             id: "tasks",
                             title: "Tasks",
-                            scripts: [
-                                "lib/tasks/**/*.js",
-                                "modules/**/tasks/**/*.js"
-                            ]
+                            scripts: [ "lib/tasks/**/*.js" ].concat( getModulePaths( 'tasks' ) )
                         }
                     ]
                 }
@@ -121,21 +114,21 @@ module.exports = function( grunt ) {
                     require: [ 'chai' ],
                     reporter: 'spec'
                 },
-                src: [ 'tests/unit/*.js', 'modules/**/tests/unit/*.js' ]
+                src: [ 'tests/unit/*.js' ].concat( getModulePaths( 'tests', 'unit' ) )
             },
             e2e: {
                 options: {
                     require: 'chai',
                     reporter: 'spec'
                 },
-                src: [ 'tests/integration/*.js', 'modules/**/tests/integration/*.js' ]
+                src: [ 'tests/integration/*.js' ].concat( getModulePaths( 'tests', 'integration' ) )
             },
             ci: {
                 options: {
                     require: 'chai',
                     reporter: 'min'
                 },
-                src: [ 'tests/**/*.js', 'modules/**/tests/**/*.js' ]
+                src: [ 'tests/**/*.js' ].concat( getModulePaths( 'tests', 'unit' ), getModulePaths( 'tests', 'integration' ) )
             }
         },
         concurrent: {
