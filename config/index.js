@@ -8,14 +8,15 @@ var path = require( 'path' )
   , packageJson = require( path.resolve( __dirname + '/../' ) + '/package.json' )
   , configFiles = {
         global: [ __dirname + '/global.json' ],
-        env: [ __dirname + '/' + envOverride + '.json' ]
+        env: [ ]
     };
 
 if ( envOverride === null ) {
-    debug( 'No environment based config found' );
-} else {
-    fileNames.push( envOverride );
+    debug( 'No environment based config set using NODE_ENV, defaulting to "local" configuration' );
+    envOverride = 'local';
 }
+
+fileNames.push( envOverride );
 
 packageJson.bundledDependencies.forEach(function( moduleName ) {
     var moduleConfigPath = [ path.resolve( __dirname + '/../modules' ), moduleName, 'config', '' ].join( path.sep );
