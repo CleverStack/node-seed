@@ -4,7 +4,8 @@ var Class = require( 'uberclass' )
   , debug = require( 'debug' )( 'Modules' )
   , config = injector.getInstance( 'config' )
   , app = injector.getInstance( 'app' )
-  , express = injector.getInstance( 'express' );
+  , express = injector.getInstance( 'express' )
+  , moduleLoader = injector.getInstance( 'moduleLoader' );
 
 module.exports = Class.extend(
 {
@@ -98,10 +99,10 @@ module.exports = Class.extend(
             }
         }
         this[ rootFolder ] = obj;
-        this.paths.push( p );
 
-        // No loading models directly through the injector
-        if ( !/model/ig.test( p ) ) {
+        // Dont add paths for disabled model modules
+        if ( rootFolder !== 'models' || ( rootFolder === 'models' && moduleLoader.moduleIsEnabled( currentFolder ) ) ) {
+            this.paths.push( p );
             injector._inherited.factoriesDirs.push( p );
         }
     },
