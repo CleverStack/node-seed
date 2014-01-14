@@ -1,0 +1,20 @@
+{
+    "name": "clever-countries",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "lodash": "2.4.1"
+    },
+    "author": {
+        "name": "Clevertech",
+        "email": "info@clevertech.biz",
+        "web": "http://www.clevertech.biz"
+    },
+    "main": "./index",
+    "description": "",
+    "devDependencies": {
+        "mocha": "*",
+        "chai": "*",
+        "sinon": "*"
+    }
+}
