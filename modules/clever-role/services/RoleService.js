@@ -1,42 +1,40 @@
-var BaseService = require( './BaseService' )
-  , Q = require( 'q' )
-  , _ = require( 'lodash' )
+var BaseService = require('./BaseService')
+  , Q = require('q')
+  , _ = require('lodash')
   , RoleService = null;
 
-module.exports = function ( db, Role, Permission, User ) {
-    if ( RoleService && RoleService.instance ) {
+module.exports = function( db, RoleModel, PermissionModel, UserModel ) {
+    if (RoleService && RoleService.instance) {
         return RoleService.instance;
     }
 
-    RoleService = BaseService.extend( {
+    RoleService = BaseService.extend({
 
-        listRolesWithPerm: function ( accId, roleId ) {
-            var deferred = Q.defer(),
-                service = this;
+        listRolesWithPerm : function( accId, roleId ){
+            var deferred = Q.defer()
+              , service = this;
 
-            if ( !!roleId ) {
+            if (!!roleId) {
                 roleId = parseInt( roleId, 10 );
             }
 
             var sql = 'select t1.id, t1.name, t1.description, t3.id as permid, t3.action, t3.description as perm_description '
-                + 'from Roles t1'
-                + ' left join PermissionsRoles t2 on t1.id = t2.RoleId'
-                + ' left join Permissions t3 on t2.PermissionId = t3.id'
-                + ' where t1.AccountId = ' + accId
-                + (!!roleId && !isNaN( roleId ) ? ' AND t1.id = ' + roleId : '')
-                + ' ;';
+                    + 'from Roles t1'
+                    + ' left join PermissionsRoles t2 on t1.id = t2.RoleId'
+                    + ' left join Permissions t3 on t2.PermissionId = t3.id'
+                    + ' where t1.AccountId = ' + accId
+                    + (!!roleId && !isNaN( roleId ) ? ' AND t1.id = ' + roleId : '')
+                    + ' ;';
 
             this.query( sql )
-                .success( function ( roles ) {
-                    if ( !roles ) {
-                        return deferred.resolve( !!roleId ? {} : [] )
-                    }
+            .success( function( roles ){
+                if( !roles ) { return deferred.resolve( !!roleId ? {} : [] ) }
 
-                    service.getRoleCounts( !!roleId ? roles[0] : roles, accId )
-                        .then( deferred.resolve )
-                        .fail( deferred.reject );
-                } )
-                .error( deferred.reject );
+                service.getRoleCounts( !!roleId ? roles[0] : roles, accId )
+                    .then( deferred.resolve )
+                    .fail( deferred.reject );
+            })
+            .error( deferred.reject );
 
             return deferred.promise;
         },
@@ -45,15 +43,14 @@ module.exports = function ( db, Role, Permission, User ) {
             var deferred = Q.defer()
               , service = this
               , roles = Array.isArray( roles ) ? roles : [roles]
-              , _where =
-                {
+              , _where = {
                     AccountId: accId,
                     RoleId: _.uniq( roles.map( function ( r ) {
                         return r.id;
                     } ) )
                 };
 
-            User.all( {attributes: ['RoleId', ['count(id)', 'count']], where: _where, group: 'RoleId'} )
+            UserModel.all( {attributes: ['RoleId', ['count(id)', 'count']], where: _where, group: 'RoleId'} )
                 .success( function ( counts ) {
                     if ( !counts || !counts.length ) {
                         return deferred.resolve( service.groupRolePermissions( roles ) );
@@ -79,19 +76,19 @@ module.exports = function ( db, Role, Permission, User ) {
             var deferred = Q.defer()
               , actions = [];
 
-            role = _.isArray( role ) ? role[0] : role;
+            role = Array.isArray( role ) ? role[0] : role;
 
             if ( !role || !role.id ) {
                 deferred.resolve( {statuscode: 404, message: 'Role not found.'} );
             } else {
                 if ( !userIds || !Array.isArray( userIds ) || !userIds.length ) {
-                    actions.push( User.update( ['RoleId IS NULL'], {RoleId: role.id} ) );
+                    actions.push( UserModel.update( ['RoleId IS NULL'], {RoleId: role.id} ) );
                 } else {
-                    actions.push( User.update( {RoleId: role.id}, {AccountId: accId, id: userIds} ) );
+                    actions.push( UserModel.update( {RoleId: role.id}, {AccountId: accId, id: userIds} ) );
                 }
 
                 if ( Array.isArray( removed ) && removed.length ) {
-                    actions.push( User.update( {RoleId: null}, {AccountId: accId, id: removed, RoleId: role.id} ) );
+                    actions.push( UserModel.update( {RoleId: null}, {AccountId: accId, id: removed, RoleId: role.id} ) );
                 }
 
                 Q.all( actions ).then( deferred.resolve ).fail( deferred.reject );
@@ -123,7 +120,7 @@ module.exports = function ( db, Role, Permission, User ) {
             service
                 .saveNewRole( data, accId )
                 .then( function ( role ) {
-                    return service.saveRolePermissions( role, data['permissions'] );
+                    return service.saveRolePermissions( role, data['permIds'] );
                 } )
                 .then( deferred.resolve )
                 .fail( deferred.reject );
@@ -140,7 +137,7 @@ module.exports = function ( db, Role, Permission, User ) {
                 AccountId: accId
             };
 
-            Role
+            RoleModel
                 .create( roledata )
                 .success( deferred.resolve )
                 .error( deferred.reject );
@@ -152,28 +149,33 @@ module.exports = function ( db, Role, Permission, User ) {
             var deferred = Q.defer()
               , permissions = [];
 
-
             if ( !permIds || !permIds.length ) {
-
-                deferred.resolve( { id: role.id, name: role.name, permissions: permissions } );
+                deferred.resolve( {
+                    id: role.id,
+                    name: role.name,
+                    description: role.description,
+                    AccountId: role.AccountId,
+                    permissions: permissions
+                } );
 
             } else {
                 permissions = permIds.map( function ( p ) {
-                    return Permission.build( { id: p } )
+                    return PermissionModel.build( { id: p } )
                 } );
 
                 role
                     .setPermissions( permissions )
-                    .success(function ( savedperms ) {
+                    .success( function ( savedperms ) {
                         deferred.resolve( {
                             id: role.id,
                             name: role.name,
-                            permissions: savedperms.map( function ( x ) {
-                                return x.id
-                            } )
+                            description: role.description,
+                            AccountId: role.AccountId,
+                            permissions: savedperms.map( function ( x ) { return x.id } )
                         } );
 
-                    } ).error( deferred.reject );
+                    } )
+                    .error( deferred.reject );
             }
 
             return deferred.promise;
@@ -184,9 +186,10 @@ module.exports = function ( db, Role, Permission, User ) {
               , service = this;
 
 
-            Role.find( data.id )
+            RoleModel.find( data.id )
                 .success( function ( role ) {
-                    if ( role[ 'AccountId' ] != accId ) {
+
+                    if ( role.AccountId !== accId ) {
                         deferred.resolve( { statuscode: 403, message: "unauthorized" } );
                         return;
                     }
@@ -195,7 +198,7 @@ module.exports = function ( db, Role, Permission, User ) {
                         .updateRole( role, data )
                         .then( service.removePermissions.bind( service ) )
                         .then( function ( updatedrole ) {
-                            return service.saveRolePermissions( updatedrole, data['permissions'] );
+                            return service.saveRolePermissions( updatedrole, data['permIds'] );
                         } )
                         .then( deferred.resolve )
                         .fail( deferred.reject );
@@ -208,13 +211,16 @@ module.exports = function ( db, Role, Permission, User ) {
         updateRole: function ( role, data ) {
             var deferred = Q.defer();
 
-            var roledata = {
-                name: data['name'],
-                description: (data['description']) ? data['description'] : null
+            var roleData = {
+                name: data['name']
             };
 
+            if ( !!data['description'] ) {
+                roleData.description = data['description'];
+            }
+
             role
-                .updateAttributes( roledata )
+                .updateAttributes( roleData )
                 .success( deferred.resolve )
                 .error( deferred.reject );
 
@@ -226,9 +232,9 @@ module.exports = function ( db, Role, Permission, User ) {
               , service = this;
 
 
-            Role.find( id )
+            RoleModel.find( id )
                 .success( function ( role ) {
-                    if ( !role || role[ 'AccountId' ] != accId ) {
+                    if ( !role || role[ 'AccountId' ] !== accId ) {
                         deferred.resolve( { statuscode: 403, message: "unauthorized" } );
                         return;
                     }
@@ -237,7 +243,6 @@ module.exports = function ( db, Role, Permission, User ) {
                         .removeRole( role )
                         .then( function ( status ) {
                             if ( !!status && !!status.statuscode ) {
-                                console.log( 'dafuq?' );
                                 return deferred.resolve( status );
                             }
 
@@ -255,16 +260,38 @@ module.exports = function ( db, Role, Permission, User ) {
         removeRole: function ( role ) {
             var deferred = Q.defer()
               , service = this
-              , systemRoles = ['Owner', 'Super Admin', 'HR Manager', 'HR Assistant', 'General User', 'Recruiter'];
+              , systemRoles = ['Owner', 'Super Admin', 'HR Manager', 'HR Assistant', 'Business Unit Manager', 'Recruiter', 'General User']
+              , defaultRole = systemRoles[ systemRoles.length - 1 ]
+              , promise = [];
 
-            if ( ~systemRoles.indexOf( role.name ) ) {
+            if ( systemRoles.indexOf( role.name ) >= 0 ) {
                 deferred.resolve( {statuscode: 403, message: 'unauthorized' } );
             } else {
                 role.destroy()
                     .success( function () {
-                        User.update( {RoleId: 7}, {AccountId: role.AccountId, RoleId: role.id } )
-                            .success( deferred.resolve )
+                        RoleModel
+                            .find( { where: { name: defaultRole } } )
+                            .success( function ( defRole ) {
+                                UserModel
+                                    .findAll( {where: {AccountId: role.AccountId, RoleId: role.id } } )
+                                    .success( function ( users ) {
+                                        if ( !!users && !!users.length ) {
+                                            users.forEach( function ( user ) {
+                                                promise.push( user.updateAttributes( { RoleId: defRole.id } ) )
+                                            } );
+
+                                            Q.all( promise )
+                                                .then( deferred.resolve )
+                                                .fail( deferred.reject );
+
+                                        } else {
+                                            deferred.resolve();
+                                        }
+                                    } )
+                                    .error( deferred.reject );
+                            } )
                             .error( deferred.reject );
+
                     } )
                     .error( deferred.reject );
             }
@@ -275,27 +302,18 @@ module.exports = function ( db, Role, Permission, User ) {
         removePermissions: function ( role ) {
             var deferred = Q.defer();
 
-            var sql = 'delete from PermissionsRoles where RoleId = ' + role.id
-                + ' ;';
+            var sql = 'delete from PermissionsRoles where RoleId = ' + role.id + ' ;';
 
             this.query( sql )
                 .success( function ( result ) {
-                    deferred.resolve( role );
+                    role
+                        .setPermissions( [] )
+                        .success( function ( perms ) {
+                            deferred.resolve( role );
+                        } )
+                        .error( deferred.reject );
                 } )
                 .error( deferred.reject );
-
-            /*
-             I am having the following issue during updates, with the code below
-             https://github.com/sequelize/sequelize/issues/739,
-
-             */
-
-            // role
-            // .setPermissions([])
-            // .success( function( perms ){
-            //     deferred.resolve( role );
-            // })
-            // .error( deferred.reject );
 
             return deferred.promise;
         },
@@ -326,10 +344,10 @@ module.exports = function ( db, Role, Permission, User ) {
             return arr;
         }
 
-    } );
+    });
 
-    RoleService.instance = new RoleService( db );
-    RoleService.Model = Role;
+    RoleService.instance = new RoleService(db);
+    RoleService.Model = RoleModel;
 
     return RoleService.instance;
 };
