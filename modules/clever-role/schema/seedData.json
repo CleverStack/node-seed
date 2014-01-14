@@ -1,0 +1,60 @@
+{
+    "Role": [
+        {
+            "name": "Owner",
+            "associations": {
+                "Account": {
+                    "name": "Default Account"
+                }
+            }
+        },
+        {
+            "name": "Super Admin",
+            "associations": {
+                "Account": {
+                    "name": "Default Account"
+                }
+            }
+        },
+        {
+            "name": "HR Manager",
+            "associations": {
+                "Account": {
+                    "name": "Default Account"
+                }
+            }
+        },
+        {
+            "name": "HR Assistant",
+            "associations": {
+                "Account": {
+                    "name": "Default Account"
+                }
+            }
+        },
+        {
+            "name": "Business Unit Manager",
+            "associations": {
+                "Account": {
+                    "name": "Default Account"
+                }
+            }
+        },
+        {
+            "name": "Recruiter",
+            "associations": {
+                "Account": {
+                    "name": "Default Account"
+                }
+            }
+        },
+        {
+            "name": "General User",
+            "associations": {
+                "Account": {
+                    "name": "Default Account"
+                }
+            }
+        }
+    ]
+}

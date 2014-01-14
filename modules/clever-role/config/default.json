@@ -1,0 +1,11 @@
+{
+    "clever-system-role": [
+        "Owner",
+        "Super Admin",
+        "HR Manager",
+        "HR Assistant",
+        "Business Unit Manager",
+        "Recruiter",
+        "General User"
+    ]
+}

@@ -28,8 +28,8 @@ module.exports = function ( RoleService ) {
             },
 
             postAction: function () {
-                var accId = this.req.user.account.id,
-                    data = this.req.body;
+                var accId = this.req.user.account.id
+                  , data = this.req.body;
 
                 if ( data.id ) {
                     this.putAction();
@@ -60,7 +60,7 @@ module.exports = function ( RoleService ) {
 
             deleteAction: function () {
                 var accId = this.req.user.account.id
-                    , roleId = this.req.params.id;
+                  , roleId = this.req.params.id;
 
                 RoleService
                     .removeRoleWithPermissions( accId, roleId )
@@ -70,9 +70,9 @@ module.exports = function ( RoleService ) {
 
             assignAction: function () {
                 var accId = this.req.user.account.id
-                    , roleId = this.req.params.id
-                    , users = this.req.body.users
-                    , removed = this.req.body.removed;
+                  , roleId = this.req.params.id
+                  , users = this.req.body.users
+                  , removed = this.req.body.removed;
 
                 users = !users || !Array.isArray( users ) ? [] : users;
                 removed = !removed || !Array.isArray( removed ) ? [] : removed;
@@ -100,4 +100,4 @@ module.exports = function ( RoleService ) {
             }
 
         } );
-};
+}

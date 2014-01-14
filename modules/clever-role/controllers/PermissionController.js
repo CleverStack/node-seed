@@ -11,4 +11,4 @@ module.exports = function ( PermissionService ) {
                     .then( this.proxy( 'send' ), this.proxy( 'handleException' ) );
             }
         } );
-};
+}

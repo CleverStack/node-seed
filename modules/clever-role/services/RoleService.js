@@ -1,7 +1,8 @@
 var BaseService = require('./BaseService')
   , Q = require('q')
   , _ = require('lodash')
-  , RoleService = null;
+  , RoleService = null
+  , configSysRoles = require( 'config' )[ 'clever-system-role' ];
 
 module.exports = function( db, RoleModel, PermissionModel, UserModel ) {
     if (RoleService && RoleService.instance) {
@@ -39,10 +40,10 @@ module.exports = function( db, RoleModel, PermissionModel, UserModel ) {
             return deferred.promise;
         },
 
-        getRoleCounts: function ( roles, accId, roleIds ) {
+        getRoleCounts: function ( roles, accId ) {
             var deferred = Q.defer()
               , service = this
-              , roles = Array.isArray( roles ) ? roles : [roles]
+              , roles = Array.isArray( roles ) ? roles : [ roles ]
               , _where = {
                     AccountId: accId,
                     RoleId: _.uniq( roles.map( function ( r ) {
@@ -52,11 +53,13 @@ module.exports = function( db, RoleModel, PermissionModel, UserModel ) {
 
             UserModel.all( {attributes: ['RoleId', ['count(id)', 'count']], where: _where, group: 'RoleId'} )
                 .success( function ( counts ) {
+
                     if ( !counts || !counts.length ) {
                         return deferred.resolve( service.groupRolePermissions( roles ) );
                     }
 
                     var _roles = service.groupRolePermissions( roles );
+
                     counts.forEach( function ( c ) {
                         var idx = _.findIndex( _roles, function ( r ) {
                             return r.id === c.RoleId;
@@ -74,7 +77,9 @@ module.exports = function( db, RoleModel, PermissionModel, UserModel ) {
 
         assignRole: function ( accId, userIds, removed, role ) {
             var deferred = Q.defer()
-              , actions = [];
+              , promise = []
+              , _set = {}
+              , _where = {};
 
             role = Array.isArray( role ) ? role[0] : role;
 
@@ -82,35 +87,53 @@ module.exports = function( db, RoleModel, PermissionModel, UserModel ) {
                 deferred.resolve( {statuscode: 404, message: 'Role not found.'} );
             } else {
                 if ( !userIds || !Array.isArray( userIds ) || !userIds.length ) {
-                    actions.push( UserModel.update( ['RoleId IS NULL'], {RoleId: role.id} ) );
+                    _set = {RoleId: null};
+                    _where = {RoleId: role.id};
+                } else if ( Array.isArray( removed ) && removed.length ){
+                    _set = {RoleId: null};
+                    _where = {AccountId: accId, id: removed, RoleId: role.id};
                 } else {
-                    actions.push( UserModel.update( {RoleId: role.id}, {AccountId: accId, id: userIds} ) );
+                    _set = {RoleId: role.id};
+                    _where = {AccountId: accId, id: userIds};
                 }
 
-                if ( Array.isArray( removed ) && removed.length ) {
-                    actions.push( UserModel.update( {RoleId: null}, {AccountId: accId, id: removed, RoleId: role.id} ) );
-                }
+                UserModel
+                    .findAll( {where: _where } )
+                    .success( function ( users ) {
 
-                Q.all( actions ).then( deferred.resolve ).fail( deferred.reject );
+                        if ( !!users && !!users.length ) {
+                            users.forEach( function ( user ) {
+                                promise.push( user.updateAttributes( _set ) )
+                            } );
+
+                            Q.all( promise )
+                                .then( deferred.resolve )
+                                .fail( deferred.reject );
+
+                        } else {
+                            deferred.resolve();
+                        }
+                    } )
+                    .error( deferred.reject );
             }
 
             return deferred.promise;
         },
 
-        hasRoles: function ( req, roles, booleanLogic ) {
-            roles = Array.isArray( roles ) ? roles : [roles];
-            booleanLogic = booleanLogic === "any" ? 'any' : 'all';
+        hasRole: function ( req, roles ) {
 
-            var isAuthed = req.isAuthenticated() && req.session.passport.user.role
-              , booleanCount = 0;
+            roles = Array.isArray( roles ) ? roles : [roles];
+
+            var isAuthed = req.isAuthenticated() && !!req.user && !!req.user.role
+              , hasRole = false;
 
             roles.forEach( function ( role ) {
-                if ( isAuthed && ~req.session.passport.user.role.name.indexOf( roleName ) ) {
-                    ++booleanCount;
+                if ( isAuthed && role === req.user.role.name ) {
+                    hasRole = true;
                 }
             } );
 
-            return (booleanLogic === "any" && booleanCount > 0) || (booleanLogic === "all" && booleanCount === roles.length);
+            return hasRole;
         },
 
         createRoleWithPermissions: function ( data, accId ) {
@@ -260,7 +283,7 @@ module.exports = function( db, RoleModel, PermissionModel, UserModel ) {
         removeRole: function ( role ) {
             var deferred = Q.defer()
               , service = this
-              , systemRoles = ['Owner', 'Super Admin', 'HR Manager', 'HR Assistant', 'Business Unit Manager', 'Recruiter', 'General User']
+              , systemRoles = configSysRoles
               , defaultRole = systemRoles[ systemRoles.length - 1 ]
               , promise = [];
 
@@ -275,6 +298,7 @@ module.exports = function( db, RoleModel, PermissionModel, UserModel ) {
                                 UserModel
                                     .findAll( {where: {AccountId: role.AccountId, RoleId: role.id } } )
                                     .success( function ( users ) {
+
                                         if ( !!users && !!users.length ) {
                                             users.forEach( function ( user ) {
                                                 promise.push( user.updateAttributes( { RoleId: defRole.id } ) )

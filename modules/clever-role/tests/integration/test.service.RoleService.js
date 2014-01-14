@@ -40,6 +40,80 @@ describe( 'service.RoleService', function () {
         }, done );
     } );
 
+    before( function ( done ) {
+        var systemRoles = [
+                {
+                    name: 'Super Admin',
+                    AccountId: 1
+                },
+                {
+                    name: 'General User',
+                    AccountId: 1
+                }
+            ]
+            , testuser = {
+                username: 'Vasilij',
+                email: 'vasil_clever@gmail.com',
+                password: 'qqq',
+                RoleId: roleId_2,
+                AccountId: 15
+            }
+            , promise = [];
+
+        systemRoles.forEach( function ( role ) {
+            promise.push( Model.find( { where: role } ) );
+        } );
+
+        Q.all( promise ).then( function ( result ) {
+            promise = [];
+            result.forEach( function ( role, index ) {
+                if ( !!role && !!role.id ) {
+                    sysRoles.push( role );
+                } else {
+                    promise.push( Model.create( systemRoles[index] ) )
+                }
+            } );
+
+            Q.all( promise ).then( function ( result ) {
+                result.forEach( function ( role, index ) {
+                    sysRoles.push( role );
+                } );
+
+                UserModel
+                    .find( { where: { username: testuser.username } } )
+                    .success( function ( user ) {
+                        if ( !!user && !!user.id ) {
+
+                            user.updateAttributes( { RoleId: roleId_2 } )
+                                .success( function ( user ) {
+
+                                    expect( user ).to.be.an( 'object' );
+                                    expect( user ).to.contain.keys( 'id', 'username', 'email', 'RoleId' );
+                                    expect( user.RoleId ).to.equal( roleId_2 );
+
+                                    testUser = user;
+                                    done();
+                                } )
+                                .error( done );
+                        } else {
+                            UserModel.create( testuser )
+                                .success( function ( user ) {
+
+                                    expect( user ).to.be.an( 'object' );
+                                    expect( user ).to.contain.keys( 'id', 'username', 'email', 'RoleId' );
+                                    expect( user.RoleId ).to.equal( roleId_2 );
+
+                                    testUser = user;
+                                    done();
+                                } )
+                                .error( done );
+                        }
+                    } )
+                    .error( done );
+            }, done );
+        }, done );
+    } );
+
     after( function( done ) {
         Model
             .destroy( roleId_0 )
@@ -97,7 +171,6 @@ describe( 'service.RoleService', function () {
     } );
 
     describe( '.saveRolePermissions( role, permIds )', function () {
-
         it( 'should not be able to create RolePermissions if permission array is empty', function ( done ) {
 
             Model.find( roleId_0 )
@@ -470,7 +543,7 @@ describe( 'service.RoleService', function () {
                 .then( function ( result ) {
 
                     expect( result ).to.be.an( 'array' );
-                    expect( result ).to.have.length.above( 0 );
+                    expect( result ).to.have.length( 1 );
                     expect( result[0] ).to.be.an( 'object' );
                     expect( result[0] ).to.contain.keys( 'id', 'name', 'description', 'permissions' );
                     expect( result[0].id ).to.equal( roleId );
@@ -483,97 +556,175 @@ describe( 'service.RoleService', function () {
                 }, done );
         } );
 
-        it( 'should be able to get a list roles with permission for accountId', function ( done ) {
+        it( 'should be able to get a list of roles with permission for accountId', function ( done ) {
             var accountId = 1;
 
             Service.listRolesWithPerm( accountId )
                 .then( function ( result ) {
 
                     expect( result ).to.be.an( 'array' );
-                    expect( result ).to.have.length.above( 0 );
-                    expect( result[0] ).to.be.an( 'object' );
-                    expect( result[0] ).to.contain.keys( 'id', 'name', 'description', 'permissions' );
-                    expect( result[0].permissions ).to.be.an( 'array' );
+                    expect( result ).to.have.length.above( 1 );
+                    expect( result[ 0 ] ).to.be.an( 'object' );
+                    expect( result[ 0 ] ).to.contain.keys( 'id', 'name', 'description', 'permissions' );
+                    expect( result[ result.length - 2 ].permissions ).to.be.an( 'array' );
+                    expect( result[ result.length - 2 ].permissions[0] ).to.contain.keys( 'permId', 'action', 'description' );
 
                     done();
                 }, done );
         } );
     } );
 
+    describe( '.assignRole( accId, userIds, removed, role )', function () {
+        it( 'should be able to get a statuscode 404 if insufficient data', function ( done ) {
+            var accountId = 15
+              , userIds = []
+              , removed = [];
+
+            Service.assignRole( accountId, userIds, removed )
+                .then( function ( result ) {
+
+                    expect( result ).to.be.an( 'object' );
+                    expect( result ).to.have.property( 'statuscode' ).and.equal( 404 );
+                    expect( result ).to.have.property( 'message' );
+
+                    done();
+                }, done );
+        } );
+
+        it( 'should be able to assign null role for user', function ( done ) {
+            var roleId = roleId_2
+              , accountId = 15
+              , userIds = []
+              , removed = [ testUser.id ];
+
+            Model.find( roleId )
+                .success( function ( role ) {
+
+                    expect( role ).to.be.an( 'object' );
+                    expect( role ).to.have.property( 'id' ).and.equal( roleId );
+                    expect( role ).to.have.property( 'name' );
+
+                    Service.assignRole( accountId, userIds, removed, role )
+                        .then( function ( result ) {
+
+                            UserModel
+                                .find( testUser.id )
+                                .success( function ( user ) {
+
+                                    expect( user ).to.be.an( 'object' );
+                                    expect( user ).to.contain.keys( 'id', 'username', 'email', 'RoleId' );
+                                    expect( user.id ).to.equal( testUser.id );
+                                    expect( user.RoleId ).to.be.null;
+
+                                    done();
+                                } )
+                                .error( done );
+                        }, done );
+                } )
+                .error( done );
+        } );
+
+        it( 'should be able to assign role for user', function ( done ) {
+            var roleId = roleId_2
+                , accountId = 15
+                , userIds = [ testUser.id ]
+                , removed = [];
+
+            Model.find( roleId )
+                .success( function ( role ) {
+
+                    expect( role ).to.be.an( 'object' );
+                    expect( role ).to.have.property( 'id' ).and.equal( roleId );
+                    expect( role ).to.have.property( 'name' );
+
+                    Service.assignRole( accountId, userIds, removed, role )
+                        .then( function ( result ) {
+
+                            UserModel
+                                .find( testUser.id )
+                                .success( function ( user ) {
+
+                                    expect( user ).to.be.an( 'object' );
+                                    expect( user ).to.contain.keys( 'id', 'username', 'email', 'RoleId' );
+                                    expect( user.id ).to.equal( testUser.id );
+                                    expect( user.RoleId ).to.equal( roleId_2 );
+
+                                    done();
+                                } )
+                                .error( done );
+                        }, done );
+                } )
+                .error( done );
+        } );
+
+        it( 'should be able to assign null role for all user', function ( done ) {
+            var roleId = roleId_2
+                , accountId = 15
+                , userIds = []
+                , removed = [];
+
+            Model.find( roleId )
+                .success( function ( role ) {
+
+                    expect( role ).to.be.an( 'object' );
+                    expect( role ).to.have.property( 'id' ).and.equal( roleId );
+                    expect( role ).to.have.property( 'name' );
+
+                    Service.assignRole( accountId, userIds, removed, role )
+                        .then( function ( result ) {
+
+                            UserModel
+                                .find( testUser.id )
+                                .success( function ( user ) {
+
+                                    expect( user ).to.be.an( 'object' );
+                                    expect( user ).to.contain.keys( 'id', 'username', 'email', 'RoleId' );
+                                    expect( user.id ).to.equal( testUser.id );
+                                    expect( user.RoleId ).to.be.null;
+
+                                    done();
+                                } )
+                                .error( done );
+                        }, done );
+                } )
+                .error( done );
+        } );
+
+    } );
+
     describe( '.removeRole( role )', function () {
 
         before( function ( done ) {
-            var systemRoles = [
-                    {
-                        name: 'Super Admin',
-                        AccountId: 1
-                    },
-                    {
-                        name: 'General User',
-                        AccountId: 1
-                    }
-                ]
-                , testuser = {
-                    username: 'Vasilij',
-                    email: 'vas@gmail.ru',
-                    password: 'qqq',
-                    RoleId: roleId_2,
-                    AccountId: 15
-                }
-                , promise = [];
+            var roleId = roleId_2
+              , accountId = 15
+              , userIds = [ testUser.id ]
+              , removed = [];
 
-            systemRoles.forEach( function ( role ) {
-                promise.push( Model.find( { where: role } ) );
-            } );
+            Model.find( roleId )
+                .success( function ( role ) {
 
-            Q.all( promise ).then( function ( result ) {
-                promise = [];
-                result.forEach( function ( role, index ) {
-                    if ( !!role && !!role.id ) {
-                        sysRoles.push( role );
-                    } else {
-                        promise.push( Model.create( systemRoles[index] ) )
-                    }
-                } );
+                    expect( role ).to.be.an( 'object' );
+                    expect( role ).to.have.property( 'id' ).and.equal( roleId );
+                    expect( role ).to.have.property( 'name' );
 
-                Q.all( promise ).then( function ( result ) {
-                    result.forEach( function ( role, index ) {
-                        sysRoles.push( role );
-                    } );
+                    Service.assignRole( accountId, userIds, removed, role )
+                        .then( function ( result ) {
 
-                    UserModel
-                        .find( { where: { username: testuser.username } } )
-                        .success( function ( user ) {
-                            if ( !!user && !!user.id ) {
+                            UserModel
+                                .find( testUser.id )
+                                .success( function ( user ) {
 
-                                user.updateAttributes( { RoleId: roleId_2 } )
-                                    .success( function ( user ) {
+                                    expect( user ).to.be.an( 'object' );
+                                    expect( user ).to.contain.keys( 'id', 'username', 'email', 'RoleId' );
+                                    expect( user.id ).to.equal( testUser.id );
+                                    expect( user.RoleId ).to.equal( roleId_2 );
 
-                                        expect( user ).to.be.an( 'object' );
-                                        expect( user ).to.contain.keys( 'id', 'username', 'email', 'RoleId' );
-                                        expect( user.RoleId ).to.equal( roleId_2 );
-
-                                        testUser = user;
-                                        done();
-                                    } )
-                                    .error( done );
-                            } else {
-                                UserModel.create( testuser )
-                                    .success( function ( user ) {
-
-                                        expect( user ).to.be.an( 'object' );
-                                        expect( user ).to.contain.keys( 'id', 'username', 'email', 'RoleId' );
-                                        expect( user.RoleId ).to.equal( roleId_2 );
-
-                                        testUser = user;
-                                        done();
-                                    } )
-                                    .error( done );
-                            }
-                        } )
-                        .error( done );
-                }, done );
-            }, done );
+                                    done();
+                                } )
+                                .error( done );
+                        }, done );
+                } )
+                .error( done );
         } );
 
         it( 'should not be able to delete system role', function ( done ) {
@@ -738,6 +889,65 @@ describe( 'service.RoleService', function () {
                         }, done );
                 } )
                 .error( done );
+        } );
+    } );
+
+    describe( '.hasRole( req, roles )', function () {
+        it( 'should be able to get true if user is authenticated and have the role', function ( done ) {
+            var roles = ['Recruiter', 'General User']
+              , req = {
+                    isAuthenticated: function () { return true },
+                    user: {
+                        id: 10000,
+                        firstname: 'Ivan',
+                        role: {
+                            id: 2000,
+                            name: 'General User'
+                        }
+                    }
+                };
+
+            expect( req.isAuthenticated() ).to.be.true;
+            expect( req ).to.have.property( 'user' ).and.have.property( 'role' );
+            expect( Service.hasRole( req, roles ) ).to.be.true;
+
+            done();
+
+        } );
+
+        it( 'should be able to get false if user is authenticated and do not have the role', function ( done ) {
+            var roles = ['Recruiter', 'General User']
+              , req = {
+                    isAuthenticated: function () { return true },
+                    user: {
+                        id: 10000,
+                        firstname: 'Ivan',
+                        role: {
+                            id: 2000,
+                            name: 'Test Role'
+                        }
+                    }
+                };
+
+            expect( req.isAuthenticated() ).to.be.true;
+            expect( req ).to.have.property( 'user' ).and.have.property( 'role' );
+            expect( Service.hasRole( req, roles ) ).to.be.false;
+
+            done();
+        } );
+
+        it( 'should be able to get false if user is not authenticated', function ( done ) {
+            var roles = ['Recruiter', 'General User']
+              , req = {
+                    isAuthenticated: function () { return false },
+                    user: {}
+                };
+
+            expect( req.isAuthenticated() ).to.be.false;
+            expect( req ).to.have.property( 'user' );
+            expect( Service.hasRole( req, roles ) ).to.be.false;
+
+            done();
         } );
     } );
 } );
