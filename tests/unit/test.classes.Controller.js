@@ -1,8 +1,21 @@
+// Bootstrap the testing environmen
+var testEnv = require ( 'utils' ).testEnv();
+
 var expect = require ( 'chai' ).expect
   , sinon = require ( 'sinon' )
-  , testEnv = require ( './utils' ).testEnv
   , BaseController = require ( 'classes' ).Controller
-  , BaseService = require ( 'services' ).BaseService;
+  , BaseService = require ( 'services' ).BaseService
+  , models = require( 'models' )
+  , sequelize = injector.getInstance( 'sequelize' )
+  , Sequelize =  injector.getInstance( 'Sequelize' )
+
+var TestModel = sequelize.define("Test", {
+    name: Sequelize.STRING
+},
+{
+    paranoid: true
+});
+TestModel.ORM = true;
 
 describe ( 'classes.Controller', function () {
     var Service,
@@ -12,10 +25,10 @@ describe ( 'classes.Controller', function () {
         objs = [];
 
     beforeEach ( function ( done ) {
-        testEnv ( function ( models ) {
+        testEnv( function(  ) {
             Service = BaseService.extend ();
-            Service.Model = models.ORM.TestModel;
-            service = new Service ();
+            Service.Model = TestModel;
+            service = new Service();
 
             Controller = BaseController.extend ();
             Controller.service = service;
@@ -47,7 +60,7 @@ describe ( 'classes.Controller', function () {
                     done ();
                 } )
                 .fail ( done );
-        } );
+        })
     } );
 
     describe ( '.listAction()', function () {

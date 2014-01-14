@@ -27,11 +27,12 @@
     "nconf": "~0.6.9",
     "uberclass": "~1.0.1",
     "debug": "~0.7.2",
-    "sendgrid": "~0.3.1",
     "matchdep": "~0.3.0",
     "async": "~0.2.9",
     "underscore": "~1.5.2",
-    "q": "~1.0.0"
+    "q": "~1.0.0",
+    "i": "~0.3.2",
+    "deepmerge": "~0.2.7"
   },
   "devDependencies": {
     "grunt-contrib-watch": "",
@@ -40,7 +41,6 @@
     "grunt-contrib-connect": "~0.3.0",
     "grunt-mocha-test": "",
     "grunt-nodemon": "",
-    "grunt-docular": "",
     "matchdep": "",
     "mocha": "",
     "chai": "",
@@ -48,10 +48,10 @@
     "karma": "",
     "supertest": "",
     "grunt-concurrent": "~0.3.0",
-    "grunt-exec": "~0.4.2"
+    "grunt-exec": "~0.4.2",
+    "should": "~2.1.1"
   },
   "bundledDependencies": [
-    "application",
     "background-tasks",
     "auth",
     "orm",

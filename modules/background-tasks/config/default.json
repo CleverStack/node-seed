@@ -1,6 +1,6 @@
 {
 	"background-tasks": {
-        "on" : true,
+        "on" : false,
 
         "interval": 2500,
 

@@ -1,11 +1,27 @@
+/**
+ * @doc module
+ * @name exampleModule
+ * @description
+ * This is an example module used to showcase how to use the node-seed
+ */
+
+/**
+ * @doc module
+ * @name exampleModule.controllers:ExampleController
+ * @description
+ * Sets up an example controller to showcase how to use clever-controller
+ */
 module.exports = function() {
     return (require('classes').Controller).extend(
-    /* @Prototype */
     {
         /**
-         * This function only exists to show you calling the main controllers handleException() function,
-         * you can use this as a hook to handle errors here in this controller before calling the main one
-         */
+        * @doc method
+        * @methodOf exampleModule.controllers:ExampleController
+        * @name exampleModule.controllers:ExampleController#handleException
+        * @description
+        * This function only exists to show you calling the main controllers handleException() function,
+        * you can use this as a hook to handle errors here in this controller before calling the main one
+        */
         handleException: function( exception ) {
             this._super(exception);
         },
@@ -59,7 +75,9 @@ module.exports = function() {
          * 'GET/PUT/POST/DELETE /example/custom'
          */
         customAction: function() {
-            this.render('example/custom.ejs', { message: 'Hello from custom action controller' });
+            this.send({
+                message: "Hello from customAction inside ExampleController"
+            });
         },
 
         /**

@@ -1,9 +1,10 @@
 {
-  "name": "application",
+  "name": "docular-docs",
+  "main": "module.js",
   "version": "0.0.1",
   "private": true,
   "dependencies": {
-    
+    "grunt-docular": "~0.1.2"
   },
   "author": {
     "name": "Clevertech",
@@ -17,8 +18,5 @@
   "keywords": [
     ""
   ],
-  "main": "module.js",
-  "devDependencies": {
-
-  }
+  "devDependencies": {}
 }

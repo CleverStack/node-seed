@@ -5,29 +5,43 @@ var mongoose = require( 'mongoose' )
   , Module;
 
 Module = ModuleClass.extend({
+    models: null,
+
+    preSetup: function() {
+        this.models = [];
+    },
+
     preResources: function() {
         debug( 'Opening connection to database' );
         
         mongoose.connect( this.config.uri );
+
+        // Add the mongoose instance to the injector
         injector.instance( 'mongoose', mongoose );
     },
-
-    preRoute: function() {
-        this.models = require( 'models' ).odm;
-    },
-
-    loadModel: function( modelPath ) {
+    
+    getModel: function( modelPath ) {
         var modelName = 'ODM' + modelPath.split( '/' ).pop().split( '.' ).shift()
           , model = injector.getInstance( modelName );
 
         if ( !model ) {
             debug( [ 'Loading model', modelName, 'from', modelPath ].join( ' ' ) );
 
+            // Load (require) the model
             model = require( modelPath )( mongoose );
+
+            // Add the model to the injector
             injector.instance( modelName, model );
+
+            // Add the model into this module instance
+            this.models[ modelName ] = model;
         }
 
         return model;
+    },
+
+    preShutdown: function() {
+        mongoose.disconnect();
     }
 });
 

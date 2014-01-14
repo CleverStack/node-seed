@@ -1,12 +1,13 @@
 var expect = require ( 'chai' ).expect
   , request = require ( 'supertest' )
-  , app = require ( '../../../index' );
+  , path = require( 'path' )
+  , app = require ( path.resolve( __dirname + '/../../../../' ) + '/index.js' );
 
-describe ( '/api/example', function () {
-    describe ( 'POST /api/example', function () {
+describe ( '/example', function () {
+    describe ( 'POST /example', function () {
         it ( 'should return valid status', function ( done ) {
             request ( app )
-                .post ( '/api/example' )
+                .post ( '/example' )
                 .expect ( 'Content-Type', /json/ )
                 .expect ( 200 )
                 .end ( function ( err, res ) {
@@ -19,10 +20,10 @@ describe ( '/api/example', function () {
         } );
     } );
 
-    describe ( 'GET /api/example', function () {
+    describe ( 'GET /example', function () {
         it ( 'should return valid status', function ( done ) {
             request ( app )
-                .get ( '/api/example' )
+                .get ( '/example' )
                 .expect ( 'Content-Type', /json/ )
                 .expect ( 200 )
                 .end ( function ( err, res ) {
@@ -35,10 +36,10 @@ describe ( '/api/example', function () {
         } );
     } );
 
-    describe ( 'GET /api/example/:id', function () {
+    describe ( 'GET /example/:id', function () {
         it ( 'should return valid status', function ( done ) {
             request ( app )
-                .get ( '/api/example/123' )
+                .get ( '/example/123' )
                 .expect ( 'Content-Type', /json/ )
                 .expect ( 200 )
                 .end ( function ( err, res ) {
@@ -51,10 +52,10 @@ describe ( '/api/example', function () {
         } );
     } );
 
-    describe ( 'PUT /api/example/:id', function () {
+    describe ( 'PUT /example/:id', function () {
         it ( 'should return valid status', function ( done ) {
             request ( app )
-                .put ( '/api/example/123' )
+                .put ( '/example/123' )
                 .expect ( 'Content-Type', /json/ )
                 .expect ( 200 )
                 .end ( function ( err, res ) {
@@ -67,10 +68,10 @@ describe ( '/api/example', function () {
         } );
     } );
 
-    describe ( 'DELETE /api/example/:id', function () {
+    describe ( 'DELETE /example/:id', function () {
         it ( 'should return valid status', function ( done ) {
             request ( app )
-                .del ( '/api/example/123' )
+                .del ( '/example/123' )
                 .expect ( 'Content-Type', /json/ )
                 .expect ( 200 )
                 .end ( function ( err, res ) {
@@ -83,15 +84,17 @@ describe ( '/api/example', function () {
         } );
     } );
 
-    describe ( 'GET /api/example/custom', function () {
+    describe ( 'GET /example/custom', function () {
         it ( 'should return valid status', function ( done ) {
             request ( app )
-                .get ( '/api/example/custom' )
-                .expect ( 'Content-Type', /html/ )
+                .get ( '/example/custom' )
+                .expect ( 'Content-Type', /json/ )
                 .expect ( 200 )
                 .end ( function ( err, res ) {
                     if ( err ) return done ( err );
-                    expect ( res ).to.have.property ( 'text' ).and.equal ( '<p>Hello from custom action controller</p>' );
+                    expect ( res.body ).to.eql ( {
+                        message: 'Hello from customAction inside ExampleController'
+                    } );
                     done ();
                 } );
         } );

@@ -1,5 +1,9 @@
+// Bootstrap the testing environmen
+var testEnv = require ( 'utils' ).testEnv();
+
 var expect = require ( 'chai' ).expect
-  , testEnv = require ( './utils' ).testEnv;
+  , models = require( 'models' )
+  , controllers = require( 'controllers' );
 
 describe ( 'controllers.ExampleController', function () {
     var ctrl;
@@ -88,11 +92,10 @@ describe ( 'controllers.ExampleController', function () {
     } );
 
     describe ( '.customAction()', function () {
-        it ( 'should call .render() with valid arguments', function ( done ) {
-            ctrl.render = function ( view, context ) {
-                expect ( view ).to.equal ( 'example/custom.ejs' );
-                expect ( context ).to.eql ( {
-                    message: 'Hello from custom action controller'
+        it ( 'should call .send() with valid arguments', function ( done ) {
+            ctrl.send = function ( data ) {
+                expect ( data ).to.eql ( {
+                    message: 'Hello from customAction inside ExampleController'
                 } );
 
                 done ();
