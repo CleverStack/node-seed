@@ -1,16 +1,10 @@
-var expect = require( 'chai' ).expect
-  , testEnv = require( './utils' ).testEnv;
+var expect = require ( 'chai' ).expect
+  , request = require ( 'supertest' )
+  , path = require( 'path' )
+  , app = require ( path.resolve( __dirname + '/../../../../' ) + '/index.js' );
 
-describe( 'service.CountryService', function () {
-    var CountryService;
-
-    before( function ( done ) {
-        this.timeout( 10000 );
-        testEnv( function ( _CountryService_ ) {
-            CountryService = _CountryService_;
-            done();
-        }, done );
-    } );
+describe( 'service.CountryService', function() {
+    var CountryService = require( 'services' ).CountryService;
 
     describe( '.findByName( name )', function () {
         it( "should be able to find a country by it's name", function ( done ) {
