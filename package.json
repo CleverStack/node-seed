@@ -56,8 +56,8 @@
     "auth",
     "orm",
     "odm",
-    "clever-countries",
     "clever-role",
+    "clever-countries",
     "example-module"
   ]
 }

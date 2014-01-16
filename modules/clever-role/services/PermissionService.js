@@ -1,15 +1,16 @@
-var BaseService = require( './BaseService' )
-  , Q = require( 'q' )
+var Q = require( 'q' )
   , PermissionService = null;
 
-module.exports = function ( db, PermissionModel, RoleModel ) {
+module.exports = function ( sequelize, ORMPermissionModel, ORMRoleModel ) {
+
     if ( PermissionService && PermissionService.instance ) {
         return PermissionService.instance;
     }
 
-    PermissionService = BaseService.extend( {
+    PermissionService = require( 'services' ).BaseService.extend( {
+
         list: function () {
-            return PermissionModel.all();
+            return ORMPermissionModel.all();
         },
 
         hasPermissions: function ( req, permissions, booleanLogic, fn ) {
@@ -37,11 +38,11 @@ module.exports = function ( db, PermissionModel, RoleModel ) {
                 return fn( null, true );
             }
 
-            RoleModel.find( {
+            ORMRoleModel.find( {
                 where: {
                     id: req.user.role.id
                 },
-                include: [PermissionModel]
+                include: [ORMPermissionModel]
             } )
                 .success( function ( userPermissions ) {
                     if ( !userPermissions.permissions.length ) {
@@ -64,8 +65,8 @@ module.exports = function ( db, PermissionModel, RoleModel ) {
         }
     } );
 
-    PermissionService.instance = new PermissionService( db );
-    PermissionService.Model = PermissionModel;
+    PermissionService.instance = new PermissionService( sequelize );
+    PermissionService.Model = ORMPermissionModel;
 
     return PermissionService.instance;
 };

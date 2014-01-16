@@ -1,15 +1,15 @@
-var BaseService = require('./BaseService')
+var RoleService = null
   , Q = require('q')
   , _ = require('lodash')
-  , RoleService = null
   , configSysRoles = require( 'config' )[ 'clever-system-role' ];
 
-module.exports = function( db, RoleModel, PermissionModel, UserModel ) {
+module.exports = function( sequelize, ORMRoleModel, ORMPermissionModel, ORMUserModel ) {
+
     if (RoleService && RoleService.instance) {
         return RoleService.instance;
     }
 
-    RoleService = BaseService.extend({
+    RoleService = require( 'services' ).BaseService.extend( {
 
         listRolesWithPerm : function( accId, roleId ){
             var deferred = Q.defer()
@@ -51,7 +51,7 @@ module.exports = function( db, RoleModel, PermissionModel, UserModel ) {
                     } ) )
                 };
 
-            UserModel.all( {attributes: ['RoleId', ['count(id)', 'count']], where: _where, group: 'RoleId'} )
+            ORMUserModel.all( {attributes: ['RoleId', ['count(id)', 'count']], where: _where, group: 'RoleId'} )
                 .success( function ( counts ) {
 
                     if ( !counts || !counts.length ) {
@@ -97,7 +97,7 @@ module.exports = function( db, RoleModel, PermissionModel, UserModel ) {
                     _where = {AccountId: accId, id: userIds};
                 }
 
-                UserModel
+                ORMUserModel
                     .findAll( {where: _where } )
                     .success( function ( users ) {
 
@@ -160,7 +160,7 @@ module.exports = function( db, RoleModel, PermissionModel, UserModel ) {
                 AccountId: accId
             };
 
-            RoleModel
+            ORMRoleModel
                 .create( roledata )
                 .success( deferred.resolve )
                 .error( deferred.reject );
@@ -183,7 +183,7 @@ module.exports = function( db, RoleModel, PermissionModel, UserModel ) {
 
             } else {
                 permissions = permIds.map( function ( p ) {
-                    return PermissionModel.build( { id: p } )
+                    return ORMPermissionModel.build( { id: p } )
                 } );
 
                 role
@@ -209,7 +209,7 @@ module.exports = function( db, RoleModel, PermissionModel, UserModel ) {
               , service = this;
 
 
-            RoleModel.find( data.id )
+            ORMRoleModel.find( data.id )
                 .success( function ( role ) {
 
                     if ( role.AccountId !== accId ) {
@@ -255,7 +255,7 @@ module.exports = function( db, RoleModel, PermissionModel, UserModel ) {
               , service = this;
 
 
-            RoleModel.find( id )
+            ORMRoleModel.find( id )
                 .success( function ( role ) {
                     if ( !role || role[ 'AccountId' ] !== accId ) {
                         deferred.resolve( { statuscode: 403, message: "unauthorized" } );
@@ -292,10 +292,10 @@ module.exports = function( db, RoleModel, PermissionModel, UserModel ) {
             } else {
                 role.destroy()
                     .success( function () {
-                        RoleModel
+                        ORMRoleModel
                             .find( { where: { name: defaultRole } } )
                             .success( function ( defRole ) {
-                                UserModel
+                                ORMUserModel
                                     .findAll( {where: {AccountId: role.AccountId, RoleId: role.id } } )
                                     .success( function ( users ) {
 
@@ -368,10 +368,10 @@ module.exports = function( db, RoleModel, PermissionModel, UserModel ) {
             return arr;
         }
 
-    });
+    } );
 
-    RoleService.instance = new RoleService(db);
-    RoleService.Model = RoleModel;
+    RoleService.instance = new RoleService( sequelize );
+    RoleService.Model = ORMRoleModel;
 
     return RoleService.instance;
 };
