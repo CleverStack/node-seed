@@ -59,26 +59,23 @@ Module = ModuleClass.extend({
     },
 
     getModel: function( modelPath ) {
-        var modelName = modelPath.split( '/' ).pop().split( '.' ).shift()
-          , injectorModelName = 'ORM' + modelName
-          , model = injector.getInstance( injectorModelName );
+        var modelName = modelPath.split( '/' ).pop().split( '.' ).shift();
 
-        // Only load the model
-        if ( !model ) {
+        if ( typeof this.models[ modelName ] === 'undefined' ) {
             debug( [ 'Loading model', modelName, 'from', modelPath ].join( ' ' ) );
 
-            // Call on sequelize to import the model
-            model = sequelize.import( modelPath );
+            // Call on sequelizejs to load the model
+            this.models[ modelName ] = sequelize.import( modelPath );
+
+            // Set a flat for tracking
+            this.models[ modelName ].ORM = true;
 
             // Add the model to the injector
-            injector.instance( injectorModelName, model );
-
-            // Add the model into this module instance
-            this.models[ modelName ] = model;
+            injector.instance( 'ORM' + modelName, this.models[ modelName ] );
         }
 
-        return model;
-    }
+        return this.models[ modelName ];
+    },
 });
 
 module.exports = new Module( 'orm', injector );

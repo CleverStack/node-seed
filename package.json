@@ -52,10 +52,10 @@
     "should": "~2.1.1"
   },
   "bundledDependencies": [
-    "background-tasks",
-    "auth",
     "orm",
     "odm",
+    "background-tasks",
+    "auth",
     "example-module"
   ]
 }
