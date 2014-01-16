@@ -29,7 +29,7 @@ module.exports = function( grunt ) {
                         {
                             id: "exampleModule",
                             title: "Example Module",
-                            scripts: getModulePaths( false, 'controllers' )
+                            scripts: getModulePaths( 'controllers', '' )
                         }
                     ]
                 }

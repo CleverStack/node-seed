@@ -39,21 +39,21 @@ module.exports = function( grunt ) {
                     require: [ 'chai' ],
                     reporter: 'spec'
                 },
-                src: [ 'tests/unit/*.js' ].concat( getModulePaths( 'tests', 'unit' ) )
+                src: [ 'tests/unit/*.js' ].concat( getModulePaths( 'tests', 'unit', '*.js' ) )
             },
             e2e: {
                 options: {
                     require: 'chai',
                     reporter: 'spec'
                 },
-                src: [ 'tests/integration/*.js' ].concat( getModulePaths( 'tests', 'integration' ) )
+                src: [ 'tests/integration/*.js' ].concat( getModulePaths( 'tests', 'integration', '*.js' ) )
             },
             ci: {
                 options: {
                     require: 'chai',
                     reporter: 'min'
                 },
-                src: [ 'tests/**/*.js' ].concat( getModulePaths( 'tests', 'unit' ), getModulePaths( 'tests', 'integration' ) )
+                src: [ 'tests/**/*.js' ].concat( getModulePaths( 'tests', 'unit', '*.js' ), getModulePaths( 'tests', 'integration', '*.js' ) )
             }
         },
         concurrent: {
