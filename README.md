@@ -16,7 +16,7 @@ See [cleverstack.io](http://cleverstack.io/getting-started/#backend) for more de
 Install is made easy using the CleverStack CLI, first install [node.js](http://nodejs.org)
 
 1. `$ npm install -g cleverstack-cli`
-2. `$ clever init my-app` & `$ cd my-app`
+2. `$ clever init my-app` && `$ cd my-app`
 4. `$ clever serve`
 5. Go to: `http://localhost:9000`. Your express server runs on port `8080` by default.
 
