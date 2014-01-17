@@ -1,7 +1,7 @@
 CleverStack Node Seed [![Build Status](https://secure.travis-ci.org/clevertech/cleverstack-node-seed.png?branch=master)](https://travis-ci.org/clevertech/cleverstack-node-seed) [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 ====================
 
-![CleverStack Node Seed](cleverstack.github.io/assets/img/logos/node-seed-logo-clean.png "CleverStack Node Seed")
+![CleverStack Node Seed](http://cleverstack.github.io/assets/img/logos/node-seed-logo-clean.png "CleverStack Node Seed")
 
 <blockquote>
 CleverStack Node Seed provides you with a cutting edge NodeJS development workflow. It's been designed to provide you with a super fast test driven back-end development lifecycle. Everything you need should be just one command away, if it's not please open an issue or fork and submit a pull request.
