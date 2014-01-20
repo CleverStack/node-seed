@@ -2,7 +2,7 @@ var expect = require ( 'chai' ).expect
   , request = require ( 'supertest' )
   , path = require( 'path' )
   , app = require ( path.resolve( __dirname + '/../../../../' ) + '/index.js' );
-
+console.dir(app)
 describe ( '/example', function () {
     describe ( 'POST /example', function () {
         it ( 'should return valid status', function ( done ) {
@@ -11,6 +11,7 @@ describe ( '/example', function () {
                 .expect ( 'Content-Type', /json/ )
                 .expect ( 200 )
                 .end ( function ( err, res ) {
+                    console.dir( arguments)
                     if ( err ) return done ( err );
                     expect ( res.body ).to.eql ( {
                         status: 'Created record!'

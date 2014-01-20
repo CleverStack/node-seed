@@ -51,34 +51,31 @@ Module = ModuleClass.extend({
         // Support second argument
         if ( assocTo instanceof Array ) {
             debug( '%s %s %s with second argument of ', modelName, assocType, assocTo[0], assocTo[1] );
-            m['ORM'][ modelName ][ assocType ](m['ORM'][ assocTo[0] ], assocTo[1] );
+            this.models[ modelName ][ assocType ]( this.models[ assocTo[0] ], assocTo[1] );
         } else {
             debug( '%s %s %s', modelName, assocType, assocTo );
-            m['ORM'][ modelName ][ assocType ]( m['ORM'][assocTo] );
+            this.models[ modelName ][ assocType ]( this.models[assocTo] );
         }
     },
 
     getModel: function( modelPath ) {
-        var modelName = modelPath.split( '/' ).pop().split( '.' ).shift()
-          , injectorModelName = 'ORM' + modelName
-          , model = injector.getInstance( injectorModelName );
+        var modelName = modelPath.split( '/' ).pop().split( '.' ).shift();
 
-        // Only load the model
-        if ( !model ) {
+        if ( typeof this.models[ modelName ] === 'undefined' ) {
             debug( [ 'Loading model', modelName, 'from', modelPath ].join( ' ' ) );
 
-            // Call on sequelize to import the model
-            model = sequelize.import( modelPath );
+            // Call on sequelizejs to load the model
+            this.models[ modelName ] = sequelize.import( modelPath );
+
+            // Set a flat for tracking
+            this.models[ modelName ].ORM = true;
 
             // Add the model to the injector
-            injector.instance( injectorModelName, model );
-
-            // Add the model into this module instance
-            this.models[ modelName ] = model;
+            injector.instance( 'ORM' + modelName, this.models[ modelName ] );
         }
 
-        return model;
-    }
+        return this.models[ modelName ];
+    },
 });
 
 module.exports = new Module( 'orm', injector );

@@ -5,13 +5,10 @@ module.exports = function( sequelize, DataTypes ) {
             primaryKey: true,
             autoIncrement: true
         },
-        data: {
+        name: {
             type: DataTypes.STRING,
             allowNull: false,
             unique: true
         }
-    },
-    {
-        paranoid: true
     });
 };

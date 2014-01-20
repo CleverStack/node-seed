@@ -7,7 +7,15 @@ var expect = require ( 'chai' ).expect
   , BaseService = require ( 'services' ).BaseService
   , models = require( 'models' )
   , sequelize = injector.getInstance( 'sequelize' )
-  , Sequelize =  injector.getInstance( 'Sequelize' );
+  , Sequelize =  injector.getInstance( 'Sequelize' )
+
+var TestModel = sequelize.define("Test", {
+    name: Sequelize.STRING
+},
+{
+    paranoid: true
+});
+TestModel.ORM = true;
 
 describe ( 'classes.Controller', function () {
     var Service,
@@ -19,8 +27,8 @@ describe ( 'classes.Controller', function () {
     beforeEach ( function ( done ) {
         testEnv( function(  ) {
             Service = BaseService.extend ();
-            Service.Model = models.orm.TestModel;
-            service = new Service ();
+            Service.Model = TestModel;
+            service = new Service();
 
             Controller = BaseController.extend ();
             Controller.service = service;
