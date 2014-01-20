@@ -1,0 +1,25 @@
+{
+    "name": "clever-email",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "q": "",
+        "lodash": "2.4.1",
+        "mandrill-api": "*",
+        "sendgrid": "~0.4.2",
+        "mailgun": "*",
+        "ejs": "*",
+        "shortid": "~2.0.0",
+        "cheerio": "~0.12.4"
+    },
+    "author": {
+        "name": "Clevertech",
+        "email": "info@clevertech.biz",
+        "web": "http://www.clevertech.biz"
+    },
+    "main": "module.js",
+    "description": "",
+    "devDependencies": {
+
+    }
+}

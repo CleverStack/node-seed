@@ -1,0 +1,31 @@
+{
+    "clever-email": {
+        "emailsToCC":     true,
+        "emailsToBCC":    true,
+        "messageTXT":     true,
+        "priority":       true,
+
+        "systems": {
+            "Mandrill": {
+                "isActive": true,
+                "apiKey" :  "j8Gzc7vRpJ36FabmOsbk6g"
+            },
+            "SendGrid": {
+                "isActive": false,
+                "apiUser" :  "",
+                "apiKey" :  ""
+            },
+            "MailGun": {
+                "isActive": false,
+                "apiUser" :  "",
+                "apiKey" :  "key-97zzcleh7dgz0kp4jfy1qp0fn38lml73"
+            }
+        },
+
+        "default": {
+            "noReply":  "true",
+            "from":     "",
+            "subject":  "test email"
+        }
+    }
+}

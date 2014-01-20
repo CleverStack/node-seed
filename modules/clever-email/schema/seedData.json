@@ -1,0 +1,156 @@
+{
+    "DefaultEmailTemplate": [
+        {
+            "title": "application submitted successfully",
+            "subject": "<%=company_name%> :<b>Application Submitted Successfully<b>",
+            "body": "Dear <%=firstName%> <%=lastName%>, <br /><p>Thank you for your interest in <%=company_name%>. We received your application for the following position(s) submitted on <%=submitted_date%>: <br /> <%=job_title%> <br /> Our team is reviewing your qualifications and will contact you if there is a match with any of our open positions. Please note that new jobs are posted to the site often. Please check back regularly for future openings that may be of interest to you. <br />We appreciate your interest <%=company_name%> and wish you the best of luck in your job search <br />Sincerely <br />Company Human Resources Team <br /> <%=career_link%> <br />Note:  This message was automatically generated.  Please do not respond to this email.</p>"
+        },
+        {
+            "title": "application status update",
+            "subject": "<%=company_name%> :<b>Application Status Update<b>",
+            "body": "Dear <%=firstName%> <%=lastName%>, <br /><p>Thank you for applying for the position <%=job_title%> with <%=company_name%>. We appreciate your interest in our organization.We received a significant number of applications for the position, and the hiring process has been a very competitive one. After a review of your application, we have decided not to move your application forward. However, we greatly appreciate your interest in working with us and wish you the best of luck with your job search. We welcome you to visit our careers page regularly for future openings that may be of interest to you <br />Sincerely <br />Company Human Resources Team <br /> <%=career_link%> <br /></p>"
+        },
+        {
+            "title": "new career opportunity",
+            "subject": "<%=company_name%> :<b>New career opportunity<b>",
+            "body": "<p><%=company_name%> has just posted the following new jobs to our careers page on <%=published_date%> <br /> <%=job_title_link%> <br /> If you or anybody you know may be a good fit for this position, please encourage them to apply immediately. If passing along to others, please be sure to remind them to mention how they heard about the opportunity. <br />Thanks, <br />Company Human Resources Team <br /> <%=career_link%> </p>"
+        }
+    ],
+    "EmailTemplate": [
+        {
+            "title": "Application submitted successfully",
+            "subject": "{{Company_Name}} :Application Submitted Successfully",
+            "body": "Dear <span class=\"label label-info\" id=\"prospect-firstName\" rel=\"placeholder\">Applicant First Name</span>&nbsp; <span class=\"label label-info\" id=\"prospect-lastName\" rel=\"placeholder\">Applicant Last Name</span>&nbsp;, <br /><p>Thank you for your interest in <span class=\"label label-warning\" id=\"account-name\" rel=\"placeholder\">Company Name</span>&nbsp;. We received your application for the following position(s) submitted on {{submitted_date}}: <br /> {{job_title}} <br /> Our team is reviewing your qualifications and will contact you if there is a match with any of our open positions. Please note that new jobs are posted to the site often. Please check back regularly for future openings that may be of interest to you. <br />We appreciate your interest <span class=\"label label-warning\" id=\"account-name\" rel=\"placeholder\">Company Name</span>&nbsp; and wish you the best of luck in your job search <br />Sincerely <br />Company Human Resources Team <br /> {{career_link}} <br />Note:  This message was automatically generated.  Please do not respond to this email.</p>",
+            "hasPermission": true,
+            "isActive": true,
+            "useDefault": false,
+            "isDefault": true,
+            "UserId": 1,
+            "associations": {
+                "Account": {
+                    "id": 1
+                }
+            }
+        },
+        {
+            "title": "Application status update",
+            "subject": "{{Company_Name}} :Application Status Update",
+            "body": "Dear <span class=\"label label-info\" id=\"prospect-firstName\" rel=\"placeholder\">Applicant First Name</span>&nbsp; <span class=\"label label-info\" id=\"prospect-lastName\" rel=\"placeholder\">Applicant Last Name</span>&nbsp;, <br /><p>Thank you for applying for the position {{job_title}} with <span class=\"label label-warning\" id=\"account-name\" rel=\"placeholder\">Company Name</span>&nbsp;. We appreciate your interest in our organization.We received a significant number of applications for the position, and the hiring process has been a very competitive one. After a review of your application, we have decided not to move your application forward. However, we greatly appreciate your interest in working with us and wish you the best of luck with your job search. We welcome you to visit our careers page regularly for future openings that may be of interest to you <br />Sincerely <br />Company Human Resources Team <br /> {{career_link}} <br /></p>",
+            "hasPermission": true,
+            "isActive": true,
+            "useDefault": false,
+            "isDefault": true,
+            "UserId": 1,
+            "associations": {
+                "Account": {
+                    "id": 1
+                }
+            }
+        },
+        {
+            "title": "new career opportunity",
+            "subject": "{{Company_Name}} :New career opportunity",
+            "body": "<p><span class=\"label label-warning\" id=\"account-name\" rel=\"placeholder\">Company Name</span>&nbsp; has just posted the following new jobs to our careers page on {{published_date}} <br /> {{job_title_link}} <br /> If you or anybody you know may be a good fit for this position, please encourage them to apply immediately. If passing along to others, please be sure to remind them to mention how they heard about the opportunity. <br />Thanks, <br />Company Human Resources Team <br /> {{career_link}} </p>",
+            "hasPermission": true,
+            "isActive": true,
+            "useDefault": false,
+            "isDefault": true,
+            "UserId": 1,
+            "associations": {
+                "Account": {
+                    "id": 1
+                }
+            }
+        },
+        {
+            "title": "Application submitted successfully",
+            "subject": "{{Company_Name}} :Application Submitted Successfully",
+            "body": "Dear <span class=\"label label-info\" id=\"prospect-firstName\" rel=\"placeholder\">Applicant First Name</span>&nbsp; <span class=\"label label-info\" id=\"prospect-lastName\" rel=\"placeholder\">Applicant Last Name</span>&nbsp;, <br /><p>Thank you for your interest in <span class=\"label label-warning\" id=\"account-name\" rel=\"placeholder\">Company Name</span>&nbsp;. We received your application for the following position(s) submitted on {{submitted_date}}: <br /> {{job_title}} <br /> Our team is reviewing your qualifications and will contact you if there is a match with any of our open positions. Please note that new jobs are posted to the site often. Please check back regularly for future openings that may be of interest to you. <br />We appreciate your interest <span class=\"label label-warning\" id=\"account-name\" rel=\"placeholder\">Company Name</span>&nbsp; and wish you the best of luck in your job search <br />Sincerely <br />Company Human Resources Team <br /> {{career_link}} <br />Note:  This message was automatically generated.  Please do not respond to this email.</p>",
+            "hasPermission": true,
+            "isActive": true,
+            "useDefault": false,
+            "isDefault": true,
+            "UserId": 2,
+            "associations": {
+                "Account": {
+                    "id": 1
+                }
+            }
+        },
+        {
+            "title": "Application status update",
+            "subject": "{{Company_Name}} :Application Status Update",
+            "body": "Dear <span class=\"label label-info\" id=\"prospect-firstName\" rel=\"placeholder\">Applicant First Name</span>&nbsp; <span class=\"label label-info\" id=\"prospect-lastName\" rel=\"placeholder\">Applicant Last Name</span>&nbsp;, <br /><p>Thank you for applying for the position {{job_title}} with <span class=\"label label-warning\" id=\"account-name\" rel=\"placeholder\">Company Name</span>&nbsp;. We appreciate your interest in our organization.We received a significant number of applications for the position, and the hiring process has been a very competitive one. After a review of your application, we have decided not to move your application forward. However, we greatly appreciate your interest in working with us and wish you the best of luck with your job search. We welcome you to visit our careers page regularly for future openings that may be of interest to you <br />Sincerely <br />Company Human Resources Team <br /> {{career_link}} <br /></p>",
+            "hasPermission": true,
+            "isActive": true,
+            "useDefault": false,
+            "isDefault": true,
+            "UserId": 2,
+            "associations": {
+                "Account": {
+                    "id": 1
+                }
+            }
+        },
+        {
+            "title": "new career opportunity",
+            "subject": "{{Company_Name}} :New career opportunity",
+            "body": "<p><span class=\"label label-warning\" id=\"account-name\" rel=\"placeholder\">Company Name</span>&nbsp; has just posted the following new jobs to our careers page on {{published_date}} <br /> {{job_title_link}} <br /> If you or anybody you know may be a good fit for this position, please encourage them to apply immediately. If passing along to others, please be sure to remind them to mention how they heard about the opportunity. <br />Thanks, <br />Company Human Resources Team <br /> {{career_link}} </p>",
+            "hasPermission": true,
+            "isActive": true,
+            "useDefault": false,
+            "isDefault": true,
+            "UserId": 2,
+            "associations": {
+                "Account": {
+                    "id": 1
+                }
+            }
+        },
+        {
+            "title": "Application submitted successfully",
+            "subject": "{{Company_Name}} :Application Submitted Successfully",
+            "body": "Dear <span class=\"label label-info\" id=\"prospect-firstName\" rel=\"placeholder\">Applicant First Name</span>&nbsp; <span class=\"label label-info\" id=\"prospect-lastName\" rel=\"placeholder\">Applicant Last Name</span>&nbsp;, <br /><p>Thank you for your interest in <span class=\"label label-warning\" id=\"account-name\" rel=\"placeholder\">Company Name</span>&nbsp;. We received your application for the following position(s) submitted on {{submitted_date}}: <br /> {{job_title}} <br /> Our team is reviewing your qualifications and will contact you if there is a match with any of our open positions. Please note that new jobs are posted to the site often. Please check back regularly for future openings that may be of interest to you. <br />We appreciate your interest <span class=\"label label-warning\" id=\"account-name\" rel=\"placeholder\">Company Name</span>&nbsp; and wish you the best of luck in your job search <br />Sincerely <br />Company Human Resources Team <br /> {{career_link}} <br />Note:  This message was automatically generated.  Please do not respond to this email.</p>",
+            "hasPermission": true,
+            "isActive": true,
+            "useDefault": false,
+            "isDefault": true,
+            "UserId": 3,
+            "associations": {
+                "Account": {
+                    "id": 1
+                }
+            }
+        },
+        {
+            "title": "Application status update",
+            "subject": "{{Company_Name}} :Application Status Update",
+            "body": "Dear <span class=\"label label-info\" id=\"prospect-firstName\" rel=\"placeholder\">Applicant First Name</span>&nbsp; <span class=\"label label-info\" id=\"prospect-lastName\" rel=\"placeholder\">Applicant Last Name</span>&nbsp;, <br /><p>Thank you for applying for the position {{job_title}} with <span class=\"label label-warning\" id=\"account-name\" rel=\"placeholder\">Company Name</span>&nbsp;. We appreciate your interest in our organization.We received a significant number of applications for the position, and the hiring process has been a very competitive one. After a review of your application, we have decided not to move your application forward. However, we greatly appreciate your interest in working with us and wish you the best of luck with your job search. We welcome you to visit our careers page regularly for future openings that may be of interest to you <br />Sincerely <br />Company Human Resources Team <br /> {{career_link}} <br /></p>",
+            "hasPermission": true,
+            "isActive": true,
+            "useDefault": false,
+            "isDefault": true,
+            "UserId": 3,
+            "associations": {
+                "Account": {
+                    "id": 1
+                }
+            }
+        },
+        {
+            "title": "new career opportunity",
+            "subject": "{{Company_Name}} :New career opportunity",
+            "body": "<p><span class=\"label label-warning\" id=\"account-name\" rel=\"placeholder\">Company Name</span>&nbsp; has just posted the following new jobs to our careers page on {{published_date}} <br /> {{job_title_link}} <br /> If you or anybody you know may be a good fit for this position, please encourage them to apply immediately. If passing along to others, please be sure to remind them to mention how they heard about the opportunity. <br />Thanks, <br />Company Human Resources Team <br /> {{career_link}} </p>",
+            "hasPermission": true,
+            "isActive": true,
+            "useDefault": false,
+            "isDefault": true,
+            "UserId": 3,
+            "associations": {
+                "Account": {
+                    "id": 1
+                }
+            }
+        }
+    ]
+}
