@@ -1,9 +1,9 @@
 {
     "orm": {
         "db": {
-            "username": "john",
-            "password": "secret",
-            "database": "nodeseed",
+            "username": "root",
+            "password": "qqq",
+            "database": "clevertech",
             "options": {
                 "host": "localhost",
                 "dialect": "mysql",

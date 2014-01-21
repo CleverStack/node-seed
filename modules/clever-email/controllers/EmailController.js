@@ -1,7 +1,9 @@
 module.exports = function ( EmailService ) {
 
     return (require( 'classes' ).Controller).extend( {
-            service: null, checkEventMailData: function ( req, res, next ) {
+            service: null,
+
+            checkEventMailData: function ( req, res, next ) {
                 var data = req.body
                   , fltData = [];
                 //console.log("\n *** SendGrid Event Data *** \n",data);

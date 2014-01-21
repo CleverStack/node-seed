@@ -1,26 +1,20 @@
-var BaseService = require( './BaseService' )
-  , Q = require( 'q' )
+var Q = require( 'q' )
   , moment = require( 'moment' )
   , Sequelize = require( 'sequelize' )
   , cheerio = require( 'cheerio' )
-  , sendgrid = require( 'utils' ).sendgrid
+  , config = require( 'config' )['clever-email']
+  , mailer = require( '../lib/mailer' )( config )
   , EmailTemplateService = null;
 
-
-module.exports = function ( db,
+module.exports = function ( sequelize,
                             EmailTemplateModel,
-                            UserModel, TeamModel,
-                            ProspectModel,
-                            JobModel,
-                            config ) {
-
-    var mailer = sendgrid( config.sendgrid );
+                            UserModel ) {
 
     if ( EmailTemplateService && EmailTemplateService.instance ) {
         return EmailTemplateService.instance;
     }
 
-    EmailTemplateService = BaseService.extend( {
+    EmailTemplateService = require( 'services' ).BaseService.extend( {
 
         formatData: function ( data ) {
             var o = {
@@ -54,21 +48,6 @@ module.exports = function ( db,
             return tu;
         },
 
-        formatEmailTemplateTeamForSave: function ( permittedToTeams ) {
-            var tm = []
-                , arr = permittedToTeams
-                , item;
-
-            if ( arr && arr.length ) {
-                while ( item = arr.pop() ) {
-                    var team = TeamModel.build( { id: item } );
-                    tm.push( team );
-                }
-            }
-
-            return tm;
-        },
-
         listTemplates: function ( accId, userId, teamId, role ) {
             var deferred = Q.defer()
               , chainer = new Sequelize.Utils.QueryChainer()
@@ -88,7 +67,7 @@ module.exports = function ( db,
             }
 
             this
-                .find( { where: [ query ], include: [ UserModel, TeamModel ] } )
+                .find( { where: [ query ], include: [ UserModel ] } )
                 .then( function ( result ) {
                     if ( !result.length ) {
                         deferred.resolve( [] );
@@ -120,7 +99,7 @@ module.exports = function ( db,
             }
 
             this
-                .findOne( { where: [ query ], include: [ UserModel, TeamModel ] } )
+                .findOne( { where: [ query ], include: [ UserModel ] } )
                 .then( function ( result ) {
 
                     if ( !result ) {
@@ -148,29 +127,15 @@ module.exports = function ( db,
 
         getPlaceholderData: function ( data ) {
             var deferred = Q.defer()
-              , plData = { template: null, prospect: null, job: null }
+              , plData = { template: null }
               , chainer = new Sequelize.Utils.QueryChainer();
 
             var tplId = data.template_id || data.EmailTemplateId
-              , accId = data.accId || data.AccountId
-              , prospId = data.prospect_id || data.ProspectId || null
-              , jobId = data.job_id || data.JobId || null;
+              , accId = data.accId || data.AccountId;
 
             chainer.add(
                 EmailTemplateModel.find( {
                     where: { id: tplId, AccountId: accId }
-                } )
-            );
-
-            chainer.add(
-                ProspectModel.find( {
-                    where: { id: prospId, AccountId: accId, "deletedAt": null }
-                } )
-            );
-
-            chainer.add(
-                JobModel.find( {
-                    where: { id: jobId, AccountId: accId, "deletedAt": null }
                 } )
             );
 
@@ -184,8 +149,6 @@ module.exports = function ( db,
                     }
 
                     plData['template'] = JSON.parse( JSON.stringify( result[0] ) );
-                    plData['prospect'] = JSON.parse( JSON.stringify( result[1] ) );
-                    plData['job'] = JSON.parse( JSON.stringify( result[2] ) );
 
                     deferred.resolve( plData );
                 } )
@@ -193,6 +156,7 @@ module.exports = function ( db,
 
             return deferred.promise;
         },
+
         processTemplateIntrpolation: function ( data, user ) {
             var deferred = Q.defer()
               , service = this
@@ -201,7 +165,7 @@ module.exports = function ( db,
             var $ = cheerio.load( tpl );
 
             $( 'span[rel="placeholder"]' ).each( function ( i, elem ) {
-                text = service.getPlaceholderText( $( elem ), data.prospect, data.job, user );
+                text = service.getPlaceholderText( $( elem ), user );
                 $( elem ).replaceWith( text );
             } );
 
@@ -210,7 +174,7 @@ module.exports = function ( db,
             return deferred.promise;
         },
 
-        getPlaceholderText: function ( placeholderNode, prospect, job, user ) {
+        getPlaceholderText: function ( placeholderNode, user ) {
             var id = placeholderNode.attr( 'id' );
             var parts = id.split( '-' );
             var domain = parts[0];
@@ -218,30 +182,6 @@ module.exports = function ( db,
             var propValue;
 
             //console.log("\n\nPLACEHOLDER: ",domain, prop);
-
-            if ( domain === 'prospect' ) {
-
-                if ( prop == 'createdAt' ) {
-                    var d = moment( prospect[prop] ).format( 'YY:MM:DD' );
-                    propValue = d + ' EST';
-                } else {
-                    propValue = prospect && prospect[prop];
-                }
-
-            }
-            if ( domain === 'job' ) {
-
-                if ( prop == 'url' ) { // Make it compatible with backend property
-                    prop = 'jobmail';
-                }
-
-                if ( prop == 'publishDate' ) {
-                    var d = moment( job[prop] ).format( 'YY:MM:DD' );
-                    propValue = d + ' EST';
-                } else {
-                    propValue = job && job[prop];
-                }
-            }
 
             if ( domain === 'user' ) {
                 propValue = user && user[prop];
@@ -344,6 +284,7 @@ module.exports = function ( db,
 
             return deferred.promise;
         },
+
         removeEmailTemplate: function ( userId, tplId ) {
             var deferred = Q.defer()
               , chainer = new Sequelize.Utils.QueryChainer();
@@ -378,13 +319,13 @@ module.exports = function ( db,
 
             mailer( payload )
                 .then( deferred.resolve )
-                .fail( deferred.resolve )
+                .fail( deferred.resolve );
 
             return deferred.promise;
         }
     } );
 
-    EmailTemplateService.instance = new EmailTemplateService( db );
+    EmailTemplateService.instance = new EmailTemplateService( sequelize );
     EmailTemplateService.Model = EmailTemplateModel;
 
     return EmailTemplateService.instance;

@@ -7,10 +7,12 @@
         "lodash": "2.4.1",
         "mandrill-api": "*",
         "sendgrid": "~0.4.2",
-        "mailgun": "*",
+        "mailgun-js": "*",
         "ejs": "*",
         "shortid": "~2.0.0",
-        "cheerio": "~0.12.4"
+        "cheerio": "~0.12.4",
+        "sequelize": "",
+        "moment": ""
     },
     "author": {
         "name": "Clevertech",
@@ -20,6 +22,7 @@
     "main": "module.js",
     "description": "",
     "devDependencies": {
-
+        "chai": "*",
+        "mocha": "*"
     }
 }

@@ -1,31 +1,33 @@
 {
     "clever-email": {
-        "emailsToCC":     true,
-        "emailsToBCC":    true,
-        "messageTXT":     true,
-        "priority":       true,
+        "cc":       true,
+        "bcc":      true,
+        "text":     true,
 
         "systems": {
             "Mandrill": {
                 "isActive": true,
-                "apiKey" :  "j8Gzc7vRpJ36FabmOsbk6g"
+                "apiKey":   "j8Gzc7vRpJ36FabmOsbk6g",
+                "ipPool":   "Example Pool",
+                "async":    false
             },
             "SendGrid": {
                 "isActive": false,
-                "apiUser" :  "",
+                "apiUser" : "",
                 "apiKey" :  ""
             },
             "MailGun": {
                 "isActive": false,
-                "apiUser" :  "",
+                "domain" :  "mytestdomain.com",
                 "apiKey" :  "key-97zzcleh7dgz0kp4jfy1qp0fn38lml73"
             }
         },
 
         "default": {
-            "noReply":  "true",
-            "from":     "",
-            "subject":  "test email"
+            "noReply":      "true",
+            "from":         "no-reply@app.bolthr.com",
+            "fromName":     "BoltHR",
+            "subject":      "BoltHR: Notification"
         }
     }
 }

@@ -1,31 +1,27 @@
-var BaseService = require( './BaseService' )
-  , Q = require( 'q' )
+var Q = require( 'q' )
   , Sequelize = require( 'sequelize' )
-  , sendgrid = require( 'utils' ).sendgrid
-  , ejsFileRender = require( 'utils' ).ejsfilerender
+  , ejsFileRender = require( '../lib/ejsfilerender' )
   , shortid = require( 'shortid' )
+  , config = require( 'config' )['clever-email']
+  , sendgrid = require( '../lib/sendgrid' )
   , EmailService = null;
 
-module.exports = function ( db,
-                            EmailModel,
-                            EmailAttachmentModel,
-                            ProspectModel,
-                            EmailReplyModel,
-                            UserModel,
-                            JobModel,
-                            EmailUserModel,
-                            EmailTemplateService,
-                            ProspectSurveyService,
-                            config ) {
+module.exports = function ( sequelize,
+                            ORMEmailModel,
+                            ORMEmailAttachmentModel,
+                            ORMEmailReplyModel,
+                            ORMUserModel,
+                            ORMEmailUserModel,
+                            EmailTemplateService ) {
 
-    var mailer = sendgrid( config.sendgrid )
+    var mailer = sendgrid( config )
       , bakeTemplate = ejsFileRender();
 
     if ( EmailService && EmailService.instance ) {
         return EmailService.instance;
     }
 
-    EmailService = BaseService.extend( {
+    EmailService = require( 'services' ).BaseService.extend( {
 
         formatReplyAddress: function ( emailToken ) {
             var addr = ''
@@ -45,7 +41,7 @@ module.exports = function ( db,
         },
 
         formatData: function ( data, operation ) {
-            var o = { email: {}, prospect: {}, usersCC: [], usersBCC: [], attachments: [], sender: {} };
+            var o = { email: {}, usersCC: [], usersBCC: [], attachments: [], sender: {} };
             var emailURL = '';
 
             // o['account'] = {};
@@ -58,8 +54,6 @@ module.exports = function ( db,
             o.email.token = data.userId + data.to.id + shortid.seed( 10000 ).generate();
             o.email.UserId = data.userId;
             o.email.AccountId = data.accId;
-            o.email.ProspectId = data.to.id;
-            o.email.JobId = data.JobId || null;
 
             o.hasTemplate = (/false|true/.test( data.hasTemplate )) ? data.hasTemplate : true;
 
@@ -67,9 +61,6 @@ module.exports = function ( db,
 
             // o.sender.fullName = data.userFirstName + ' ' + data.userLastName;
             // o.sender.email    = emailURL;
-
-            //EmailProspect object
-            // o.prospect  = data.to;
 
             //EmailUsers Object
             o.usersCC = ( data.cc && data.cc.length ) ? data.cc : [];
@@ -110,7 +101,7 @@ module.exports = function ( db,
 
             return o;
         },
-        //TODO: change sentAttempts and isDelivered values when we move notification mail into background tasks
+
         formatRepliedData: function ( data ) {
             var replyAddr = this.formatReplyAddress( data['emailToken'] );
 
@@ -135,17 +126,6 @@ module.exports = function ( db,
                 o['from'] = data.userEmail;
                 t['fromname'] = null;
 
-                o['to'] = data.prospectEmail;
-                t['toname'] = data.prospectName;
-
-            } else if ( data.from.indexOf( data[ 'prospectEmail' ] ) != -1 ) {
-
-                o['from'] = data.prospectEmail;
-                t['fromname'] = data.prospectName;
-
-                o['to'] = data.userEmail;
-                t['toname'] = null;
-
             } else {
 
                 o['from'] = t['fromname'] = o['to'] = t['toname'] = null;
@@ -161,7 +141,7 @@ module.exports = function ( db,
             var deferred = Q.defer();
 
             this
-                .find( { where: { UserId: userId }, include: [ EmailAttachmentModel, ProspectModel, EmailReplyModel ] } )
+                .find( { where: { UserId: userId }, include: [ ORMEmailAttachmentModel, ORMEmailReplyModel ] } )
                 .then( deferred.resolve )
                 .fail( deferred.reject );
 
@@ -170,18 +150,18 @@ module.exports = function ( db,
 
         getEmailById: function ( userId, emailId ) {
             var deferred = Q.defer()
-                , service = this
-                , chainer = new Sequelize.Utils.QueryChainer();
+              , service = this
+              , chainer = new Sequelize.Utils.QueryChainer();
 
             chainer.add(
-                EmailModel.find( {
-                    where: { id: emailId, UserId: userId, 'deletedAt': null }, include: [ EmailAttachmentModel, ProspectModel, EmailReplyModel ]
+                ORMEmailModel.find( {
+                    where: { id: emailId, UserId: userId, 'deletedAt': null }, include: [ ORMEmailAttachmentModel, ORMEmailReplyModel ]
                 } )
             );
 
             chainer.add(
-                EmailUserModel.find( {
-                    where: { EmailId: emailId, 'deletedAt': null }, include: [ UserModel ]
+                ORMEmailUserModel.find( {
+                    where: { EmailId: emailId, 'deletedAt': null }, include: [ ORMUserModel ]
                 } )
             );
 
@@ -237,11 +217,7 @@ module.exports = function ( db,
                                 return;
                             }
 
-                            service
-                                .handleProspectSurveyCreation( fData.email, fData.survey )
-                                .then( deferred.resolve )
-                                .fail( deferred.reject );
-
+                            deferred.resolve();
                         } )
                         .then( deferred.resolve )
                         .fail( deferred.reject );
@@ -251,30 +227,15 @@ module.exports = function ( db,
             return deferred.promise;
         },
 
-        handleProspectSurveyCreation: function ( email, survey ) {
-            var deferred = Q.defer();
-
-            ProspectSurveyService
-                .createProspectSurvey( {
-                    pointsAwarded: survey.pointsPossible,
-                    SurveyId: survey.id,
-                    accId: email.AccountId,
-                    ProspectId: email.ProspectId,
-                    token: survey.token
-                } )
-                .then( deferred.resolve )
-                .fail( deferred.reject );
-
-            return deferred.promise;
-        },
-
         saveEmailAssociation: function ( savedEmail, fData ) {
             var deferred = Q.defer()
-                , chainer = new Sequelize.Utils.QueryChainer();
+              , chainer = new Sequelize.Utils.QueryChainer();
 
             //USERS: CC
             if ( fData.usersCC.length ) {
-                var l = fData.usersCC.length, item, cc = [];
+                var l = fData.usersCC.length
+                  , item
+                  , cc = [];
                 while ( l-- ) {
                     item = fData.usersCC[l];
                     cc.push( {
@@ -282,12 +243,14 @@ module.exports = function ( db,
                     } );
                 }
 
-                chainer.add( EmailUserModel.bulkCreate( cc ) );
+                chainer.add( ORMEmailUserModel.bulkCreate( cc ) );
             }
 
             //USERS: BCC
             if ( fData.usersBCC.length ) {
-                var l = fData.usersBCC.length, itm, bcc = [];
+                var l = fData.usersBCC.length
+                  , itm
+                  , bcc = [];
 
                 while ( l-- ) {
                     itm = fData.usersBCC[l];
@@ -296,12 +259,14 @@ module.exports = function ( db,
                     } );
                 }
 
-                chainer.add( EmailUserModel.bulkCreate( bcc ) );
+                chainer.add( ORMEmailUserModel.bulkCreate( bcc ) );
             }
 
             //Attachments
             if ( fData.attachments.length ) {
-                var l = fData.attachments.length, attch, emailDocs = [];
+                var l = fData.attachments.length
+                  , attch
+                  , emailDocs = [];
 
                 while ( l-- ) {
                     attch = fData.attachments[l];
@@ -310,7 +275,7 @@ module.exports = function ( db,
                     } );
                 }
 
-                chainer.add( EmailAttachmentModel.bulkCreate( emailDocs ) );
+                chainer.add( ORMEmailAttachmentModel.bulkCreate( emailDocs ) );
             }
 
             chainer
@@ -351,7 +316,8 @@ module.exports = function ( db,
 
                 EmailTemplateService
                     .getPlaceholderData( {
-                        accId: email.AccountId, ProspectId: email.ProspectId, EmailTemplateId: email.EmailTemplateId, JobId: null
+                        accId: email.AccountId,
+                        EmailTemplateId: email.EmailTemplateId
                     } )
                     .then( function ( emailTemplate ) {
                         return EmailTemplateService.processTemplateIntrpolation( user, emailTemplate );
@@ -369,37 +335,9 @@ module.exports = function ( db,
         },
 
         sendEmail: function ( email, html ) {
-            var deferred = Q.defer()
-                , fromMail = 'no-reply@app.bolthr.com'
-                , fromName = 'BoltHR'
-                , subject = email.subject || 'BoltHR: Notification'
-                , emailId = email.id
-                , payload = {};
+            var deferred = Q.defer();
 
-            if ( email.dump.fromCompanyName ) {
-                fromName = email.dump.fromName;
-                fromMail = email.dump.fromMail;
-            }
-
-            payload = {
-                to: [ email.dump.toMail ],
-                bcc: email.dump.usersBCC,
-                subject: subject,
-                html: html,
-                from: fromMail,
-                fromname: fromName,
-                emailId: emailId
-            };
-
-            if ( email.dump.usersCC && email.dump.usersCC.length ) {
-
-                email.dump.usersCC.forEach( function ( userEmail ) {
-                    payload.to.push( userEmail );
-                } );
-
-            }
-
-            mailer( payload )
+            mailer.send( email, html )
                 .then( deferred.resolve )
                 .fail( deferred.reject );
 
@@ -411,7 +349,7 @@ module.exports = function ( db,
               , service = this;
 
             this
-                .findOne( { where: { token: data.replyMailHash }, include: [ UserModel, ProspectModel ] } )
+                .findOne( { where: { token: data.replyMailHash }, include: [ ORMUserModel ] } )
                 .then( function ( email ) {
 
                     if ( !email || !email.id ) {
@@ -426,8 +364,6 @@ module.exports = function ( db,
                     data['emailToken'] = email.token;
                     data['userEmail'] = email.user.email;
                     data['userName'] = email.user.firstname + ' ' + email.user.lastname;
-                    data['prospectEmail'] = email.prospect.email;
-                    data['prospectName'] = email.prospect.firstName + ' ' + email.prospect.lastName;
 
                     service
                         .saveMailReply( data )
@@ -444,7 +380,7 @@ module.exports = function ( db,
             var deferred = Q.defer()
                 , replyData = this.formatRepliedData( data );
 
-            EmailReplyModel
+            ORMEmailReplyModel
                 .create( replyData )
                 .success( deferred.resolve )
                 .error( deferred.reject );
@@ -452,7 +388,6 @@ module.exports = function ( db,
             return deferred.promise;
         },
 
-        //TODO: Move this function into Background Tasks
         processMailReplyNotification: function ( savedReply ) {
             var deferred = Q.defer()
               , mail = JSON.parse( JSON.stringify( savedReply ) )
@@ -481,7 +416,7 @@ module.exports = function ( db,
 
             while ( item = evns.pop() ) {
                 console.log( "\nUPDATING: ", item.email_id );
-                chainer.add( EmailModel.update( { isOpened: true }, { id: item.email_id, 'deletedAt': null} ) );
+                chainer.add( ORMEmailModel.update( { isOpened: true }, { id: item.email_id, 'deletedAt': null} ) );
             }
 
             chainer
@@ -496,8 +431,8 @@ module.exports = function ( db,
 
     } );
 
-    EmailService.instance = new EmailService( db );
-    EmailService.Model = EmailModel;
-console.log('-----------------------')
+    EmailService.instance = new EmailService( sequelize );
+    EmailService.Model = ORMEmailModel;
+
     return EmailService.instance;
 };

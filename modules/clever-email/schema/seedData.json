@@ -1,5 +1,5 @@
 {
-    "DefaultEmailTemplate": [
+    "DefaultEmailTemplateModel": [
         {
             "title": "application submitted successfully",
             "subject": "<%=company_name%> :<b>Application Submitted Successfully<b>",
@@ -16,7 +16,7 @@
             "body": "<p><%=company_name%> has just posted the following new jobs to our careers page on <%=published_date%> <br /> <%=job_title_link%> <br /> If you or anybody you know may be a good fit for this position, please encourage them to apply immediately. If passing along to others, please be sure to remind them to mention how they heard about the opportunity. <br />Thanks, <br />Company Human Resources Team <br /> <%=career_link%> </p>"
         }
     ],
-    "EmailTemplate": [
+    "EmailTemplateModel": [
         {
             "title": "Application submitted successfully",
             "subject": "{{Company_Name}} :Application Submitted Successfully",
@@ -26,11 +26,7 @@
             "useDefault": false,
             "isDefault": true,
             "UserId": 1,
-            "associations": {
-                "Account": {
-                    "id": 1
-                }
-            }
+            "AccountId": 1
         },
         {
             "title": "Application status update",
@@ -41,11 +37,7 @@
             "useDefault": false,
             "isDefault": true,
             "UserId": 1,
-            "associations": {
-                "Account": {
-                    "id": 1
-                }
-            }
+            "AccountId": 1
         },
         {
             "title": "new career opportunity",
@@ -56,11 +48,7 @@
             "useDefault": false,
             "isDefault": true,
             "UserId": 1,
-            "associations": {
-                "Account": {
-                    "id": 1
-                }
-            }
+            "AccountId": 1
         },
         {
             "title": "Application submitted successfully",
@@ -71,11 +59,7 @@
             "useDefault": false,
             "isDefault": true,
             "UserId": 2,
-            "associations": {
-                "Account": {
-                    "id": 1
-                }
-            }
+            "AccountId": 1
         },
         {
             "title": "Application status update",
@@ -86,11 +70,7 @@
             "useDefault": false,
             "isDefault": true,
             "UserId": 2,
-            "associations": {
-                "Account": {
-                    "id": 1
-                }
-            }
+            "AccountId": 1
         },
         {
             "title": "new career opportunity",
@@ -101,11 +81,7 @@
             "useDefault": false,
             "isDefault": true,
             "UserId": 2,
-            "associations": {
-                "Account": {
-                    "id": 1
-                }
-            }
+            "AccountId": 1
         },
         {
             "title": "Application submitted successfully",
@@ -116,11 +92,7 @@
             "useDefault": false,
             "isDefault": true,
             "UserId": 3,
-            "associations": {
-                "Account": {
-                    "id": 1
-                }
-            }
+            "AccountId": 1
         },
         {
             "title": "Application status update",
@@ -131,11 +103,7 @@
             "useDefault": false,
             "isDefault": true,
             "UserId": 3,
-            "associations": {
-                "Account": {
-                    "id": 1
-                }
-            }
+            "AccountId": 1
         },
         {
             "title": "new career opportunity",
@@ -146,11 +114,7 @@
             "useDefault": false,
             "isDefault": true,
             "UserId": 3,
-            "associations": {
-                "Account": {
-                    "id": 1
-                }
-            }
+            "AccountId": 1
         }
     ]
 }
