@@ -1,21 +1,134 @@
 {
-    "DefaultEmailTemplateModel": [
+    "AccountModel": [
         {
-            "title": "application submitted successfully",
-            "subject": "<%=company_name%> :<b>Application Submitted Successfully<b>",
-            "body": "Dear <%=firstName%> <%=lastName%>, <br /><p>Thank you for your interest in <%=company_name%>. We received your application for the following position(s) submitted on <%=submitted_date%>: <br /> <%=job_title%> <br /> Our team is reviewing your qualifications and will contact you if there is a match with any of our open positions. Please note that new jobs are posted to the site often. Please check back regularly for future openings that may be of interest to you. <br />We appreciate your interest <%=company_name%> and wish you the best of luck in your job search <br />Sincerely <br />Company Human Resources Team <br /> <%=career_link%> <br />Note:  This message was automatically generated.  Please do not respond to this email.</p>"
+            "name": "Default Account",
+            "subdomain": "dev",
+            "emailFwd": "dev23io@stage.bolthr.clevertech.biz",
+            "active": true
         },
         {
-            "title": "application status update",
-            "subject": "<%=company_name%> :<b>Application Status Update<b>",
-            "body": "Dear <%=firstName%> <%=lastName%>, <br /><p>Thank you for applying for the position <%=job_title%> with <%=company_name%>. We appreciate your interest in our organization.We received a significant number of applications for the position, and the hiring process has been a very competitive one. After a review of your application, we have decided not to move your application forward. However, we greatly appreciate your interest in working with us and wish you the best of luck with your job search. We welcome you to visit our careers page regularly for future openings that may be of interest to you <br />Sincerely <br />Company Human Resources Team <br /> <%=career_link%> <br /></p>"
-        },
-        {
-            "title": "new career opportunity",
-            "subject": "<%=company_name%> :<b>New career opportunity<b>",
-            "body": "<p><%=company_name%> has just posted the following new jobs to our careers page on <%=published_date%> <br /> <%=job_title_link%> <br /> If you or anybody you know may be a good fit for this position, please encourage them to apply immediately. If passing along to others, please be sure to remind them to mention how they heard about the opportunity. <br />Thanks, <br />Company Human Resources Team <br /> <%=career_link%> </p>"
+            "name": "Testing Account",
+            "subdomain": "testing",
+            "emailFwd": "dfg344dc@stage.bolthr.clevertech.biz",
+            "active": true
         }
     ],
+
+    "UserModel": [
+        {
+            "username": "dimitrios@clevertech.biz",
+            "email": "dimitrios@clevertech.biz",
+            "password": "9ac20922b054316be23842a5bca7d69f29f69d77",
+            "firstname": "dimitris",
+            "lastname": "ioakimidis",
+            "phone": "8900000",
+            "active": true,
+            "confirmed": true,
+            "hasAdminRight": true,
+            "associations": {
+                "AccountModel": {
+                    "name": "Default Account"
+                }
+            }
+        },
+        {
+            "username": "adnan@clevertech.biz",
+            "email": "adnan@clevertech.biz",
+            "password": "f10e2821bbbea527ea02200352313bc059445190",
+            "firstname": "Adnan",
+            "lastname": "Ibrisimbegovic",
+            "phone": "8900000",
+            "active": true,
+            "confirmed": true,
+            "hasAdminRight": true,
+            "associations": {
+                "AccountModel": {
+                    "name": "Default Account"
+                }
+            }
+        },
+        {
+            "username": "richard",
+            "email": "richard@clevertech.biz",
+            "password": "9ac20922b054316be23842a5bca7d69f29f69d77",
+            "firstname": "Richard",
+            "lastname": "Gustin",
+            "phone": "+61448048484",
+            "active": true,
+            "confirmed": true,
+            "hasAdminRight": true,
+            "associations": {
+                "AccountModel": {
+                    "name": "Default Account"
+                }
+            }
+        },
+        {
+            "username": "joeJunior",
+            "email": "joeJunior@clevertech2.biz",
+            "password": "9ac20922b054316be23842a5bca7d69f29f69d77",
+            "firstname": "joeJunior",
+            "lastname": "joeJunior",
+            "phone": "+3044444",
+            "active": true,
+            "confirmed": false,
+            "hasAdminRight": true,
+            "associations": {
+                "AccountModel": {
+                    "name": "Default Account"
+                }
+            }
+        },
+        {
+            "username": "joeJunior3",
+            "email": "joeJunior3@clevertech2.biz",
+            "password": "9ac20922b054316be23842a5bca7d69f29f69d77",
+            "firstname": "joeJunior3",
+            "lastname": "joeJunior3",
+            "phone": "+3044444",
+            "active": false,
+            "confirmed": false,
+            "hasAdminRight": true,
+            "associations": {
+                "AccountModel": {
+                    "name": "Default Account"
+                }
+            }
+        },
+        {
+            "username": "test",
+            "email": "bolt-hris@clevertech.biz",
+            "password": "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8",
+            "firstname": "Test",
+            "lastname": "Account",
+            "phone": "+61448048484",
+            "active": true,
+            "confirmed": true,
+            "hasAdminRight": true,
+            "associations": {
+                "AccountModel": {
+                    "name": "Default Account"
+                }
+            }
+        },
+        {
+            "username": "test_employee",
+            "email": "bolt-employee@clevertech.biz",
+            "password": "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8",
+            "firstname": "Test",
+            "lastname": "Employee",
+            "phone": "+61448048484",
+            "active": true,
+            "confirmed": true,
+            "hasAdminRight": false,
+            "associations": {
+                "AccountModel": {
+                    "name": "Default Account"
+                }
+            }
+        }
+    ],
+
     "EmailTemplateModel": [
         {
             "title": "Application submitted successfully",
@@ -25,8 +138,11 @@
             "isActive": true,
             "useDefault": false,
             "isDefault": true,
-            "UserId": 1,
-            "AccountId": 1
+            "associations": {
+                "UserModel": {
+                    "username": "test_employee"
+                }
+            }
         },
         {
             "title": "Application status update",
@@ -36,8 +152,11 @@
             "isActive": true,
             "useDefault": false,
             "isDefault": true,
-            "UserId": 1,
-            "AccountId": 1
+            "associations": {
+                "UserModel": {
+                    "username": "test_employee"
+                }
+            }
         },
         {
             "title": "new career opportunity",
@@ -47,8 +166,11 @@
             "isActive": true,
             "useDefault": false,
             "isDefault": true,
-            "UserId": 1,
-            "AccountId": 1
+            "associations": {
+                "UserModel": {
+                    "username": "test_employee"
+                }
+            }
         },
         {
             "title": "Application submitted successfully",
@@ -58,8 +180,11 @@
             "isActive": true,
             "useDefault": false,
             "isDefault": true,
-            "UserId": 2,
-            "AccountId": 1
+            "associations": {
+                "UserModel": {
+                    "id": 1
+                }
+            }
         },
         {
             "title": "Application status update",
@@ -69,8 +194,11 @@
             "isActive": true,
             "useDefault": false,
             "isDefault": true,
-            "UserId": 2,
-            "AccountId": 1
+            "associations": {
+                "UserModel": {
+                    "id": 1
+                }
+            }
         },
         {
             "title": "new career opportunity",
@@ -80,8 +208,11 @@
             "isActive": true,
             "useDefault": false,
             "isDefault": true,
-            "UserId": 2,
-            "AccountId": 1
+            "associations": {
+                "UserModel": {
+                    "id": 1
+                }
+            }
         },
         {
             "title": "Application submitted successfully",
@@ -91,8 +222,11 @@
             "isActive": true,
             "useDefault": false,
             "isDefault": true,
-            "UserId": 3,
-            "AccountId": 1
+            "associations": {
+                "UserModel": {
+                    "id": 1
+                }
+            }
         },
         {
             "title": "Application status update",
@@ -102,8 +236,11 @@
             "isActive": true,
             "useDefault": false,
             "isDefault": true,
-            "UserId": 3,
-            "AccountId": 1
+            "associations": {
+                "UserModel": {
+                    "id": 1
+                }
+            }
         },
         {
             "title": "new career opportunity",
@@ -113,8 +250,11 @@
             "isActive": true,
             "useDefault": false,
             "isDefault": true,
-            "UserId": 3,
-            "AccountId": 1
+            "associations": {
+                "UserModel": {
+                    "id": 1
+                }
+            }
         }
     ]
 }

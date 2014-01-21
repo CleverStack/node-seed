@@ -73,7 +73,7 @@ async.forEachSeries(
 
                                 // Handle hasOne
                                 if ( typeof model[funcName] !== 'function' ) {
-                                    funcName = 'set' + assocModelName;
+                                    funcName = 'set' + assocModelName.replace( "Model", "" );
                                     associations = associations[0];
                                 }
 

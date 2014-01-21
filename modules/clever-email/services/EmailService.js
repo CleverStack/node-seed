@@ -2,8 +2,8 @@ var Q = require( 'q' )
   , Sequelize = require( 'sequelize' )
   , ejsFileRender = require( '../lib/ejsfilerender' )
   , shortid = require( 'shortid' )
-  , config = require( 'config' )['clever-email']
-  , sendgrid = require( '../lib/sendgrid' )
+  , config = require( 'config' )
+  , mailer = require( '../lib/mailer' )( config['clever-email'] )
   , EmailService = null;
 
 module.exports = function ( sequelize,
@@ -14,8 +14,7 @@ module.exports = function ( sequelize,
                             ORMEmailUserModel,
                             EmailTemplateService ) {
 
-    var mailer = sendgrid( config )
-      , bakeTemplate = ejsFileRender();
+    var bakeTemplate = ejsFileRender();
 
     if ( EmailService && EmailService.instance ) {
         return EmailService.instance;
@@ -31,7 +30,9 @@ module.exports = function ( sequelize,
                 ? 'dev'
                 : ( config.environmentName == 'PROD' )
                     ? 'prod'
-                    : 'stage';
+                    : ( config.environmentName == 'STAGE' )
+                        ? 'stage'
+                        : 'local';
 
             addr = ( envName != 'prod' )
                 ? 'reply_' + emailToken + '@' + envName + '.bolthr.clevertech.biz'
@@ -137,7 +138,7 @@ module.exports = function ( sequelize,
             return o;
         },
 
-        listEmails: function ( userId, emailId ) {
+        listEmails: function ( userId ) {
             var deferred = Q.defer();
 
             this

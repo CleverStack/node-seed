@@ -2,6 +2,7 @@ var expect = require ( 'chai' ).expect
   , request = require ( 'supertest' )
   , path = require( 'path' )
   , app = require ( path.resolve( __dirname + '/../../../../' ) + '/index.js' )
+  , config = require( 'config' )
   , testEnv = require ( 'utils' ).testEnv();
 
 describe( 'service.EmailService', function () {
@@ -21,32 +22,19 @@ describe( 'service.EmailService', function () {
     describe( '.formatReplyAddress', function () {
         it( 'should return an address according to environmentName', function ( done ) {
 
-            var data = {
-                title: 'some title',
-                subject: 'some subject',
-                body: 'some body',
-                accId: 15,
-                userId: 5,
-                useDefault: true,
-                permission: 'none',
-                someattr: 'this attribute is not part of the model'
-            };
+            var emailToken = '15da5AS15A1s';
 
-            var emailData = Service.formatData( data );
+            var addr = Service.formatReplyAddress( emailToken );
 
-            expect( emailData ).to.have.property( 'id' ).and.equal( null );
-            expect( emailData ).to.have.property( 'title' ).and.equal( data.title );
-            expect( emailData ).to.have.property( 'subject' ).and.equal( data.subject );
-            expect( emailData ).to.have.property( 'body' ).and.equal( data.body );
-            expect( emailData ).to.have.property( 'AccountId' ).and.equal( data.accId );
-            expect( emailData ).to.have.property( 'UserId' ).and.equal( data.userId );
-            expect( emailData ).to.have.property( 'isActive' ).and.equal( false );
-            expect( emailData ).to.have.property( 'isDefault' ).and.equal( false );
-            expect( emailData ).to.have.property( 'useDefault' ).and.equal( true );
-            expect( emailData ).to.have.property( 'hasPermission' ).and.equal( true );
-
-            expect( emailData ).to.not.have.property( 'permission' );
-            expect( emailData ).to.not.have.property( 'someattr' );
+            if ( config.environmentName == 'DEV' ){
+                expect( addr ).to.equal( 'reply_15da5AS15A1s@dev.bolthr.clevertech.biz' );
+            } else if ( config.environmentName == 'PROD' ) {
+                expect( addr ).to.equal( 'reply_15da5AS15A1s@app-mail.bolthr.com' );
+            } else if ( config.environmentName == 'STAGE' ) {
+                expect( addr ).to.equal( 'reply_15da5AS15A1s@stage.bolthr.clevertech.biz' );
+            } else {
+                expect( addr ).to.equal( 'reply_15da5AS15A1s@local.bolthr.clevertech.biz' );
+            }
 
             done();
         } );
@@ -61,28 +49,45 @@ describe( 'service.EmailService', function () {
                 title: 'some title',
                 subject: 'some subject',
                 body: 'some body',
-                accId: 15,
                 userId: 5,
-                useDefault: true,
+                accId: 1,
+                to: {
+                    id: 15,
+                    email: 'to1@email.za'
+                },
+                hasTemplate: false,
+                cc: [ 'cc1@mail.ru', 'cc2@mail.ru' ],
+                bcc: [ 'bcc1@mail.com', 'bcc2@mail.com' ],
+                accLogo: 'LoGo',
+                accName: 'Default Name',
+                userFirstName: 'Dmitrij',
+                userLastName: 'Safronov',
+
                 permission: 'none',
                 someattr: 'this attribute is not part of the model'
             };
 
             var emailData = Service.formatData( data );
+console.log(emailData.email)
+console.log(emailData.usersCC)
+            expect( emailData ).to.be.an('object');
+            expect( emailData ).to.contain.keys('email', 'usersCC', 'usersBCC', 'attachments', 'sender', 'hasTemplate');
 
-            expect( emailData ).to.have.property( 'id' ).and.equal( null );
-            expect( emailData ).to.have.property( 'title' ).and.equal( data.title );
-            expect( emailData ).to.have.property( 'subject' ).and.equal( data.subject );
-            expect( emailData ).to.have.property( 'body' ).and.equal( data.body );
-            expect( emailData ).to.have.property( 'AccountId' ).and.equal( data.accId );
-            expect( emailData ).to.have.property( 'UserId' ).and.equal( data.userId );
-            expect( emailData ).to.have.property( 'isActive' ).and.equal( false );
-            expect( emailData ).to.have.property( 'isDefault' ).and.equal( false );
-            expect( emailData ).to.have.property( 'useDefault' ).and.equal( true );
-            expect( emailData ).to.have.property( 'hasPermission' ).and.equal( true );
+            expect( emailData.email ).to.be.an('object');
+            expect( emailData.email ).to.have.property;
 
-            expect( emailData ).to.not.have.property( 'permission' );
-            expect( emailData ).to.not.have.property( 'someattr' );
+//            expect( emailData ).to.have.property( 'title' ).and.equal( data.title );
+//            expect( emailData ).to.have.property( 'subject' ).and.equal( data.subject );
+//            expect( emailData ).to.have.property( 'body' ).and.equal( data.body );
+//            expect( emailData ).to.have.property( 'AccountId' ).and.equal( data.accId );
+//            expect( emailData ).to.have.property( 'UserId' ).and.equal( data.userId );
+//            expect( emailData ).to.have.property( 'isActive' ).and.equal( false );
+//            expect( emailData ).to.have.property( 'isDefault' ).and.equal( false );
+//            expect( emailData ).to.have.property( 'useDefault' ).and.equal( true );
+//            expect( emailData ).to.have.property( 'hasPermission' ).and.equal( true );
+//
+//            expect( emailData ).to.not.have.property( 'permission' );
+//            expect( emailData ).to.not.have.property( 'someattr' );
 
             done();
         } );

@@ -58,6 +58,9 @@ module.exports = function(sequelize, DataTypes) {
             accessedAt : {
                 type: DataTypes.DATE,
                 allowNull: true
+            },
+            AccountId : {
+                type: DataTypes.INTEGER
             }
 
         },
