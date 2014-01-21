@@ -1,7 +1,7 @@
 {
   "main": "app.js",
   "name": "cleverstack-node-seed",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": {
     "name": "Clevertech",
     "email": "info@clevertech.biz",
@@ -12,10 +12,11 @@
     "Dmitry Bashkatov <dmitry@clevertech.biz>",
     "Leandro Ostera <leostera@gmail.com>"
   ],
-  "private": true,
   "description": "Cleverstack Node-Seed",
   "keywords": [
-    ""
+    "cleverstack",
+    "clevertech",
+    "cleverstack-seed"
   ],
   "scripts": {
     "start": "grunt",
@@ -52,10 +53,9 @@
     "should": "~2.1.1"
   },
   "bundledDependencies": [
-    "orm",
-    "odm",
-    "background-tasks",
-    "auth",
-    "example-module"
+    "clever-orm",
+    "clever-odm",
+    "clever-background-tasks",
+    "clever-auth"
   ]
 }
