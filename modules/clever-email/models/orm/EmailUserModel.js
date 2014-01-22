@@ -10,9 +10,16 @@ module.exports = function ( sequelize, DataTypes ) {
                 type: DataTypes.ENUM,
                 values: ['cc', 'bcc'],
                 allowNull: false
+            },
+            EmailId: {
+                type: DataTypes.INTEGER
+            },
+            UserId: {
+                type: DataTypes.INTEGER
             }
         },
         {
+            paranoid: true,
             instanceMethods: {
                 toJSON: function () {
                     return this.values;

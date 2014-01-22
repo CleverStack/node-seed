@@ -14,16 +14,20 @@ module.exports = function ( sequelize, DataTypes ) {
                 type: DataTypes.STRING,
                 allowNull: false
             },
-            fileType: {
+            mimeType: {
                 type: DataTypes.STRING,
                 allowNull: true
+            },
+            EmailId: {
+                type: DataTypes.INTEGER
             }
         },
         {
-            paranoid: true, instanceMethods: {
-            toJSON: function () {
-                return this.values;
-            }
+            paranoid: true,
+            instanceMethods: {
+                toJSON: function () {
+                    return this.values;
+                }
         }
-        } );
+    } );
 };

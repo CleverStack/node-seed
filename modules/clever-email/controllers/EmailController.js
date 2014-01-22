@@ -36,7 +36,7 @@ module.exports = function ( EmailService ) {
                     , emailId = this.req.params.id;
 
                 EmailService
-                    .getEmailById( userId, emailId )
+                    .getEmailByIds( userId, emailId )
                     .then( this.proxy( 'handleServiceMessage' ) )
                     .fail( this.proxy( 'handleException' ) );
             },

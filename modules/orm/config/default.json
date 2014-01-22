@@ -11,31 +11,31 @@
             }
         },
         "modelAssociations": {
-            "AccountModel":  {
-                "hasMany": [ "UserModel", "EmailModel", "EmailTemplateModel" ]
+            "AccountModel": {
+                "hasMany": [ "EmailTemplateModel" ]
             },
             "UserModel": {
-                "belongsTo": [ "AccountModel" ]
+                "belongsTo": [ "AccountModel" ],
+                "hasMany"  : [ "EmailTemplateModel" ]
             },
-            "ExampleModel": {},
             "EmailTemplateModel": {
-                "hasMany": [ "UserModel" ],
+                "hasMany": [ "UserModel", "EmailModel" ],
                 "belongsTo": [ "AccountModel", "UserModel" ]
             },
             "EmailModel": {
-                "hasMany": [ "EmailAttachmentModel", "EmailReplyModel" ],
-                "belongsTo": [ "UserModel", "AccountModel" ]
+                "hasMany": [  "EmailAttachmentModel", "EmailReplyModel" ],
+                "belongsTo": [ "UserModel", "AccountModel", "EmailTemplateModel" ]
             },
-            "EmailUserModel": {
-                "belongsTo": [ "EmailModel", "UserModel" ]
+            "EmailUserModel":{
+                "belongsTo" : [ "EmailModel", "UserModel" ]
             },
             "EmailAttachmentModel": {
                 "belongsTo": [ "EmailModel" ]
             },
             "EmailReplyModel": {
                 "belongsTo": [ "EmailModel" ]
-            }
-
+            },
+            "ExampleModel": {}
 
         }
     }

@@ -61,6 +61,9 @@ module.exports = function(sequelize, DataTypes) {
             },
             AccountId : {
                 type: DataTypes.INTEGER
+            },
+            EmailTemplateId : {
+                type: DataTypes.INTEGER
             }
 
         },

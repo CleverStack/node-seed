@@ -44,7 +44,13 @@ module.exports = function ( sequelize, DataTypes ) {
                 allowNull: false,
                 default: true
             },
+            AccountId: {
+                type: DataTypes.INTEGER
+            },
             UserId: {
+                type: DataTypes.INTEGER
+            },
+            EmailId: {
                 type: DataTypes.INTEGER
             }
         },
@@ -62,7 +68,7 @@ module.exports = function ( sequelize, DataTypes ) {
                         for ( i = 0; i < l; i += 1 ) o[arr[i][attr]] = arr[i];
                         for ( i in o ) r.push( o[i] );
                         return r;
-                    }
+                    };
 
                     if ( values['users'] && values['users'].length ) {
                         values['permittedToUsers'] = uniqueValues( values['users'], 'id' ).map( function ( user ) {
@@ -70,6 +76,7 @@ module.exports = function ( sequelize, DataTypes ) {
                         } );
                         delete values['users'];
                     }
+                    ;
 
                     if ( values['teams'] && values['teams'].length ) {
                         values['permittedToTeams'] = uniqueValues( values['teams'], 'id' ).map( function ( team ) {
