@@ -38,7 +38,8 @@ module.exports = function( grunt ) {
             unit: {
                 options: {
                     require: [ 'chai' ],
-                    reporter: 'spec'
+                    reporter: 'spec',
+                    timeout: 5000
                 },
                 src: [ 'tests/unit/*.js' ].concat( getModulePaths( 'tests', 'unit', '*.js' ) )
             },
