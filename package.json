@@ -53,9 +53,6 @@
     "should": "~2.1.1"
   },
   "bundledDependencies": [
-    "clever-orm",
-    "clever-odm",
-    "clever-background-tasks",
-    "clever-auth"
+    
   ]
 }
