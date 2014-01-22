@@ -13,7 +13,7 @@ module.exports = function( grunt ) {
     // load all grunt tasks
     require( 'matchdep' ).filterDev( 'grunt-*' ).forEach( grunt.loadNpmTasks );
 
-    // Create the project wide 
+    // Create the project wide
     var gruntConfig = {
         watch: {
             tests: {
@@ -23,6 +23,7 @@ module.exports = function( grunt ) {
         },
         nodemon: {
             web: {
+                script: 'app.js',
                 options: {
                     file: 'app.js',
                     ignoredFiles: [ 'README.md', 'node_modules/**' ],
