@@ -1,0 +1,13 @@
+{
+    "EmailModel": [
+        {
+            "subject": "custom subject",
+            "body": "custom body for testing",
+            "isDelivered": false,
+            "isOpened": false,
+            "token": "45sada45asd",
+            "dump": "{'companyLogo': 'LOGO','companyName': 'name','fromName': 'from name','fromMail': 'custom@mail.ru','toMail': 'denshikov_vovan@mail.ru'}",
+            "UserId": 1
+        }
+    ]
+}

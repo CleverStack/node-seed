@@ -8,12 +8,13 @@ Module = ModuleClass.extend({
     models: null,
 
     preSetup: function() {
-        this.models = [];
+        this.models = {};
     },
 
     preResources: function() {
         debug( 'Opening connection to database' );
         
+        // Connect to mongo
         mongoose.connect( this.config.uri );
 
         // Add the mongoose instance to the injector
@@ -21,23 +22,24 @@ Module = ModuleClass.extend({
     },
     
     getModel: function( modelPath ) {
-        var modelName = 'ODM' + modelPath.split( '/' ).pop().split( '.' ).shift()
-          , model = injector.getInstance( modelName );
+        var modelName = modelPath.split( '/' ).pop().split( '.' ).shift();
 
-        if ( !model ) {
+        if ( typeof this.models[ modelName ] === 'undefined' ) {
             debug( [ 'Loading model', modelName, 'from', modelPath ].join( ' ' ) );
 
             // Load (require) the model
-            model = require( modelPath )( mongoose );
+            this.models[ modelName ] = require( modelPath )( mongoose );
 
             // Add the model to the injector
-            injector.instance( modelName, model );
-
-            // Add the model into this module instance
-            this.models[ modelName ] = model;
+            injector.instance( 'ODM' + modelName, this.models[ modelName ] );
         }
 
-        return model;
+        return this.models[ modelName ];
+    },
+
+    preShutdown: function() {
+        // Disconnect mongo
+        mongoose.disconnect();
     }
 });
 
