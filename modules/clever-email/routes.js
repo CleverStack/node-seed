@@ -1,11 +1,13 @@
 module.exports = function (
     app,
-    EmailController ) {
+    EmailController,
+    UserController )
+{
 
-    app.get( '/emails',                         EmailController.attach() );
-    app.get( '/emails/:id',                     EmailController.attach() );
-    app.post( '/emails',                        EmailController.attach() );
-    app['delete']( '/emails/:id',               EmailController.attach() );
-    app.post('/emails/:id/send' ,               EmailController.attach());
+    app.get( '/emails',           UserController.requiresLogin, EmailController.attach() );
+    app.get( '/emails/:id',       UserController.requiresLogin, EmailController.attach() );
+    app.post( '/emails',          UserController.requiresLogin, EmailController.attach() );
+    app['delete']( '/emails/:id', UserController.requiresLogin, EmailController.attach() );
+    app.post('/emails/:id/send' , UserController.requiresLogin, EmailController.attach());
 
 };
