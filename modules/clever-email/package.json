@@ -8,11 +8,8 @@
         "mandrill-api": "*",
         "sendgrid": "~0.4.2",
         "mailgun-js": "*",
-        "ejs": "*",
         "shortid": "~2.0.0",
-        "cheerio": "~0.12.4",
-        "sequelize": "",
-        "moment": ""
+        "sequelize": "1.7.0-beta8"
     },
     "author": {
         "name": "Clevertech",
