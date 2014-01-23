@@ -1,19 +1,20 @@
 module.exports = function ( config ) {
 
     var Q = require( 'q' )
+      , _ = require( 'lodash' )
       , defConf = config.default
       , confMailgun = config.systems.MailGun
       , mailgun = require( 'mailgun-js' )( confMailgun.apiKey, confMailgun.domain );
 
     return {
-        send: function ( email, html, text ) {
+        send: function ( email, body, type ) {
             var deferred = Q.defer();
 
-            var message = this.createMessage( email, html, text );
+            var message = this.createMessage( email, body, type );
 
             mailgun
                 .messages
-                .send( message, function ( err, response, body ) {
+                .send( message, function ( err, res, body ) {
 
                     if ( err ) {
                         console.log( "MailGun Error: ", err.toString() );
@@ -21,17 +22,17 @@ module.exports = function ( config ) {
                         return;
                     }
 
-                    deferred.resolve( response );
+                    deferred.resolve( _.map( res, function( x ) { return { status: x.message, id: x.id }; }) );
                 } );
 
             return deferred.promise;
         },
 
-        createMessage: function( email, html, text ){
+        createMessage: function( email, body, type ){
             var fromMail = defConf.from
               , fromName = defConf.fromName;
 
-            if ( email.dump.fromCompanyName ) {
+            if ( email.dump.companyName ) {
                 fromName = email.dump.fromName;
                 fromMail = email.dump.fromMail;
             }
@@ -43,10 +44,10 @@ module.exports = function ( config ) {
                 emailId: email.id
             };
 
-            if ( config.text && !!text ){
-                message.text = text;
+            if ( config.text && type === "text" ){
+                message.text = body;
             } else {
-                message.html = html;
+                message.html = body;
             }
 
             if ( config.cc && email.dump.usersCC && email.dump.usersCC.length ) {

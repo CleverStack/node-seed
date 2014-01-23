@@ -1,23 +1,8 @@
 module.exports = function ( EmailService ) {
 
-    return (require( 'classes' ).Controller).extend( {
-            service: null,
-
-            checkEventMailData: function ( req, res, next ) {
-                var data = req.body
-                  , fltData = [];
-                //console.log("\n *** SendGrid Event Data *** \n",data);
-
-                var item;
-                while ( item = data.pop() ) {
-                    if ( ( item.event == 'open' ) && item.email_id ) {
-                        fltData.push( item );
-                    }
-                }
-                console.log( "\n\nReceived Event Notification POST from Sendgrid: " );
-                req.body = fltData;
-                next();
-            }
+    return (require( 'classes' ).Controller).extend(
+        {
+            service: null
         },
         /* @Prototype */
         {
@@ -33,7 +18,7 @@ module.exports = function ( EmailService ) {
 
             getAction: function () {
                 var userId = this.req.user.id
-                    , emailId = this.req.params.id;
+                  , emailId = this.req.params.id;
 
                 EmailService
                     .getEmailByIds( userId, emailId )
@@ -55,8 +40,8 @@ module.exports = function ( EmailService ) {
                     x.accId = accId;
                     x.userFirstName = userFirstName;
                     x.userLastName = userLastName;
-                    x['accLogo'] = accLogo;
-                    x['accName'] = accName;
+                    x.accLogo = accLogo;
+                    x.accName = accName;
                     return x;
                 } );
 
@@ -67,18 +52,26 @@ module.exports = function ( EmailService ) {
             },
 
             putAction: function () {
-                this.send( 403, 'invalid' );
+                this.send( 'invalid', 403 );
             },
 
             deleteAction: function () {
-                this.send( 403, 'invalid' );
-            },
-
-            eventsMailAction: function () {
-                var data = this.req.body;
+                var userId = this.req.user.id
+                  , emailId = this.req.params.id;
 
                 EmailService
-                    .processMailEvents( data )
+                    .deleteEmail( userId, emailId )
+                    .then( this.proxy( 'handleServiceMessage' ) )
+                    .fail( this.proxy( 'handleException' ) );
+            },
+
+            sendAction: function () {
+                var userId = this.req.user.id
+                  , emailId = this.req.params.id
+                  , type = this.req.body.type;
+
+                EmailService
+                    .handleEmailSending( userId, emailId, type )
                     .then( this.proxy( 'handleServiceMessage' ) )
                     .fail( this.proxy( 'handleException' ) );
 

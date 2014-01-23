@@ -1,20 +1,16 @@
 var Q = require( 'q' )
   , Sequelize = require( 'sequelize' )
-  , ejsFileRender = require( '../lib/ejsfilerender' )
   , shortid = require( 'shortid' )
   , config = require( 'config' )
   , mailer = require( '../lib/mailer' )( config['clever-email'] )
+  , _ = require( 'lodash' )
   , EmailService = null;
 
 module.exports = function ( sequelize,
                             ORMEmailModel,
                             ORMEmailAttachmentModel,
-                            ORMEmailReplyModel,
                             ORMUserModel,
-                            ORMEmailUserModel,
-                            EmailTemplateService ) {
-
-    var bakeTemplate = ejsFileRender();
+                            ORMEmailUserModel ) {
 
     if ( EmailService && EmailService.instance ) {
         return EmailService.instance;
@@ -39,7 +35,7 @@ module.exports = function ( sequelize,
                 : 'reply_' + emailToken + '@app-mail.bolthr.com';
 
             return addr;
-        }, /* tested */
+        }, 
 
         formatData: function ( data ) {
             var o = {
@@ -102,47 +98,18 @@ module.exports = function ( sequelize,
             o.hasTemplate = hasTemplate;
 
             return o;
-        }, /* tested */
-
-        formatRepliedData: function ( data ) {
-
-            var replyAddr = this.formatReplyAddress( data.emailToken );
-
-            var o = {
-                id: null,
-                reply: data.reply,
-                EmailId: data.emailId,
-                token: data.emailId + '_' + shortid.seed( 10000 ).generate(),
-                sentAttemps: 1,
-                isDelivered: true,
-                isOpened: false,
-                from: data.from.indexOf( data.userEmail ) != -1 ? data.userEmail : null,
-                to: data.to
-            };
-
-            var t = {
-                subject: data.subject,
-                html: data.replyHTML,
-                replyAddress: replyAddr,
-                from: data.from,
-                to: data.to
-            };
-
-            o.dump = JSON.stringify( t );
-
-            return o;
-        }, /* tested */
+        }, 
 
         listEmails: function ( userId ) {
             var deferred = Q.defer();
 
             this
-                .find( { where: { UserId: userId }, include: [ ORMEmailAttachmentModel, ORMEmailReplyModel ] } )
+                .find( { where: { UserId: userId }, include: [ ORMEmailAttachmentModel ] } )
                 .then( deferred.resolve )
                 .fail( deferred.reject );
 
             return deferred.promise;
-        }, /* tested */
+        }, 
 
         getEmailByIds: function ( userId, emailId ) {
             var deferred = Q.defer()
@@ -151,7 +118,7 @@ module.exports = function ( sequelize,
 
             chainer.add(
                 ORMEmailModel.find( {
-                    where: { id: emailId, UserId: userId, 'deletedAt': null }, include: [ ORMEmailAttachmentModel, ORMEmailReplyModel ]
+                    where: { id: emailId, UserId: userId, 'deletedAt': null }, include: [ ORMEmailAttachmentModel ]
                 } )
             );
 
@@ -180,7 +147,7 @@ module.exports = function ( sequelize,
                 .error( deferred.reject );
 
             return deferred.promise;
-        }, /* tested */
+        }, 
 
         handleEmailCreation: function ( data ) {
             var deferred = Q.defer()
@@ -193,12 +160,12 @@ module.exports = function ( sequelize,
 
             Q.all( promises )
                 .then( function() {
-                    deferred.resolve();
+                    deferred.resolve( {statuscode: 200, message: 'email is created'} );
                 })
                 .fail( deferred.reject );
 
             return deferred.promise;
-        }, /* tested */
+        }, 
 
         processEmailCreation: function ( emailItem ) {
             var deferred = Q.defer()
@@ -219,7 +186,7 @@ module.exports = function ( sequelize,
                 .fail( deferred.reject );
 
             return deferred.promise;
-        }, /* tested */
+        }, 
 
         saveEmailAssociation: function ( savedEmail, fData ) {
             var deferred = Q.defer()
@@ -286,143 +253,71 @@ module.exports = function ( sequelize,
                 } );
 
             return deferred.promise;
-        }, /* tested */
+        }, 
 
-        renderTemplate: function ( data ) {
-            var deferred = Q.defer()
-              , email = data.email
-              , user = data.user || null
-              , tplName = data.tplName || null
-              , tpl = {};
-
-            tpl.tplName = tplName || config['clever-email'].default.tplName;
-            tpl.tplTitle = email.subject || config['clever-email'].default.subject;
-            tpl.companyName = ( email.dump.companyName ) ? email.dump.companyName : config['clever-email'].default.fromName;
-            tpl.companyLogo = ( email.dump.companyLogo ) ? email.dump.companyLogo : config['clever-email'].default.logo;
-
-            //Text has already being parsed from frontend
-            if ( !email.EmailTemplateId ) {
-                tpl.strHTML = email.body;
-
-                bakeTemplate( tpl )
-                    .then( deferred.resolve )
-                    .fail( deferred.reject );
-
-            } else {
-
-                EmailTemplateService
-                    .getPlaceholderData( {
-                        accId: email.AccountId,
-                        EmailTemplateId: email.EmailTemplateId
-                    } )
-                    .then( function ( emailTemplate ) {
-                        return EmailTemplateService.processTemplateIntrpolation( user, emailTemplate );
-                    } )
-                    .then( function ( html ) {
-                        tpl['strHTML'] = html;
-
-                        return bakeTemplate( tpl );
-                    } )
-                    .then( deferred.resolve )
-                    .fail( deferred.reject );
-            }
-
-            return deferred.promise;
-        },
-
-        sendEmail: function ( email, html ) {
-            var deferred = Q.defer();
-
-            mailer.send( email, html )
-                .then( deferred.resolve )
-                .fail( deferred.reject );
-
-            return deferred.promise;
-        },
-
-        processMailReply: function ( data ) {
+        handleEmailSending: function ( userId, emailId, type ) {
             var deferred = Q.defer()
               , service = this;
 
-            this
-                .findOne( { where: { token: data.replyMailHash }, include: [ ORMUserModel ] } )
-                .then( function ( email ) {
+            service
+                .getEmailByIds( userId, emailId )
+                .then( function( result ) {
 
-                    if ( !email || !email.id ) {
-                        console.log( "\n\n----- EMAIL REPLY TOKEN DOES NOT EXISTS ------\n" );
-                        deferred.resolve();
-                        return;
+                    if ( !!result && !!result.id && !!result.body ) {
+
+                        service
+                            .sendEmail( result, result.body, type )
+                            .then( deferred.resolve )
+                            .fail( deferred.reject );
+
+                    } else {
+                        deferred.resolve( result )
                     }
-
-                    console.log( "\n\n----- EMAIL REPLY TOKEN EXISTS ------\n" );
-
-                    data['emailId'] = email.id;
-                    data['emailToken'] = email.token;
-                    data['userEmail'] = email.user.email;
-                    data['userName'] = email.user.firstname + ' ' + email.user.lastname;
-
-                    service
-                        .saveMailReply( data )
-                        .then( deferred.resolve )
-                        .fail( deferred.reject );
-
-                } )
+                })
                 .fail( deferred.reject );
 
             return deferred.promise;
-        },
+        }, 
 
-        saveMailReply: function ( data ) {
-            var deferred = Q.defer()
-              , replyData = this.formatRepliedData( data );
+        sendEmail: function ( email, body, type ) {
+            var deferred = Q.defer();
 
-            ORMEmailReplyModel
-                .create( replyData )
-                .success( deferred.resolve )
-                .error( deferred.reject );
+            email.dump = _.isPlainObject( email.dump )
+                ? email.dump
+                : JSON.parse( email.dump );
 
-            return deferred.promise;
-        },
-
-        processMailReplyNotification: function ( savedReply ) {
-            var deferred = Q.defer()
-              , mail = JSON.parse( JSON.stringify( savedReply ) )
-              , payload = { };
-
-            payload[ 'from' ] = mail.dump.replyAddress;
-            payload[ 'fromname' ] = mail.dump.fromname;
-            payload[ 'to' ] = [ mail.to ];
-            payload[ 'toname' ] = mail.dump.toname;
-
-            payload[ 'subject' ] = mail.dump.subject;
-            payload[ 'text' ] = mail.reply;
-            payload[ 'html' ] = mail.dump.html;
-
-            mailer( payload )
+            mailer.send( email, body, type )
                 .then( deferred.resolve )
-                .fail( deferred.resolve );
+                .fail( deferred.reject );
 
             return deferred.promise;
-        },
+        }, 
 
-        processMailEvents: function ( evns ) {
+        deleteEmail: function( userId, emailId ) {
             var deferred = Q.defer()
-                , item = null
-                , chainer = new Sequelize.Utils.QueryChainer();
+              , service = this;
 
-            while ( item = evns.pop() ) {
-                console.log( "\nUPDATING: ", item.email_id );
-                chainer.add( ORMEmailModel.update( { isOpened: true }, { id: item.email_id, 'deletedAt': null} ) );
-            }
+            service
+                .getEmailByIds( userId, emailId )
+                .then( function( result ) {
 
-            chainer
-                .run()
-                .success( function () {
-                    deferred.resolve( {statuscode: 200, message: 'ok'} );
-                } )
-                .error( deferred.reject );
+                    if ( !!result && !!result.id ) {
+
+                        service
+                            .destroy( emailId )
+                            .then( function() {
+                                deferred.resolve( { statuscode: 200, message: 'email is deleted'} )
+                            })
+                            .fail( deferred.reject );
+
+                    } else {
+                        deferred.resolve( result )
+                    }
+                })
+                .fail( deferred.reject );
 
             return deferred.promise;
+
         }
 
     } );

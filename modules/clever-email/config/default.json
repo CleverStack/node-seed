@@ -2,13 +2,12 @@
     "clever-email": {
         "cc":       true,
         "bcc":      true,
-        "text":     true,
+        "text":     false,
 
         "systems": {
             "Mandrill": {
                 "isActive": true,
-                "apiKey":   "j8Gzc7vRpJ36FabmOsbk6g",
-                "ipPool":   "Example Pool",
+                "apiKey":   "anyaWGoRNAFaQQW79MwqAA",
                 "async":    false
             },
             "SendGrid": {

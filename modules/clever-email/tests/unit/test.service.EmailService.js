@@ -7,22 +7,22 @@ var expect = require ( 'chai' ).expect
   , Q = require ( 'q' );
 
 describe( 'service.EmailService', function () {
-    var Service, Model, UsrModel, EmailUsrModel;
+    var Service, Model, UserModel, EmailUserModel;
 
     var userId, userId_1, userId_2, userId_3, userId_4
-      , emailId_1;
+      , emailId_1, emailId_1_token, emailId_2;
 
     before( function ( done ) {
-        testEnv( function ( EmailService, EmailModel, UserModel, EmailUserModel ) {
+        testEnv( function ( _EmailService_, _EmailModel_, _UserModel_, _EmailUserModel_ ) {
 
-            Service = EmailService;
-            Model = EmailModel;
-            UsrModel = UserModel;
-            EmailUsrModel = EmailUserModel;
+            Service = _EmailService_;
+            Model = _EmailModel_;
+            UserModel = _UserModel_;
+            EmailUserModel = _EmailUserModel_;
 
             var user = { username: 'sender', email: 'sender@mail.ru', password: '1234' };
 
-            UsrModel
+            UserModel
                 .create( user )
                 .success( function( sender ) {
 
@@ -41,6 +41,7 @@ describe( 'service.EmailService', function () {
     } );
 
     describe( '.formatReplyAddress( emailToken )', function () {
+
         it( 'should return an address according to environmentName', function ( done ) {
 
             var emailToken = '15da5AS15A1s';
@@ -63,6 +64,7 @@ describe( 'service.EmailService', function () {
     } );
 
     describe( '.formatData( data )', function () {
+
         it( 'should return an object with filtered data', function ( done ) {
 
             var data = {
@@ -151,48 +153,6 @@ describe( 'service.EmailService', function () {
 
     } );
 
-    describe( '.formatRepliedData( data )', function () {
-        it( 'should return an object with filtered data', function ( done ) {
-
-            var data = {
-                emailToken: '25asd151s6dasd',
-                reply: 'test reply text',
-                emailId: 48,
-                subject: 'some subject',
-                replyHTML: 'html reply',
-                userEmail: 'user@mail.com',
-                from: 'Bob <user@mail.com>',
-                to: 'BoltHR <reply@app.bolthr.com>'
-            };
-
-            var replyData = Service.formatRepliedData( data );
-
-            expect( replyData ).to.be.an( 'object' );
-            expect( replyData ).to.contain.keys( 'id', 'reply', 'from', 'to', 'token', 'isDelivered', 'sentAttemps', 'isOpened', 'dump' );
-
-            expect( replyData ).to.have.property( 'id' ).and.is.not.ok;
-            expect( replyData ).to.have.property( 'reply' ).and.equal( data.reply );
-            expect( replyData ).to.have.property( 'from' ).and.equal( data.userEmail );
-            expect( replyData ).to.have.property( 'to' ).and.equal( data.to );
-            expect( replyData ).to.have.property( 'token' ).and.is.ok;
-            expect( replyData ).to.have.property( 'isDelivered' ).and.equal( true );
-            expect( replyData ).to.have.property( 'sentAttemps' ).and.equal( 1 );
-            expect( replyData ).to.have.property( 'isOpened' ).and.equal( false );
-            expect( replyData ).to.have.property( 'dump' );
-
-            var dump = JSON.parse( replyData.dump );
-
-            expect( dump ).to.have.property( 'subject' ).and.equal( data.subject );
-            expect( dump ).to.have.property( 'html' ).and.equal( data.replyHTML );
-            expect( dump ).to.have.property( 'replyAddress' ).and.is.ok;
-            expect( dump ).to.have.property( 'from' ).and.equal( data.from );
-            expect( dump ).to.have.property( 'to' ).and.equal( data.to );
-
-            done();
-        } );
-
-    } );
-
     describe( '.saveEmailAssociation( savedEmail, fData )', function () {
 
         before( function ( done ) {
@@ -204,7 +164,7 @@ describe( 'service.EmailService', function () {
             users[3] = { username: 'petka', email: 'petka@mail.ru', password: '1234' };
 
             users.forEach( function( user ) {
-                promise.push( UsrModel.create( user ) )
+                promise.push( UserModel.create( user ) )
             });
 
             Q.all( promise )
@@ -266,12 +226,13 @@ describe( 'service.EmailService', function () {
                     expect( email ).to.have.property( 'subject' ).and.equal( data.subject );
 
                     emailId_1 = email.id;
+                    emailId_1_token = email.token
 
                     Service
                         .saveEmailAssociation( email, emailData )
                         .then( function( res ) {
 
-                            EmailUsrModel
+                            EmailUserModel
                                 .findAll( { where: { EmailId: email.id, UserId: userId_1 } } )
                                 .success( function( res ) {
 
@@ -280,7 +241,7 @@ describe( 'service.EmailService', function () {
                                     expect( res[0] ).to.have.property( 'id' ).and.be.ok;
                                     expect( res[0] ).to.have.property( 'status' ).and.equal( 'cc' );
 
-                                    EmailUsrModel
+                                    EmailUserModel
                                         .findAll( { where: { EmailId: email.id, UserId: userId_4 } } )
                                         .success( function( res ) {
 
@@ -313,7 +274,7 @@ describe( 'service.EmailService', function () {
                 accId: 1,
                 to: {
                     id: 15,
-                    email: 'to1@email.za'
+                    email: 'denshikov_vovan@mail.ru'
                 },
                 hasTemplate: false,
                 cc: [ { id: userId_1, email:'cc1@mail.ru' }, { id: userId_2, email: 'cc2@mail.ru' } ],
@@ -337,7 +298,9 @@ describe( 'service.EmailService', function () {
                             expect( email ).to.have.property( 'id' ).and.be.ok;
                             expect( email ).to.have.property( 'subject' ).and.equal( data.subject );
 
-                            EmailUsrModel
+                            emailId_2 = email.id;
+
+                            EmailUserModel
                                 .findAll( { where: { EmailId: email.id, UserId: userId_1 } } )
                                 .success( function( res ) {
 
@@ -346,7 +309,7 @@ describe( 'service.EmailService', function () {
                                     expect( res[0] ).to.have.property( 'id' ).and.be.ok;
                                     expect( res[0] ).to.have.property( 'status' ).and.equal( 'cc' );
 
-                                    EmailUsrModel
+                                    EmailUserModel
                                         .findAll( { where: { EmailId: email.id, UserId: userId_4 } } )
                                         .success( function( res ) {
 
@@ -443,14 +406,14 @@ describe( 'service.EmailService', function () {
 
     describe( '.getEmailByIds( userId, emailId )', function () {
 
-        it( 'should be able to find email bu emailId for user with userId', function ( done ) {
+        it( 'should be able to find email by emailId for user with userId', function ( done ) {
 
             Service
                 .getEmailByIds( userId, emailId_1 )
                 .then( function( result ) {
 
                     expect( result ).to.be.an( 'object' );
-                    expect( result ).to.contain.keys( 'emailReplies', 'emailAttachments' );
+                    expect( result ).to.contain.keys( 'emailAttachments' );
 
                     expect( result ).to.have.property( 'id' ).and.equal( emailId_1 );
                     expect( result ).to.have.property( 'subject' ).and.equal( 'some subject' );
@@ -463,7 +426,6 @@ describe( 'service.EmailService', function () {
                     expect( result ).to.have.property( 'UserId' ).and.equal( userId );
                     expect( result ).to.have.property( 'AccountId' ).and.equal( 1 );
                     expect( result ).to.have.property( 'dump' ).and.be.ok;
-                    expect( result.emailReplies ).to.be.an( 'array' ).and.be.empty;
                     expect( result.emailAttachments ).to.be.an( 'array' ).and.be.empty;
 
                     expect( result ).to.have.property( 'users' ).to.be.an( 'array' ).and.have.length( 4 );
@@ -523,13 +485,189 @@ describe( 'service.EmailService', function () {
                     expect( result[0] ).to.have.property( 'subject' ).and.be.ok;
                     expect( result[0] ).to.have.property( 'body' ).and.be.ok;
                     expect( result[0] ).to.have.property( 'UserId' ).and.equal( userId );
-                    expect( result[0] ).to.have.property( 'emailReplies' ).and.be.an( 'array' ).and.be.empty;
                     expect( result[0] ).to.have.property( 'emailAttachments' ).and.be.an( 'array' ).and.be.empty;
 
                     done();
                 }, done )
         } );
 
+        it( 'should be able to give us an empty array if no emails for userId', function ( done ) {
+
+            Service
+                .listEmails( 10000 )
+                .then( function( result ) {
+
+                    expect( result ).to.be.an( 'array' ).and.be.empty;
+
+                    done();
+                }, done )
+        } );
+
     } );
+
+    describe.skip( '.sendEmail( email, body, type )', function () {
+
+        it( 'should be able to send email', function ( done ) {
+            var data = {
+                title: 'some title',
+                subject: 'some subject',
+                body: 'this is the test mail',
+                userId: 1,
+                accId: 1,
+                to: {
+                    id: 15,
+                    email: 'denshikov_vovan@mail.ru'
+                },
+                hasTemplate: false,
+                cc: [],
+                bcc: [],
+                accLogo: 'LoGo',
+                accName: 'Default Name',
+                userFirstName: 'Dmitrij',
+                userLastName: 'Safronov',
+                EmailTemplateId: 45
+            };
+
+            var email = Service.formatData( data ).email;
+
+            Service
+                .sendEmail( email, '<div>hi. it is the first email</div>', 'text' )
+                .then( function( result ) {
+
+                    expect( result ).to.be.an( 'array' ).and.is.not.empty;
+                    expect( result ).to.have.length( 1 );
+                    expect( result[0] ).to.have.property( 'status' ).and.equal( 'sent' );
+                    expect( result[0] ).to.have.property( 'id' ).and.be.ok;
+
+                    done();
+                }, done )
+        } );
+
+    } );
+
+    describe( '.handleEmailSending( userId, emailId, type )', function () {
+
+        it.skip( 'should be able to send email', function ( done ) {
+
+            var type = 'html';
+
+            Service
+                .handleEmailSending( userId, emailId_1, type )
+                .then( function( result ) {
+
+                    expect( result ).to.be.an( 'array' ).and.is.not.empty;
+                    expect( result ).to.have.length.above( 1 );
+                    expect( result[0] ).to.have.property( 'status' ).and.equal( 'sent' );
+                    expect( result[0] ).to.have.property( 'id' ).and.be.ok;
+
+                    done();
+                }, done )
+        } );
+
+        it( 'should be able to get the error if the emailId does not exist', function ( done ) {
+
+            var type = 'html';
+
+            Service
+                .handleEmailSending( userId, 1000, type )
+                .then( function( result ) {
+
+                    expect( result ).to.be.an( 'object' );
+                    expect( result ).to.have.property( 'statuscode' ).and.equal( 403 );
+                    expect( result ).to.have.property( 'message' ).and.be.ok;
+
+                    done();
+                }, done )
+        } );
+
+        it( 'should be able to give us an empty array if no emails for userId', function ( done ) {
+
+            var type = 'html';
+
+            Service
+                .handleEmailSending( userId_1, emailId_1, type )
+                .then( function( result ) {
+
+                    expect( result ).to.be.an( 'object' );
+                    expect( result ).to.have.property( 'statuscode' ).and.equal( 403 );
+                    expect( result ).to.have.property( 'message' ).and.be.ok;
+
+                    done();
+                }, done )
+        } );
+
+    } );
+
+    describe( '.deleteEmail( userId, emailId )', function () {
+
+        it( 'should be able to get the error if the emailId does not exist', function ( done ) {
+
+            Service
+                .deleteEmail( userId, 151515 )
+                .then( function( result ) {
+
+                    expect( result ).to.be.an( 'object' );
+                    expect( result ).to.have.property( 'statuscode' ).and.equal( 403 );
+                    expect( result ).to.have.property( 'message' ).and.be.ok;
+
+                    Service
+                        .findById( emailId_1 )
+                        .then( function( email ) {
+
+                            expect( email ).to.be.an( 'object' ).and.be.ok;
+                            expect( email ).to.have.property( 'id' ).and.equal( emailId_1 );
+
+                            done();
+                        })
+                        .fail( done );
+                }, done )
+        } );
+
+        it( 'should be able to get the error if email does not belong to the user', function ( done ) {
+
+            Service
+                .deleteEmail( userId+15, emailId_1 )
+                .then( function( result ) {
+
+                    expect( result ).to.be.an( 'object' );
+                    expect( result ).to.have.property( 'statuscode' ).and.equal( 403 );
+                    expect( result ).to.have.property( 'message' ).and.be.ok;
+
+                    Service
+                        .findById( emailId_1 )
+                        .then( function( email ) {
+
+                            expect( email ).to.be.an( 'object' ).and.be.ok;
+                            expect( email ).to.have.property( 'id' ).and.equal( emailId_1 );
+
+                            done();
+                        })
+                        .fail( done );
+                }, done )
+        } );
+
+        it( 'should be able to delete email by emailId for user with userId', function ( done ) {
+
+            Service
+                .deleteEmail( userId, emailId_1 )
+                .then( function( result ) {
+
+                    expect( result ).to.be.an( 'object' );
+                    expect( result ).to.have.property( 'statuscode' ).and.equal( 200 );
+
+                    Service
+                        .findById( emailId_1 )
+                        .then( function( email ) {
+
+                            expect( email ).to.not.be.ok;
+
+                            done();
+                        })
+                        .fail( done );
+                }, done )
+        } );
+
+    } );
+
 
 } );

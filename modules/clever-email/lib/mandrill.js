@@ -1,27 +1,24 @@
 module.exports = function ( config ) {
 
     var Q = require( 'q' )
+      , _ = require( 'lodash' )
       , mandrill = require( 'mandrill-api/mandrill' )
       , defConf = config.default
       , confMandrill = config.systems.Mandrill
       , mandrill_client = new mandrill.Mandrill( confMandrill.apiKey );
 
     return {
-        send: function ( email, html, text ) {
+        send: function ( email, body, type ) {
             var deferred = Q.defer();
 
-            var message = this.createMessage( email, html, text )
-              , async = confMandrill.async
-              , ip_pool = confMandrill.ipPool;
+            var message = this.createMessage( email, body, type )
+              , async = confMandrill.async;
 
             mandrill_client
                 .messages
-                .send( {
-                    "message": message,
-                    "async": async,
-                    "ip_pool": ip_pool }, function ( result ) {
+                .send( { "message": message, "async": async }, function ( result ) {
 
-                    deferred.resolve( result );
+                    deferred.resolve( _.map( result, function( x ) { return { status: x.status, id: x._id }; }) );
 
                 }, function ( err ) {
 
@@ -34,11 +31,11 @@ module.exports = function ( config ) {
             return deferred.promise;
         },
 
-        createMessage: function( email, html, text ){
+        createMessage: function( email, body, type ){
             var fromMail = defConf.from
               , fromName = defConf.fromName;
 
-            if ( email.dump.fromCompanyName ) {
+            if ( email.dump.companyName ) {
                 fromName = email.dump.fromName;
                 fromMail = email.dump.fromMail;
             }
@@ -51,10 +48,10 @@ module.exports = function ( config ) {
                 emailId: email.id
             };
 
-            if ( config.text && !!text ){
-                message.text = text;
+            if ( config.text && type === "text" ){
+                message.text = body;
             } else {
-                message.html = html;
+                message.html = body;
             }
 
             if ( config.cc && email.dump.usersCC && email.dump.usersCC.length ) {
