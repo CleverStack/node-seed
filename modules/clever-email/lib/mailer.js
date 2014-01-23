@@ -11,7 +11,7 @@ module.exports = function ( config ) {
             ? sendgrid
             : confs.MailGun.isActive
                 ? mailgun
-                : sendgrid;
+                : mandrill;
 
     return mailer( config );
 };
