@@ -1,0 +1,22 @@
+{
+    "clever-workflow": {
+        "WorkflowModel": {
+            "default": {
+                "type": {
+                    "values": [ "Job", "Applicant" ],
+                    "defaultValue": "Applicant"
+
+                }
+            }
+        },
+        "WorkflowStepsModel": {
+            "default": {
+                "statusType": {
+                    "values": [ "Active", "Hired", "Not-Hired" ],
+                    "defaultValue": "Active"
+                }
+            }
+        }
+
+    }
+}

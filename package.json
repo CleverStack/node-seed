@@ -57,6 +57,7 @@
     "background-tasks",
     "auth",
     "example-module",
-    "clever-email"
+    "clever-email",
+    "clever-workflow"
   ]
 }

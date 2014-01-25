@@ -11,7 +11,9 @@
             }
         },
         "modelAssociations": {
-            "AccountModel": {},
+            "AccountModel": {
+                "hasMany": [ "WorkflowModel", "UserModel", "EmailModel" ]
+            },
             "UserModel": {
                 "belongsTo": [ "AccountModel" ]
             },
@@ -25,7 +27,14 @@
             "EmailAttachmentModel": {
                 "belongsTo": [ "EmailModel" ]
             },
-            "ExampleModel": {}
+            "ExampleModel": {},
+            "WorkflowModel": {
+                "belongsTo": [ "AccountModel", "UserModel" ],
+                "hasMany": [ "WorkflowStepsModel" ]
+            },
+            "WorkflowStepsModel": {
+                "belongsTo": [ "WorkflowModel" ]
+            }
 
         }
     }
