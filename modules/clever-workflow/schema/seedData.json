@@ -1,0 +1,333 @@
+{
+    "AccountModel": [
+        {
+            "name": "Default Account",
+            "subdomain": "dev",
+            "emailFwd": "dev23io@stage.bolthr.clevertech.biz",
+            "active": true
+        }
+    ],
+
+    "UserModel": [
+        {
+            "username": "richard",
+            "email": "richard@clevertech.biz",
+            "password": "9ac20922b054316be23842a5bca7d69f29f69d77",
+            "firstname": "Richard",
+            "lastname": "Gustin",
+            "phone": "+61448048484",
+            "active": true,
+            "confirmed": true,
+            "hasAdminRight": true,
+            "associations": {
+                "AccountModel": { "name": "Default Account" }
+            }
+        }
+    ],
+
+    "WorkflowModel": [
+        {
+            "name": "Advanced Workflow",
+            "type": "Applicant",
+            "defaultWorkflow": true,
+            "associations": {
+                "AccountModel": {"name": "Default Account"},
+                "UserModel": {"username": "richard"}
+            },
+            "isEditable": false
+        },
+        {
+            "name": "Simple Workflow",
+            "type": "Applicant",
+            "defaultWorkflow": true,
+            "associations": {
+                "AccountModel": {"name": "Default Account"},
+                "UserModel": {"username": "richard"}
+            },
+            "isEditable": false
+        }
+    ],
+
+    "WorkflowStepsModel": [
+        {
+            "name": "Filed for Later",
+            "statusType": "Active",
+            "position": 1,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Reviewed",
+            "statusType": "Active",
+            "position": 2,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Phone Screened",
+            "statusType": "Active",
+            "position": 3,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Scheduling Interview",
+            "statusType": "Active",
+            "position": 4,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Interview Scheduled",
+            "statusType": "Active",
+            "position": 5,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Interviewed",
+            "statusType": "Active",
+            "position": 6,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Checking References",
+            "statusType": "Active",
+            "position": 7,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Scheduling Interview",
+            "statusType": "Active",
+            "position": 8,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Put On Hold",
+            "statusType": "Active",
+            "position": 9,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Made Offer",
+            "statusType": "Active",
+            "position": 10,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Hired Full Time",
+            "statusType": "Hired",
+            "position": 1,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Hired Part Time",
+            "statusType": "Hired",
+            "position": 2,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Interned",
+            "statusType": "Hired",
+            "position": 3,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Contracted",
+            "statusType": "Hired",
+            "position": 4,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Not a Fit",
+            "statusType": "Not-Hired",
+            "position": 1,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Declined Offer",
+            "statusType": "Not-Hired",
+            "position": 2,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Not Qualified",
+            "statusType": "Not-Hired",
+            "position": 3,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Over Qualified",
+            "statusType": "Not-Hired",
+            "position": 4,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Location",
+            "statusType": "Not-Hired",
+            "position": 5,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Hired Elsewhere",
+            "statusType": "Not-Hired",
+            "position": 6,
+            "associations": {
+                "WorkflowModel": {"name": "Advanced Workflow"}
+            }
+        },
+        {
+            "name": "Scheduling Interview",
+            "statusType": "Active",
+            "position": 1,
+            "associations": {
+                "WorkflowModel": {"name": "Simple Workflow"}
+            }
+        },
+        {
+            "name": "Interview Scheduled",
+            "statusType": "Active",
+            "position": 2,
+            "associations": {
+                "WorkflowModel": {"name": "Simple Workflow"}
+            }
+        },
+        {
+            "name": "Interviewed",
+            "statusType": "Active",
+            "position": 3,
+            "associations": {
+                "WorkflowModel": {"name": "Simple Workflow"}
+            }
+        },
+        {
+            "name": "Checking References",
+            "statusType": "Active",
+            "position": 4,
+            "associations": {
+                "WorkflowModel": {"name": "Simple Workflow"}
+            }
+        },
+        {
+            "name": "Made Offer",
+            "statusType": "Active",
+            "position": 5,
+            "associations": {
+                "WorkflowModel": {"name": "Simple Workflow"}
+            }
+        },
+        {
+            "name": "Hired Full Time",
+            "statusType": "Hired",
+            "position": 1,
+            "associations": {
+                "WorkflowModel": {"name": "Simple Workflow"}
+            }
+        },
+        {
+            "name": "Hired Part Time",
+            "statusType": "Hired",
+            "position": 2,
+            "associations": {
+                "WorkflowModel": {"name": "Simple Workflow"}
+            }
+        },
+        {
+            "name": "Interned",
+            "statusType": "Hired",
+            "position": 3,
+            "associations": {
+                "WorkflowModel": {"name": "Simple Workflow"}
+            }
+        },
+        {
+            "name": "Contracted",
+            "statusType": "Hired",
+            "position": 4,
+            "associations": {
+                "WorkflowModel": {"name": "Simple Workflow"}
+            }
+        },
+        {
+            "name": "Not a Fit",
+            "statusType": "Not-Hired",
+            "position": 1,
+            "associations": {
+                "WorkflowModel": {"name": "Simple Workflow"}
+            }
+        },
+        {
+            "name": "Declined Offer",
+            "statusType": "Not-Hired",
+            "position": 2,
+            "associations": {
+                "WorkflowModel": {"name": "Simple Workflow"}
+            }
+        },
+        {
+            "name": "Not Qualified",
+            "statusType": "Not-Hired",
+            "position": 3,
+            "associations": {
+                "WorkflowModel": {"name": "Simple Workflow"}
+            }
+        },
+        {
+            "name": "Over Qualified",
+            "statusType": "Not-Hired",
+            "position": 4,
+            "associations": {
+                "WorkflowModel": {"name": "Simple Workflow"}
+            }
+        },
+        {
+            "name": "Location",
+            "statusType": "Not-Hired",
+            "position": 5,
+            "associations": {
+                "WorkflowModel": {"name": "Simple Workflow"}
+            }
+        },
+        {
+            "name": "Hired Elsewhere",
+            "statusType": "Not-Hired",
+            "position": 6,
+            "associations": {
+                "WorkflowModel": {"name": "Simple Workflow"}
+            }
+        }
+    ]
+}
