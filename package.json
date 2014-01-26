@@ -1,7 +1,7 @@
 {
   "main": "app.js",
   "name": "cleverstack-node-seed",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": {
     "name": "Clevertech",
     "email": "info@clevertech.biz",
@@ -52,7 +52,5 @@
     "grunt-exec": "~0.4.2",
     "should": "~2.1.1"
   },
-  "bundledDependencies": [
-    
-  ]
+  "bundledDependencies": []
 }
