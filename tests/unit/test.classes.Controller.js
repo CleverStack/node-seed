@@ -9,6 +9,11 @@ var expect = require ( 'chai' ).expect
   , sequelize = injector.getInstance( 'sequelize' )
   , Sequelize =  injector.getInstance( 'Sequelize' )
 
+// Just in case if we don't have clever-orm installed...
+if (typeof sequelize === "undefined" || typeof Sequelize === "undefined") {
+    return;
+}
+
 var TestModel = sequelize.define("Test", {
     name: Sequelize.STRING
 },
