@@ -12,6 +12,7 @@ notifications:
 
 env:
   - NODE_ENV=local
+  - NODE_PATH=./lib/:./modules/
 
 language: node_js
 
