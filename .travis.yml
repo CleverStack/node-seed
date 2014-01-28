@@ -1,5 +1,5 @@
 script:
-  - "make test"
+  - "npm run test"
 
 notifications:
   email:
