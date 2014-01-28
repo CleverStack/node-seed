@@ -1,0 +1,25 @@
+script:
+  - "make test"
+
+notifications:
+  email:
+    - cleverstack@github.com
+  irc:
+    - "chat.freenode.net#cleverstack"
+
+env:
+  - NODE_ENV=local
+
+language: node_js
+
+node_js:
+  - "0.8"
+  - "0.10"
+
+branches:
+  only:
+    - master
+
+cache:
+  directories:
+    - node_modules

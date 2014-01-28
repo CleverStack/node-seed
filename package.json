@@ -20,7 +20,8 @@
   ],
   "scripts": {
     "start": "grunt",
-    "setup": "npm i; grunt db;"
+    "setup": "npm i; grunt db;",
+    "test": "grunt test --verbose"
   },
   "dependencies": {
     "express": "~3.4.7",
