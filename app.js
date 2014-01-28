@@ -21,7 +21,7 @@ if ( cluster.isMaster ) {
             console.log('Master ' + process.pid + ' received message from worker ' + id + '.', msg);
             
             //Send message to background task
-            if( msg.cmd == 'backgroundTask'){
+            if( msg.cmd == 'backgroundTask' && config[ 'background-tasks' ] && config[ 'background-tasks' ].on === true){
                 backgroundTasks.send({ cmd: 'master', task:msg.task, wrkid: id });
             }
         });

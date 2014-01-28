@@ -1,9 +1,9 @@
 {
     "orm": {
         "db": {
-            "username": "john",
-            "password": "secret",
-            "database": "nodeseed",
+            "username": "root",
+            "password": "qqq",
+            "database": "clevertech",
             "options": {
                 "host": "localhost",
                 "dialect": "mysql",
@@ -11,7 +11,25 @@
             }
         },
         "modelAssociations": {
-            "Example": {}
+            "AccountModel": {},
+            "UserModel": {
+                "belongsTo": [ "AccountModel" ]
+            },
+            "EmailModel": {
+                "hasMany": [  "EmailAttachmentModel" ],
+                "belongsTo": [ "UserModel", "AccountModel" ]
+            },
+            "EmailUserModel":{
+                "belongsTo" : [ "EmailModel", "UserModel" ]
+            },
+            "EmailAttachmentModel": {
+                "belongsTo": [ "EmailModel" ]
+            },
+            "ExampleModel": {},
+            "FileModel": {
+                "belongsTo": [ "AccountModel", "UserModel" ]
+            }
+
         }
     }
 }

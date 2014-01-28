@@ -1,0 +1,90 @@
+{
+    "AccountModel": [
+        {
+            "name": "Test File Upload Account",
+            "subdomain": "dev",
+            "emailFwd": "dev23io@stage.bolthr.clevertech.biz",
+            "active": true
+        }
+    ],
+
+    "UserModel": [
+        {
+            "username": "uploader",
+            "email": "uploader@clevertech.biz",
+            "password": "9ac20922b054316be23842a5bca7d69f29f69d77",
+            "firstname": "Pavel",
+            "lastname": "Ivanov",
+            "phone": "+61448048484",
+            "active": true,
+            "confirmed": true,
+            "hasAdminRight": true,
+            "associations": {
+                "AccountModel": {
+                    "name": "Test File Upload Account"
+                }
+            }
+        },
+        {
+            "username": "uploader#1",
+            "email": "uploader1@clevertech.biz",
+            "password": "9ac20922b054316be23842a5bca7d69f29f69d77",
+            "firstname": "Victor",
+            "lastname": "Petrov",
+            "phone": "+61448048484",
+            "active": true,
+            "confirmed": true,
+            "hasAdminRight": true,
+            "associations": {
+                "AccountModel": {
+                    "name": "Test File Upload Account"
+                }
+            }
+        }
+    ],
+
+    "FileModel": [
+        {
+            "name": "icon.ico",
+            "url": "https://www.filepicker.io/api/file/8JZWC7hbS6isnIrqwqwq",
+            "type": "image/x-icon",
+            "size": 1524635,
+            "associations": {
+                "AccountModel": {
+                    "name": "Test File Upload Account"
+                },
+                "UserModel": {
+                    "username": "uploader"
+                }
+            }
+        },
+        {
+            "name": "icon.ico",
+            "url": "https://www.filepicker.io/api/file/8JZWC7hbS6isnIrCaQ0b",
+            "type": "image/x-icon",
+            "size": 35264,
+            "associations": {
+                "AccountModel": {
+                    "name": "Test File Upload Account"
+                },
+                "UserModel": {
+                    "username": "uploader"
+                }
+            }
+        },
+        {
+            "name": "image.ico",
+            "url": "https://www.filepicker.io/api/file/8JZWC7hbS6iasasCaQ0b",
+            "type": "image/x-icon",
+            "size": 35264,
+            "associations": {
+                "AccountModel": {
+                    "name": "Test File Upload Account"
+                },
+                "UserModel": {
+                    "username": "uploader#1"
+                }
+            }
+        }
+    ]
+}

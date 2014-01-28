@@ -1,0 +1,20 @@
+{
+    "name": "clever-file",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "q": "~1.0.0",
+        "sequelize": "1.7.0-beta8"
+    },
+    "author": {
+        "name": "Clevertech",
+        "email": "info@clevertech.biz",
+        "web": "http://www.clevertech.biz"
+    },
+    "main": "module.js",
+    "description": "",
+    "devDependencies": {
+        "chai": "*",
+        "mocha": "*"
+    }
+}

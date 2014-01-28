@@ -6,10 +6,20 @@ var env = utils.bootstrapEnv();
 // Load all the modules
 env.moduleLoader.loadModules();
 
+// Configure the app before routes
+env.app.configure(function() {
+    env.app.use( env.express.urlencoded() );
+    env.app.use( env.express.json() );
+    env.app.use( env.express.logger('dev') );
+    env.app.use( env.express.compress() );
+    env.app.use( env.express.favicon() );
+    env.app.use( env.express.methodOverride() );
+});
+
 // Initialize all the modules
 env.moduleLoader.initializeRoutes( injector );
 
-// Add our standard configuration
+// Add middleware that needs to come after routes
 env.app.configure(function() {
     // Attach our router
     env.app.use( env.app.router );
