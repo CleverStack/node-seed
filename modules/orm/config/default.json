@@ -25,7 +25,10 @@
             "EmailAttachmentModel": {
                 "belongsTo": [ "EmailModel" ]
             },
-            "ExampleModel": {}
+            "ExampleModel": {},
+            "FileModel": {
+                "belongsTo": [ "AccountModel", "UserModel" ]
+            }
 
         }
     }
