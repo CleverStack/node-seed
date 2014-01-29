@@ -1,5 +1,5 @@
 {
-    "auth": {
+    "clever-auth": {
         "secretKey": "youMustChangeMe",
 
         "redis": {
@@ -8,5 +8,9 @@
             "prefix": "",
             "key": ""
         }
+    },
+
+    "clever-auth-data": {
+
     }
 }

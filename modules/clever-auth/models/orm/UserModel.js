@@ -1,9 +1,14 @@
-module.exports = function(sequelize, DataTypes) {
-    return sequelize.define("User", {
+module.exports = function ( sequelize, DataTypes ) {
+    return sequelize.define( "User",
+        {
             id: {
                 type: DataTypes.INTEGER,
                 primaryKey: true,
                 autoIncrement: true
+            },
+            title: {
+                type: DataTypes.STRING,
+                allowNull: true
             },
             username: {
                 type: DataTypes.STRING,
@@ -25,53 +30,39 @@ module.exports = function(sequelize, DataTypes) {
             firstname: {
                 type: DataTypes.STRING,
                 allowNull: true
-                // validate: {
-                //     isAlphanumeric: true
-                // }
             },
             lastname: {
                 type: DataTypes.STRING,
                 allowNull: true
-                // validate: {
-                //     isAlphanumeric: true
-                // }
             },
-            phone : {
-                type:DataTypes.STRING,
+            phone: {
+                type: DataTypes.STRING,
                 allowNull: true
             },
-            confirmed : {
+            confirmed: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
                 defaultValue: false
             },
-            active : {
+            active: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
                 defaultValue: true
             },
-            hasAdminRight : {
+            hasAdminRight: {
                 type: DataTypes.BOOLEAN,
                 allowNull: false,
                 defaultValue: false
             },
-            accessedAt : {
-                type: DataTypes.DATE,
-                allowNull: true
-            },
-            AccountId : {
-                type: DataTypes.INTEGER
-            },
-            EmailTemplateId : {
-                type: DataTypes.INTEGER
+            accessedAt: {
+                type: DataTypes.DATE
             }
-
         },
         {
             paranoid: true,
             getterMethods: {
-                fullName: function(){
-                    return [ this.getDataValue('firstname'),  this.getDataValue('lastname')].join(' ');
+                fullName: function () {
+                    return [ this.getDataValue( 'firstname' ), this.getDataValue( 'lastname' )].join( ' ' );
                 }
             },
             instanceMethods: {
@@ -82,5 +73,5 @@ module.exports = function(sequelize, DataTypes) {
                     return values;
                 }
             }
-        });
+        } );
 };

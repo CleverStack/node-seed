@@ -11,7 +11,12 @@
             }
         },
         "modelAssociations": {
-            "AccountModel": {},
+            "SubscriptionModel": {
+                "hasMany": [ "AccountModel" ]
+            },
+            "AccountModel": {
+                "belongsTo": [ "SubscriptionModel" ]
+            },
             "UserModel": {
                 "belongsTo": [ "AccountModel" ]
             },

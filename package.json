@@ -55,7 +55,7 @@
     "orm",
     "odm",
     "background-tasks",
-    "auth",
+    "clever-auth",
     "example-module",
     "clever-email"
   ]
