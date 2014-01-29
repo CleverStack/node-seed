@@ -1,4 +1,5 @@
 var utils = require( 'utils' );
+var cors  = require( 'cors' );
 
 // Bootstrap the environment
 var env = utils.bootstrapEnv();
@@ -21,6 +22,10 @@ env.moduleLoader.initializeRoutes( injector );
 
 // Add middleware that needs to come after routes
 env.app.configure(function() {
+
+    // Allow cross-origin requests
+    env.app.use( cors( env.config.cors ) );
+
     // Attach our router
     env.app.use( env.app.router );
 

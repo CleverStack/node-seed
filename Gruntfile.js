@@ -100,5 +100,6 @@ module.exports = function( grunt ) {
     grunt.registerTask( 'test:ci', [ 'watch:tests' ] );
     grunt.registerTask( 'server', [ 'concurrent:servers' ] );
     grunt.registerTask( 'server:web', [ 'nodemon:web' ] );
+    grunt.registerTask( 'serve', [ 'server'] );
     grunt.registerTask( 'default', [ 'server'] );
 };
