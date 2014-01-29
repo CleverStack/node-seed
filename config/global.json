@@ -5,5 +5,13 @@
 
     "params": {
         "appName": ""
+    },
+
+    "cors": {
+      "origin": true,
+      "credentials": true,
+      "headers": [ "x-requested-with", "content-type" ],
+      "methods": [ "GET", "PUT", "POST", "DELETE", "OPTIONS" ],
+      "maxAge": 1000000000
     }
 }

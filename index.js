@@ -24,13 +24,7 @@ env.moduleLoader.initializeRoutes( injector );
 env.app.configure(function() {
 
     // Allow cross-origin requests
-    env.app.use( cors({
-        origin: true,
-        credentials: true,
-        headers: [ "x-requested-with", "content-type" ],
-        methods: [ "GET", "PUT", "POST", "DELETE", "OPTIONS" ],
-        maxAge: 1000000000
-    }) );
+    env.app.use( cors( env.config.cors ) );
 
     // Attach our router
     env.app.use( env.app.router );
