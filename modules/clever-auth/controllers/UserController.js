@@ -74,38 +74,11 @@ module.exports = function ( UserService ) {
                 // }
 
                 next();
-            },
-            isUserInTheSameAccount: function ( req, res, next ) {
-                var uId = req.params.id,
-                    myAccId = req.user.account.id;
-
-                if ( !uId ) {
-                    res.send( 401, {} );
-                    return;
-                }
-
-                UserService.findById( uId )
-                    .then( function ( user ) {
-                        if ( user.AccountId != myAccId ) {
-                            res.send( 401, {} );
-                            return;
-                        }
-                        ;
-
-                        next();
-                    } )
-                    .fail( function () {
-                        res.send( 500, {} );
-                        return;
-                    } );
-
             }
         },
         {
             listAction: function () {
-                var accId = this.req.user.account.id;
-
-                UserService.find( { where: { "AccountId": accId } } )
+                UserService.find( )
                     .then( this.proxy( 'send', 200 ) )
                     .fail( this.proxy( 'handleException' ) );
             },
@@ -123,18 +96,14 @@ module.exports = function ( UserService ) {
                     , data = this.req.body;
 
                 //Its an update
-                if ( data.id || data.AccountId ) {
+                if ( data.id ) {
                     return this.putAction();
                 }
-                ;
 
                 if ( !data.email ) {
                     this.send( 'Email is mandatory', 400 );
                     return;
                 }
-                ;
-
-                data['AccountId'] = me.account.id;
 
                 var tplData = {
                     firstName: this.req.user.firstname, accountSubdomain: this.req.user.account.subdomain, userFirstName: data.firstname, userEmail: data.email, tplTitle: 'BoltHR: Account Confirmation', subject: this.req.user.firstname + ' wants to add you to their recruiting team!'
@@ -148,7 +117,6 @@ module.exports = function ( UserService ) {
 
             putAction: function () {
                 var meId = this.req.user.id
-                    , accId = this.req.user.AccountId
                     , userId = this.req.params.id
                     , data = this.req.body;
 
@@ -158,14 +126,13 @@ module.exports = function ( UserService ) {
                 }
 
                 UserService
-                    .handleUpdateUser( accId, userId, data )
+                    .handleUpdateUser( userId, data )
                     .then( this.proxy( 'handleSessionUpdate', meId ) )
                     .fail( this.proxy( 'handleException' ) );
 
             },
 
             handleSessionUpdate: function ( meId, user ) {
-                console.log( user );
                 if ( user.id && (meId === user.id) ) {
                     this.loginUserJson( user );
                     return;
@@ -249,7 +216,6 @@ module.exports = function ( UserService ) {
             },
 
             authorizedUser: function ( user ) {
-                console.dir( user );
                 if ( user ) {
                     this.req.login( user );
                     this.res.send( 200 );

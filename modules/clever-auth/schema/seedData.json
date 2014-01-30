@@ -1,75 +1,15 @@
 {
-    "Subscription": [
-        {
-            "name": "Trial",
-            "description": "This is a 30 days trial subscription",
-            "price": 0.00,
-            "period": "30days"
-        }
-    ],
-
-    "Account": [
-        {
-            "name": "Default Account",
-            "subdomain": "dev",
-            "emailFwd": "dev23io@stage.bolthr.clevertech.biz",
-            "active": true,
-            "associations": {
-                "Subscription": {
-                    "name": "Trial"
-                }
-            }
-        }
-    ],
-
     "User": [
         {
-            "username": "dimitrios@clevertech.biz",
-            "email": "dimitrios@clevertech.biz",
-            "password": "9ac20922b054316be23842a5bca7d69f29f69d77",
-            "firstname": "dimitris",
-            "lastname": "ioakimidis",
-            "phone": "8900000",
+            "username": "test",
+            "email": "test@clevertech.biz",
+            "password": "5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8",
+            "firstname": "Test",
+            "lastname": "Account",
+            "phone": "+15551234",
             "active": true,
             "confirmed": true,
-            "hasAdminRight": true,
-            "associations": {
-                "Account": {
-                    "name": "Default Account"
-                }
-            }
-        },
-        {
-            "username": "adnan@clevertech.biz",
-            "email": "adnan@clevertech.biz",
-            "password": "f10e2821bbbea527ea02200352313bc059445190",
-            "firstname": "Adnan",
-            "lastname": "Ibrisimbegovic",
-            "phone": "8900000",
-            "active": true,
-            "confirmed": true,
-            "hasAdminRight": true,
-            "associations": {
-                "Account": {
-                    "name": "Default Account"
-                }
-            }
-        },
-        {
-            "username": "richard",
-            "email": "richard@clevertech.biz",
-            "password": "9ac20922b054316be23842a5bca7d69f29f69d77",
-            "firstname": "Richard",
-            "lastname": "Gustin",
-            "phone": "+61448048484",
-            "active": true,
-            "confirmed": true,
-            "hasAdminRight": true,
-            "associations": {
-                "Account": {
-                    "name": "Default Account"
-                }
-            }
+            "hasAdminRight": true
         }
     ]
 }

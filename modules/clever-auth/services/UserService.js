@@ -2,17 +2,12 @@ var Q = require( 'q' )
   , crypto = require( 'crypto' )
   , moment = require( 'moment' )
   , Sequelize = require( 'sequelize' )
-  , sendgrid = require( 'utils' ).sendgrid
-  , ejsFileRender = require( 'utils' ).ejsfilerender
   , config = require( 'config' )
   , UserService = null;
 
-module.exports = function ( sequelize, 
-                            ORMUserModel, 
-                            ORMAccountModel, 
-                            ORMRoleModel ) {
-
-    var mailer = sendgrid( config.sendgrid );
+module.exports = function ( sequelize,
+                            ORMUserModel
+                             ) {
 
     if ( UserService && UserService.instance ) {
         return UserService.instance;
@@ -26,21 +21,19 @@ module.exports = function ( sequelize,
               , chainer = new Sequelize.Utils.QueryChainer();
 
             service
-                .findOne( { where: credentials, include: [ ORMAccountModel, ORMRoleModel ] } )
+                .findOne( { where: credentials } )
                 .then( function ( user ) {
                     if ( !user || !user.active ) {
                         return deferred.resolve();
                     }
 
                     chainer.add( user.updateAttributes( { accessedAt: moment.utc().format( 'YYYY-MM-DD HH:ss:mm' )  } ) );
-                    chainer.add( user.role.getPermissions() );
 
                     chainer
                         .runSerially()
                         .success( function ( result ) {
 
                             var userJson = ( result[0] ) ? JSON.parse( JSON.stringify( result[0] ) ) : {};
-                            userJson.role.permissions = ( result[1] ) ? result[1] : [];
 
                             deferred.resolve( userJson );
                         } )
@@ -56,23 +49,16 @@ module.exports = function ( sequelize,
               , service = this;
 
             service
-                .findOne( { where: options, include: [ ORMAccountModel, ORMRoleModel ] } )
+                .findOne( { where: options } )
                 .then( function ( user ) {
 
                     if ( !user ) {
                         return deferred.resolve();
                     }
 
-                    user.role
-                        .getPermissions()
-                        .success( function ( perms ) {
+                    var userJson = JSON.parse( JSON.stringify( user ) );
 
-                            var userJson = JSON.parse( JSON.stringify( user ) );
-                            userJson.role.permissions = perms;
-
-                            deferred.resolve( userJson );
-                        } )
-                        .error( deferred.reject );
+                    deferred.resolve( userJson );
                 } )
                 .fail( deferred.reject );
 
@@ -111,52 +97,56 @@ module.exports = function ( sequelize,
         },
 
         mailPasswordRecoveryToken: function ( obj ) {
-            var mailer = sendgrid( config.sendgrid )
-              , bakeTemplate = ejsFileRender()
-              , link = config.hosturl + '/' + obj.action + '?u=' + obj.user.id + '&t=' + obj.hash + '&n=' + encodeURIComponent( obj.user.fullName );
 
-            var payload = { to: obj.user.email, from: 'no-reply@bolthr.com' };
+            // var mailer = sendgrid( config.sendgrid )
+            //   , bakeTemplate = ejsFileRender()
+            //   , link = config.hosturl + '/' + obj.action + '?u=' + obj.user.id + '&t=' + obj.hash + '&n=' + encodeURIComponent( obj.user.fullName );
 
-            payload.text = (obj.action === 'account_confirm')
-                ? "Please click on the link below to activate your account\n " + link
-                : "Please click on the link below to enter a new password\n " + link;
+            // var payload = { to: obj.user.email, from: 'no-reply@CleverTech.biz' };
 
-            var info = { link: link, companyLogo: 'http://app.bolthr.com/images/logo.png', companyName: 'BoltHR' };
+            // payload.text = (obj.action === 'account_confirm')
+            //     ? "Please click on the link below to activate your account\n " + link
+            //     : "Please click on the link below to enter a new password\n " + link;
 
-            info.tplName = (obj.action === 'account_confirm')
-                ? 'userNew'
-                : 'passwordRecovery';
+            // var info = { link: link, companyLogo: 'http://app.CleverTech.biz/images/logo.png', companyName: 'CleverTech' };
 
-            if ( !obj.tplData ) {
-                payload.subject = 'BoltHR: ' + obj.mailsubject;
+            // info.tplName = (obj.action === 'account_confirm')
+            //     ? 'userNew'
+            //     : 'passwordRecovery';
 
-                info.firstname = obj.user.firstname;
-                info.username = obj.user.username;
-                info.user = obj.user;
-                info.tplTitle = 'BoltHR: Password Recovery';
+            // if ( !obj.tplData ) {
+            //     payload.subject = 'CleverTech: ' + obj.mailsubject;
 
-            } else {
-                payload.subject = obj.tplData.subject;
+            //     info.firstname = obj.user.firstname;
+            //     info.username = obj.user.username;
+            //     info.user = obj.user;
+            //     info.tplTitle = 'CleverTech: Password Recovery';
 
-                info.tplTitle = obj.tplData.tplTitle;
-                info.firstName = obj.tplData.firstName;
-                info.accountSubdomain = obj.tplData.accountSubdomain;
-                info.userFirstName = obj.tplData.userFirstName;
-                info.userEmail = obj.tplData.userEmail;
-            }
+            // } else {
+            //     payload.subject = obj.tplData.subject;
+
+            //     info.tplTitle = obj.tplData.tplTitle;
+            //     info.firstName = obj.tplData.firstName;
+            //     info.accountSubdomain = obj.tplData.accountSubdomain;
+            //     info.userFirstName = obj.tplData.userFirstName;
+            //     info.userEmail = obj.tplData.userEmail;
+            // }
 
             return Q.resolve( 'Init Promise Chaining' )
                 .then( function () {
-                    return bakeTemplate( info );
-                } )
-                .then( function ( html ) {
-                    payload.html = html;
-
-                    return mailer( payload );
-                } )
-                .then( function () {
                     return { statuscode: 200, message: 'Message successfully sent' };
                 } )
+                // .then( function() {
+                //     return bakeTemplate( info );
+                // } )
+                // .then( function ( html ) {
+                //     payload.html = html;
+
+                //     return mailer( payload );
+                // } )
+                // .then( function () {
+                //     return { statuscode: 200, message: 'Message successfully sent' };
+                // } )
                 .fail( function ( err ) {
                     console.log( "\n\nERRR: ", err );
                     return { statuscode: 500, message: err };
@@ -200,22 +190,16 @@ module.exports = function ( sequelize,
         saveNewUser: function ( data ) {
             var deferred = Q.defer();
 
-            if ( !data.AccountId ) {
-                deferred.resolve( { statuscode: 403, message: 'Unauthorized' } );
+            data.username = data.username || data.email;
+            data.confirmed = false;
+            data.active = true;
+            data.password = ( data.password )
+                ? crypto.createHash( 'sha1' ).update( data.password ).digest( 'hex' )
+                : Math.random().toString( 36 ).slice( -14 );
 
-            } else {
-                data.username = data.username || data.email;
-                data.RoleId = data.RoleId || 7; //Default into general user
-                data.confirmed = false;
-                data.active = true;
-                data.password = ( data.password )
-                    ? crypto.createHash( 'sha1' ).update( data.password ).digest( 'hex' )
-                    : Math.random().toString( 36 ).slice( -14 );
-
-                this.create( data )
-                    .then( deferred.resolve )
-                    .fail( deferred.reject );
-            }
+            this.create( data )
+                .then( deferred.resolve )
+                .fail( deferred.reject );
 
             return deferred.promise;
         },
@@ -228,8 +212,8 @@ module.exports = function ( sequelize,
                 .findOne( userId )
                 .then( function ( user ) {
 
-                    if ( !user || ( user.AccountId !== accId ) ) {
-                        deferred.resolve( { statuscode: 403, message: 'User doesn\'t exist or invalid account' } );
+                    if ( !user ) {
+                        deferred.resolve( { statuscode: 403, message: 'User doesn\'t exist' } );
                         return;
                     }
 
@@ -255,11 +239,11 @@ module.exports = function ( sequelize,
             return deferred.promise;
         },
 
-        handleUpdateUser: function ( accId, userId, data ) {
+        handleUpdateUser: function ( userId, data ) {
             var deferred = Q.defer();
 
             ORMUserModel
-                .find( { where: { id: userId, AccountId: accId } } )
+                .find( { where: { id: userId } } )
                 .success( function ( user ) {
 
                     if ( !user ) {
