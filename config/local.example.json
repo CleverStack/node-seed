@@ -1,29 +1,6 @@
 {
     "environmentName": "LOCAL",
-
     "memcacheHost": "localhost:11211",
-
-    "db": {
-        "username": "",
-        "password": "",
-        "database": "",
-        "options": {
-            "host": "",
-            "dialect": "mysql",
-            "port": 3306
-        }
-    },
-
-    "testDb": {
-        "username": "",
-        "password": "",
-        "database": "",
-        "options": {
-            "host": "",
-            "dialect": "mysql",
-            "port": 3306
-        }
-    },
 
     "mongoose": {
         "uri": "mongodb://localhost/database"
