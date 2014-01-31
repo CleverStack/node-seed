@@ -98,7 +98,7 @@ module.exports = function ( UserService ) {
                 var tplData = {
                     firstName: data.firstname,
                     userEmail: data.email,
-                    tplTitle: 'BoltHR: User Confirmation',
+                    tplTitle: 'User Confirmation',
                     subject: data.firstname || data.email + ' wants to add you to their recruiting team!'
                 };
 
@@ -107,13 +107,13 @@ module.exports = function ( UserService ) {
                     .createUser( data, tplData )
                     .then( this.proxy( 'handleServiceMessage' ) )
                     .fail( this.proxy( 'handleException' ) );
-            }, // tested without email confirmation
+            }, //tested without email confirmation
 
             putAction: function () {
                 var meId = this.req.user.id
                   , userId = this.req.params.id
                   , data = this.req.body;
-console.log(data)
+
                 if ( !userId ) {
                     this.send( 'Bad Request', 400 );
                     return;
@@ -124,16 +124,16 @@ console.log(data)
                     .then( this.proxy( 'handleSessionUpdate', meId ) )
                     .fail( this.proxy( 'handleException' ) );
 
-            },
+            }, //tested
 
             handleSessionUpdate: function ( meId, user ) {
-                if ( user.id && (meId === user.id) ) {
-                    this.loginUserJson( user );
+                if ( user.id && ( meId === user.id ) ) {
+                    this.loginUserJson ( user );
                     return;
                 }
 
                 this.handleServiceMessage( user );
-            },
+            }, //tested -->  putAction
 
             deleteAction: function () {
                 var uId = this.req.params.id;
@@ -177,14 +177,14 @@ console.log(data)
             },
 
             loginUserJson: function ( user ) {
-
+                console.log(user)
                 this.req.login( user, this.proxy( 'handleLoginJson', user ) );
-            },
+            }, //tested -->  putAction, loginAction
 
             handleLoginJson: function ( user, err ) {
                 if ( err ) return this.handleException( err );
                 this.send( user, 200 );
-            },
+            }, //tested -->  putAction, loginAction
 
             currentAction: function () {
                 var user = this.req.user
@@ -299,7 +299,6 @@ console.log(data)
                 if ( token != hash ) {
                     return this.send( 'Invalid token', 400 );
                 }
-                ;
 
                 this.handleUpdatePassword( newPassword, [user] );
 
@@ -365,7 +364,7 @@ console.log(data)
                   , data = this.req.body;
 
                 var tplData = {
-                    firstName: this.req.user.firstname, accountSubdomain: this.req.user.account.subdomain, userFirstName: '', userEmail: '', tplTitle: 'BoltHR: Account Confirmation', subject: this.req.user.firstname + ' wants to add you to their recruiting team!'
+                    firstName: this.req.user.firstname, accountSubdomain: this.req.user.account.subdomain, userFirstName: '', userEmail: '', tplTitle: 'Account Confirmation', subject: this.req.user.firstname + ' wants to add you to their recruiting team!'
                 };
 
                 UserService

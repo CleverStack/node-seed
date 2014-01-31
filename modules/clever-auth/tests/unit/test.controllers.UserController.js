@@ -6,10 +6,12 @@ var expect = require( 'chai' ).expect
   , sinon = require( 'sinon' )
   , Service;
 
+var new_user;
+
 describe( 'controllers.UserController', function () {
     var Service, UserController, ctrl, users = [];
 
-    beforeEach( function ( done ) {
+    before( function ( done ) {
         testEnv( function ( _UserService_, _UserController_ ) {
             var req = {
                 params: { action: 'fakeAction'},
@@ -60,9 +62,21 @@ describe( 'controllers.UserController', function () {
         } );
     } );
 
-    afterEach( function () {
-        Service.constructor.instance = null;
-    } );
+    afterEach( function ( done ) {
+
+        ctrl.req = {
+            params: { action: 'fakeAction'},
+            method: 'GET',
+            query: {},
+            body: {}
+        };
+
+        ctrl.res = {
+            json: function () {}
+        };
+
+        done();
+    });
 
     describe( 'static members', function () {
 
@@ -356,32 +370,23 @@ describe( 'controllers.UserController', function () {
         it( 'should be able to get the error if user with such email already exist', function ( done ) {
             var data = {
                 username: 'admin',
-                email: 'admin@example.com',
+                email: users[0].email,
                 password: 'secret_password'
             };
 
-            Service
-                .create( data )
-                .then( function( user ) {
+            ctrl.send = function ( result, status ) {
 
-                    expect( user ).to.be.an( 'object' ).and.be.ok;
-                    expect( user ).to.have.property( 'id' ).and.be.ok;
+                expect ( status ).to.equal ( 400 );
 
-                    ctrl.send = function ( result, status ) {
+                expect ( result ).to.be.an ( 'string' ).and.be.ok;
 
-                        expect( status ).to.equal( 400 );
+                done ();
+            };
 
-                        expect( result ).to.be.an( 'string' ).and.be.ok;
+            ctrl.req.body = data;
 
-                        done();
-                    };
+            ctrl.postAction ();
 
-                    ctrl.req.body = data;
-
-                    ctrl.postAction();
-
-                })
-                .fail( done );
         } );
 
         it( 'should be able to get the error if insufficiently email', function ( done ) {
@@ -411,6 +416,26 @@ describe( 'controllers.UserController', function () {
 
     describe( 'putAction()', function () {
 
+        before( function( done ) {
+
+            Service.saveNewUser( {
+                firstName: 'cdxsasdf',
+                username: 'xcxcxc@example.com',
+                email: 'sasasas@example.com',
+                password: 'secret_password'
+            } )
+                .then( function ( user ) {
+
+                    expect( user ).to.be.an( 'object' ).and.be.ok;
+                    expect( user ).to.have.property( 'id' ).and.be.ok;
+
+                    new_user = user;
+
+                    done();
+                })
+                .fail( done );
+        });
+
         it( 'should be able to get the error if insufficiently userId', function ( done ) {
             var data = {
                 username: 'admin',
@@ -421,108 +446,215 @@ describe( 'controllers.UserController', function () {
 
                 expect( status ).to.equal( 400 );
 
-                expect( result ).to.be.an( 'string' ).and.be.ok;
+                expect( result ).to.be.an( 'string' ).and.equal( 'Bad Request' );
 
                 done();
             };
 
-            ctrl.req = {
-                user: { id: users[0].id },
-                params: { id: null }
-            };
-
+            ctrl.req.user = { id: users[0].id };
+            ctrl.req.params = { id: null };
             ctrl.req.body = data;
 
             ctrl.putAction();
 
         } );
 
-        it( 'should hash password and update user', function ( done ) {
+        it( 'should be able to get the error if new email already exist', function ( done ) {
             var data = {
+                email: users[0].email,
                 username: 'admin',
-                email: 'admin@example.com',
                 password: 'secret_password'
             };
 
             ctrl.send = function ( result, status ) {
 
+                expect( status ).to.equal( 400 );
+
+                expect( result ).to.be.an( 'string' ).and.equal( 'email already exists' );
+
+                done();
+            };
+
+            ctrl.req.user = { id: new_user.id };
+            ctrl.req.params = { id: new_user.id };
+            ctrl.req.body = data;
+
+            ctrl.putAction();
+
+        } );
+
+        it( 'should be able to get the error if old password incorrect', function ( done ) {
+            var data = {
+                password: 'secret_password_incorrect',
+                new_password: 'secret_password_new'
+            };
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 403 );
+
+                expect( result ).to.be.an( 'string' ).and.equal( 'Invalid password' );
+
+                done();
+            };
+
+            ctrl.req.user = { id: new_user.id };
+            ctrl.req.params = { id: new_user.id };
+            ctrl.req.body = data;
+
+            ctrl.putAction();
+
+        } );
+
+        it.skip( 'should hash password and to update firstname, lastname, email, phone, password and do not update other', function ( done ) {
+            var data = {
+                password: 'secret_password',
+                new_password: 'secret_password_new',
+
+                firstname: 'mishka',
+                lastname: 'mikhajlov',
+                email: 'qwqwqw@mail.ru',
+                phone: '845848485',
+
+                username: 'vasjok',
+                confirmed: true,
+                active: false
+            };
+
+            var old_password = new_user.password;
+
+            ctrl.send = function ( user, status ) {
+
                 expect( status ).to.equal( 200 );
 
-                UserService.findById( users[0].id )
-                    .then( function ( user ) {
+                expect( user ).to.be.an( 'object' ).and.be.ok;
+                expect( user ).to.have.property( 'id' ).and.equal( new_ser.id );
 
-                        user.username.should.equal( 'admin' );
-                        user.email.should.equal( 'admin@example.com' );
-                        user.password.should.equal( '2394a9661a9089208c1c9c65ccac85a91da6a859' );
+                UserService.findById( new_user.id )
+                    .then( function ( newUser ) {
+
+                        expect( newUser ).to.be.an( 'object' ).and.be.ok;
+                        expect( newUser ).to.have.property( 'id' ).and.equal( new_user.id );
+
+                        expect( newUser ).to.have.property( 'email' ).and.equal( data.email );
+                        expect( newUser ).to.have.property( 'password' ).and.not.equal( old_password );
+                        expect( newUser ).to.have.property( 'firstname' ).and.equal( data.firstname );
+                        expect( newUser ).to.have.property( 'lastname' ).and.equal( data.lastname );
+                        expect( newUser ).to.have.property( 'email' ).and.equal( data.email );
+                        expect( newUser ).to.have.property( 'phone' ).and.equal( data.phone );
+
+                        expect( newUser ).to.have.property( 'username' ).and.not.equal( data.username );
+                        expect( newUser ).to.have.property( 'confirmed' ).and.not.equal( data.confirmed );
+                        expect( newUser ).to.have.property( 'active' ).and.not.equal( data.active );
 
                         done();
                     } )
                     .fail( done );
             };
 
-            ctrl.req = {
-                body: data,
-                user: { id: users[0].id },
-                params: { id: users[0].id }
-            };
+            ctrl.req.user = { id: new_user.id };
+            ctrl.req.params = { id: new_user.id };
+            ctrl.req.body = data;
 
             ctrl.putAction();
         } );
 
-
     } );
 
-    describe.skip( 'loginAction()', function () {
+    describe( 'loginAction()', function () {
+
         it( 'should call req.login(user) if user with such credentials found', function ( done ) {
-            ctrl.req.login = function ( user ) {
-                user.id.should.eql( users[0].id );
+
+            before( function( done ) {
+
+                Service
+                    .findById( new_user.id )
+                    .then( function( user ) {
+
+                        user
+                            .updateAttributes( { confirmed: true, active: true } )
+                            .success( done )
+                            .error( done );
+
+                        done();
+                    }, done );
+            });
+
+            ctrl.send = function ( user, status ) {
+
+console.log(user)
+console.log(status)
+
+                expect( user ).to.be.an( 'object' ).and.be.ok;
+                expect( user ).to.have.property( 'id' ).and.equal( users[0].id );
+
                 done();
             };
+
             ctrl.req.body = {
-                username: users[0].username,
-                password: '1234'
+                username: new_user.username,
+                password: 'secret_password'
             };
+
             ctrl.loginAction();
         } );
 
-        it( 'should call .send(200) if user if such credentials found', function ( done ) {
+        it( 'should call .send( 200 ) if user if such credentials found', function ( done ) {
+
             ctrl.req.login = function ( data, done ) {
                 done( null );
             };
+
             ctrl.send = function ( user, code ) {
-                user.username.should.equal( users[0].username );
-                code.should.equal( 200 );
+
+                expect( user ).to.be.an( 'object' ).and.be.ok;
+                expect( user ).to.have.property( 'id' ).and.equal( users[0].id );
+                expect( user ).to.have.property( 'username' ).and.equal( users[0].username );
+
+                expect( code ).to.equal( 200 );
+
                 done();
             };
+
             ctrl.req.body = {
                 username: users[0].username,
                 password: '1234'
             };
+
             ctrl.loginAction();
         } );
 
-        it( 'should call .send(403) if user is not found', function ( done ) {
+        it( 'should call .send( 403 ) if user is not found', function ( done ) {
             ctrl.send = function ( data, code ) {
-                data.should.eql( {} );
-                code.should.equal( 403 );
+
+                expect( data ).to.be.an( 'object' ).and.be.empty;
+
+                expect( code ).to.equal( 200 );
+
                 done();
             };
+
             ctrl.req.body = {
                 username: users[0].username,
                 password: '12345'
             };
+
             ctrl.loginAction();
         } );
     } );
 
-    describe.skip( 'logoutAction()', function () {
-        it( 'should call req.logout() and .send(200)', function () {
+    describe( 'logoutAction()', function () {
+
+        it( 'should call req.logout() and .send(200)', function ( done ) {
             ctrl.req.logout = sinon.spy();
             ctrl.res.send = sinon.spy();
             ctrl.logoutAction();
 
-            ctrl.req.logout.called.should.be.true;
-            ctrl.res.send.calledWith( 200 ).should.be.true;
+            expect( ctrl.req.logout.called ).to.be.true;
+            expect( ctrl.res.send.calledWith( 200 ) ).to.be.true;
+
+            done();
         } );
+
     } );
 } );

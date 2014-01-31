@@ -9,6 +9,8 @@
             "key": ""
         },
 
-        "hostUrl": "http://localhost:"
+        "hostUrl": "http://localhost:",
+
+        "email_confirmation": false
     }
 }

@@ -439,7 +439,7 @@ describe( 'service.UserService', function () {
                 .createUser( data )
                 .then( function () {
 
-                    if ( EmailService !== null ) {
+                    if ( EmailService !== null && config['clever-auth'].email_confirmation ) {
 
                         expect( UserService.generatePasswordResetHash.calledOnce ).to.be.true;
 
@@ -470,7 +470,7 @@ describe( 'service.UserService', function () {
                 .createUser( data )
                 .then( function () {
 
-                    if ( EmailService !== null ) {
+                    if ( EmailService !== null && config['clever-auth'].email_confirmation ) {
 
                         expect( UserService.mailPasswordRecoveryToken.calledOnce ).to.be.true;
 

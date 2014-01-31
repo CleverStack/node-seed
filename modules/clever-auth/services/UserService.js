@@ -177,7 +177,7 @@ module.exports = function ( sequelize,
                         console.log( err );
                     }
 
-                    if ( EmailService === null ) {
+                    if ( EmailService === null || !config['clever-auth'].email_confirmation ) {
 
                         data.confirmed = true;
 
