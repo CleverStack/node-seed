@@ -582,9 +582,6 @@ describe( 'controllers.UserController', function () {
 
             ctrl.send = function ( user, status ) {
 
-console.log(user)
-console.log(status)
-
                 expect( user ).to.be.an( 'object' ).and.be.ok;
                 expect( user ).to.have.property( 'id' ).and.equal( users[0].id );
 

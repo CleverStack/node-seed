@@ -177,7 +177,6 @@ module.exports = function ( UserService ) {
             },
 
             loginUserJson: function ( user ) {
-                console.log(user)
                 this.req.login( user, this.proxy( 'handleLoginJson', user ) );
             }, //tested -->  putAction, loginAction
 
@@ -305,7 +304,6 @@ module.exports = function ( UserService ) {
             },
 
             confirmAction: function () {
-                console.log(this.req.query)
                 var password = this.req.body.password
                   , token = this.req.body.token
                   , userId = this.req.body.userId;
