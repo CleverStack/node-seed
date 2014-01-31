@@ -31,50 +31,42 @@ module.exports = function ( UserService ) {
             service: UserService,
 
             requiresLogin: function ( req, res, next ) {
-                if ( !req.isAuthenticated() )
-                    return res.send( 401 );
-                next();
-            },
 
-            requiresRole: function ( roleName ) {
-                return function ( req, res, next ) {
-                    if ( !req.isAuthenticated() || !req.session.passport.user.role ||
-                        req.session.passport.user.role.name.indexOf( roleName ) === -1 )
-                        return res.send( 403 );
-                    next();
-                };
-            },
+                if ( !req.isAuthenticated() ) {
+                    return res.send( 401 );
+                }
+
+                next();
+            }, //tested
 
             requiresAdminRights: function ( req, res, next ) {
-                if ( !req.isAuthenticated() || !req.session.passport.user || !req.session.passport.user.hasAdminRight )
+
+                if ( !req.isAuthenticated() || !req.session.passport.user || !req.session.passport.user.hasAdminRight ) {
                     return res.send( 403 );
+                }
+
                 next();
-            },
+            }, //tested
 
             checkPasswordRecoveryData: function ( req, res, next ) {
-                var userId = req.body.userId || req.body.user,
-                    password = req.body.password,
-                    token = req.body.token;
-                //expTime  = req.body.exp;
+                var userId = req.body.userId
+                  , password = req.body.password
+                  , token = req.body.token
 
-
-                if ( !token || !userId ) {
-                    return res.json( 400, 'Invalid Token.' );
+                if ( !userId ) {
+                    return res.send( 400, 'Invalid user Id.' );
                 }
 
-                //TODO: Here should be a regexp for password validation
+                if ( !token ) {
+                    return res.send( 400, 'Invalid Token.' );
+                }
+
                 if ( !password ) {
-                    return res.json( 400, 'Password does not much the requirements' );
+                    return res.send( 400, 'Password does not much the requirements' );
                 }
-
-                //Check timestamp
-                // var now = moment.utc().valueOf();
-                // if( now > expTime ){
-                //      return res.json(400,'Token has been expired');
-                // }
 
                 next();
-            }
+            } //tested
         },
         {
             listAction: function () {
@@ -92,10 +84,8 @@ module.exports = function ( UserService ) {
             },
 
             postAction: function () {
-                var me = this.req.user
-                    , data = this.req.body;
+                var data = this.req.body;
 
-                //Its an update
                 if ( data.id ) {
                     return this.putAction();
                 }
@@ -106,22 +96,26 @@ module.exports = function ( UserService ) {
                 }
 
                 var tplData = {
-                    firstName: this.req.user.firstname, accountSubdomain: this.req.user.account.subdomain, userFirstName: data.firstname, userEmail: data.email, tplTitle: 'BoltHR: Account Confirmation', subject: this.req.user.firstname + ' wants to add you to their recruiting team!'
+                    firstName: data.firstname,
+                    userEmail: data.email,
+                    tplTitle: 'BoltHR: User Confirmation',
+                    subject: data.firstname || data.email + ' wants to add you to their recruiting team!'
                 };
+
 
                 UserService
                     .createUser( data, tplData )
                     .then( this.proxy( 'handleServiceMessage' ) )
                     .fail( this.proxy( 'handleException' ) );
-            },
+            }, // tested without email confirmation
 
             putAction: function () {
                 var meId = this.req.user.id
-                    , userId = this.req.params.id
-                    , data = this.req.body;
-
+                  , userId = this.req.params.id
+                  , data = this.req.body;
+console.log(data)
                 if ( !userId ) {
-                    this.send( {}, 400 );
+                    this.send( 'Bad Request', 400 );
                     return;
                 }
 
@@ -173,12 +167,10 @@ module.exports = function ( UserService ) {
             },
 
             loginAction: function () {
-
                 passport.authenticate( 'local', this.proxy( 'handleLocalUser' ) )( this.req, this.res, this.next );
             },
 
             handleLocalUser: function ( err, user ) {
-
                 if ( err ) return this.handleException( err );
                 if ( !user ) return this.send( {}, 403 );
                 this.loginUserJson( user );
@@ -314,9 +306,10 @@ module.exports = function ( UserService ) {
             },
 
             confirmAction: function () {
+                console.log(this.req.query)
                 var password = this.req.body.password
-                    , token = this.req.body.token
-                    , userId = this.req.body.userId;
+                  , token = this.req.body.token
+                  , userId = this.req.body.userId;
 
 
                 UserService.findById( userId )
@@ -368,8 +361,8 @@ module.exports = function ( UserService ) {
 
             resendAction: function () {
                 var me = this.req.user
-                    , userId = this.req.params.id
-                    , data = this.req.body;
+                  , userId = this.req.params.id
+                  , data = this.req.body;
 
                 var tplData = {
                     firstName: this.req.user.firstname, accountSubdomain: this.req.user.account.subdomain, userFirstName: '', userEmail: '', tplTitle: 'BoltHR: Account Confirmation', subject: this.req.user.firstname + ' wants to add you to their recruiting team!'

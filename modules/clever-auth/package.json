@@ -31,6 +31,7 @@
     "main": "module.js",
     "devDependencies": {
         "chai": "*",
-        "mocha": "*"
+        "mocha": "*",
+        "sinon": ""
     }
 }

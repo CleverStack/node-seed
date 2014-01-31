@@ -6,12 +6,13 @@ var Q = require( 'q' )
   , UserService = null;
 
 module.exports = function ( sequelize,
-                            ORMUserModel
-                             ) {
+                            ORMUserModel ) {
 
     if ( UserService && UserService.instance ) {
         return UserService.instance;
     }
+
+    var EmailService = null;
 
     UserService = require( 'services' ).BaseService.extend( {
 
@@ -20,9 +21,10 @@ module.exports = function ( sequelize,
               , service = this
               , chainer = new Sequelize.Utils.QueryChainer();
 
-            service
-                .findOne( { where: credentials } )
-                .then( function ( user ) {
+            ORMUserModel
+                .find( { where: credentials } )
+                .success( function ( user ) {
+
                     if ( !user || !user.active ) {
                         return deferred.resolve();
                     }
@@ -39,18 +41,18 @@ module.exports = function ( sequelize,
                         } )
                         .error( deferred.reject );
                 } )
-                .fail( deferred.reject );
+                .error( deferred.reject );
 
             return deferred.promise;
-        },
+        }, //tested
 
         getUserFullDataJson: function ( options ) {
             var deferred = Q.defer()
               , service = this;
 
-            service
-                .findOne( { where: options } )
-                .then( function ( user ) {
+            ORMUserModel
+                .find( { where: options } )
+                .success( function ( user ) {
 
                     if ( !user ) {
                         return deferred.resolve();
@@ -60,26 +62,25 @@ module.exports = function ( sequelize,
 
                     deferred.resolve( userJson );
                 } )
-                .fail( deferred.reject );
+                .error( deferred.reject );
 
             return deferred.promise;
-        },
+        }, //tested
 
         generatePasswordResetHash: function ( user, tplData ) {
             var deferred = Q.defer()
               , md5 = null
               , hash = null
               , expTime = null
-              , actionpath = ( !user.confirmed ) ? 'account_confirm' : 'password_reset_submit'
-              , mailsubject = ( !user.confirmed ) ? 'Account Confirmation' : 'Password Recovery';
+              , actionpath = ( !user.confirmed ) ? 'user/confirm' : 'password_reset_submit'
+              , mailsubject = ( !user.confirmed ) ? 'User Confirmation' : 'Password Recovery';
 
-
-            if ( !user || !user.createdAt || !user.updatedAt || !user.password || !user.email || !user.AccountId ) {
+            if ( !user || !user.createdAt || !user.updatedAt || !user.password || !user.email ) {
                 deferred.resolve( { statuscode: 403, message: 'Unauthorized' } );
             } else {
 
                 md5 = crypto.createHash( 'md5' );
-                md5.update( user.createdAt + user.updatedAt + user.password + user.email + user.AccountId + 'recover', 'utf8' );
+                md5.update( user.createdAt + user.updatedAt + user.password + user.email + 'recover', 'utf8' );
                 hash = md5.digest( 'hex' );
 
                 expTime = moment.utc().add( 'hours', 8 ).valueOf();
@@ -94,13 +95,16 @@ module.exports = function ( sequelize,
                 } );
             }
             return deferred.promise;
-        },
+        }, //tested
 
         mailPasswordRecoveryToken: function ( obj ) {
 
-            // var mailer = sendgrid( config.sendgrid )
-            //   , bakeTemplate = ejsFileRender()
-            //   , link = config.hosturl + '/' + obj.action + '?u=' + obj.user.id + '&t=' + obj.hash + '&n=' + encodeURIComponent( obj.user.fullName );
+//            var hosturl = !!config.hosturl
+//                ? config.hosturl
+//                : [ config['clever-auth'].hostUrl, config.webPort ].join('');
+//
+//            var link = hosturl + '/' + obj.action + '?u=' + obj.user.id + '&t=' + obj.hash + '&n=' + encodeURIComponent( obj.user.fullName );
+
 
             // var payload = { to: obj.user.email, from: 'no-reply@CleverTech.biz' };
 
@@ -158,59 +162,79 @@ module.exports = function ( sequelize,
               , service = this
               , usr;
 
-            service
-                .findOne( { where: { email: data.email } } )
-                .then( function ( user ) {
+            ORMUserModel
+                .find( { where: { email: data.email } } )
+                .success( function ( user ) {
 
                     if ( user !== null ) {
                         deferred.resolve( { statuscode: 400, message: 'Email already exist' } );
                         return;
                     }
 
-                    service
-                        .saveNewUser( data )
-                        .then( function ( user ) {
-                            usr = user;
-                            return service.generatePasswordResetHash( user, tplData );
-                        } )
-                        .then( service.mailPasswordRecoveryToken )
-                        .then( function () {
-                            deferred.resolve( usr );
-                        } )
-                        .fail( function ( er ) {
-                            console.log( er );
-                            deferred.reject();
-                        } );
+                    try {
+                        EmailService = require( 'services' )['EmailService'];
+                    } catch ( err ) {
+                        console.log( err );
+                    }
+
+                    if ( EmailService === null ) {
+
+                        data.confirmed = true;
+
+                        service
+                            .saveNewUser( data )
+                            .then( deferred.resolve )
+                            .fail( deferred.reject );
+
+                    } else {
+
+                        data.confirmed = false;
+
+                        service
+                            .saveNewUser( data )
+                            .then( function ( user ) {
+                                usr = user;
+                                return service.generatePasswordResetHash( user, tplData );
+                            } )
+                            .then( service.mailPasswordRecoveryToken )
+                            .then( function () {
+                                deferred.resolve( usr );
+                            } )
+                            .fail( function ( err ) {
+                                console.log( err );
+                                deferred.reject();
+                            } );
+                    }
                 } )
-                .fail( deferred.reject );
+                .error( deferred.reject );
 
             return deferred.promise;
-        },
+        }, //tested
 
         saveNewUser: function ( data ) {
             var deferred = Q.defer();
 
             data.username = data.username || data.email;
-            data.confirmed = false;
             data.active = true;
-            data.password = ( data.password )
+            data.password = data.password
                 ? crypto.createHash( 'sha1' ).update( data.password ).digest( 'hex' )
                 : Math.random().toString( 36 ).slice( -14 );
 
-            this.create( data )
-                .then( deferred.resolve )
-                .fail( deferred.reject );
+            ORMUserModel
+                .create( data )
+                .success( deferred.resolve )
+                .error( deferred.reject );
 
             return deferred.promise;
-        },
+        }, //tested
 
-        resendAccountConfirmation: function ( accId, userId, tplData ) {
+        resendAccountConfirmation: function ( userId, tplData ) {
             var deferred = Q.defer()
               , service = this;
 
-            service
-                .findOne( userId )
-                .then( function ( user ) {
+            ORMUserModel
+                .find( userId )
+                .success( function ( user ) {
 
                     if ( !user ) {
                         deferred.resolve( { statuscode: 403, message: 'User doesn\'t exist' } );
@@ -234,7 +258,7 @@ module.exports = function ( sequelize,
                         .fail( deferred.reject );
 
                 } )
-                .fail( deferred.resolve );
+                .error( deferred.resolve );
 
             return deferred.promise;
         },
@@ -252,6 +276,7 @@ module.exports = function ( sequelize,
                     }
 
                     if ( data.password && data.new_password ) {
+
                         if ( crypto.createHash( 'sha1' ).update( data.password ).digest( 'hex' ) !== user.password ) {
                             deferred.resolve( {statuscode: 403, message: 'Invalid password'} );
                             return;
@@ -269,7 +294,7 @@ module.exports = function ( sequelize,
                 .error( deferred.reject );
 
             return deferred.promise;
-        },
+        }, //tested
 
         checkEmailAndUpdate: function ( user, data ) {
             var deferred = Q.defer();
@@ -301,7 +326,7 @@ module.exports = function ( sequelize,
             }
 
             return deferred.promise;
-        },
+        }, //tested
 
         updateUser: function ( user, data ) {
             var deferred = Q.defer();
@@ -327,7 +352,7 @@ module.exports = function ( sequelize,
                 .error( deferred.reject );
 
             return deferred.promise;
-        }
+        } //tested
 
     } );
 

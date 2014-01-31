@@ -56,7 +56,6 @@
     "odm",
     "background-tasks",
     "clever-auth",
-    "example-module",
     "clever-email"
   ]
 }

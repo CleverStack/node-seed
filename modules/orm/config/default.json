@@ -11,26 +11,17 @@
             }
         },
         "modelAssociations": {
-            "SubscriptionModel": {
-                "hasMany": [ "AccountModel" ]
-            },
-            "AccountModel": {
-                "belongsTo": [ "SubscriptionModel" ]
-            },
-            "UserModel": {
-                "belongsTo": [ "AccountModel" ]
-            },
+            "UserModel": {},
             "EmailModel": {
                 "hasMany": [  "EmailAttachmentModel" ],
-                "belongsTo": [ "UserModel", "AccountModel" ]
+                "belongsTo": [ "UserModel" ]
             },
             "EmailUserModel":{
                 "belongsTo" : [ "EmailModel", "UserModel" ]
             },
             "EmailAttachmentModel": {
                 "belongsTo": [ "EmailModel" ]
-            },
-            "ExampleModel": {}
+            }
 
         }
     }

@@ -7,10 +7,8 @@
             "port": "6379",
             "prefix": "",
             "key": ""
-        }
-    },
+        },
 
-    "clever-auth-data": {
-
+        "hostUrl": "http://localhost:"
     }
 }
