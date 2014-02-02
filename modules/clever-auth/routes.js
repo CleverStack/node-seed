@@ -4,9 +4,11 @@ module.exports = function (
     UserController )
 {
 
+    app.get('/users',               UserController.requiresLogin,               UserController.attach());
+    app.all('/users/?:id?',         UserController.requiresLogin,               UserController.attach());
+
     app.all('/user/?:action?',      UserController.attach());
 
-    app.post('/users/confirm',      UserController.checkPasswordRecoveryData,   UserController.attach());
 
 //    app.post('/users/confirm',      UserController.attach());
 //    app.get('/users',               UserController.attach());

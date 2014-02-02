@@ -161,7 +161,7 @@ describe( 'service.UserService', function () {
                 .fail( done );
         } );
 
-        it( 'should return null when options does not match in the db', function ( done ) {
+        it( 'should return empty object when options does not match in the db', function ( done ) {
             var data = {
                 username: 'Rachel10',
                 email: 'rachel10@example.com',
@@ -174,7 +174,7 @@ describe( 'service.UserService', function () {
                 } )
                 .then( function ( user ) {
 
-                    expect( user ).to.not.be.ok;
+                    expect( user ).to.be.empty;
 
                     done();
                 } )
@@ -850,6 +850,62 @@ describe( 'service.UserService', function () {
                     expect( user ).to.have.property( 'email' ).and.equal( data.email );
                     expect( user ).to.have.property( 'phone' ).and.equal( data.phone );
                     expect( user ).to.have.property( 'password' ).and.not.equal( old_password );
+
+                    done();
+                } )
+                .fail( done );
+        } );
+
+    } );
+
+    describe( '.listUsers()', function () {
+
+        it( 'should be able to get list of all users', function ( done ) {
+
+            UserService
+                .listUsers()
+                .then( function ( users ) {
+
+                    expect( users ).to.be.an( 'array' ).and.have.length.above( 1 );
+                    expect( users[0] ).to.be.an( 'object' ).and.be.ok;
+                    expect( users[0] ).to.have.property( 'id' ).and.be.ok;
+                    expect( users[0] ).to.have.property( 'username' ).and.be.ok;
+                    expect( users[0] ).to.have.property( 'email' ).and.be.ok;
+                    expect( users[0] ).to.have.property( 'active' ).and.equal( true );
+                    expect( users[0] ).to.not.have.property( 'password' );
+
+                    done();
+                } )
+                .fail( done );
+        } );
+
+    } );
+
+    describe( '.deleteUser( userId )', function () {
+
+        it( 'should be able to get the error if the user does not exist', function ( done ) {
+
+            UserService
+                .deleteUser( 151515115151515151 )
+                .then( function( result ) {
+
+                    expect( result ).to.be.an( 'object' );
+                    expect( result ).to.have.property( 'statuscode' ).and.equal( 403 );
+                    expect( result ).to.have.property( 'message' ).and.be.ok;
+
+                    done();
+                }, done )
+        } );
+
+        it( 'should be able to delete user', function ( done ) {
+
+            UserService
+                .deleteUser( user_1.id )
+                .then( function ( result ) {
+
+                    expect( result ).to.be.an( 'object' );
+                    expect( result ).to.have.property( 'statuscode' ).and.equal( 200 );
+                    expect( result ).to.have.property( 'message' ).and.be.ok;
 
                     done();
                 } )

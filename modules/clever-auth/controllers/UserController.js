@@ -70,18 +70,18 @@ module.exports = function ( UserService ) {
         },
         {
             listAction: function () {
-                UserService.find( )
-                    .then( this.proxy( 'send', 200 ) )
+                UserService.listUsers()
+                    .then( this.proxy( 'handleServiceMessage' ) )
                     .fail( this.proxy( 'handleException' ) );
-            },
+            }, //tested
 
             getAction: function () {
                 var uId = this.req.params.id;
 
                 UserService.getUserFullDataJson( { id: uId } )
-                    .then( this.proxy( 'send', 200 ) )
+                    .then( this.proxy( 'handleServiceMessage' ) )
                     .fail( this.proxy( 'handleException' ) );
-            },
+            }, //tested
 
             postAction: function () {
                 var data = this.req.body;
@@ -133,61 +133,39 @@ module.exports = function ( UserService ) {
                 }
 
                 this.handleServiceMessage( user );
-            }, //tested -->  putAction
+            }, //tested through putAction
 
             deleteAction: function () {
                 var uId = this.req.params.id;
 
-                UserService.destroy( uId )
-                    .then( this.proxy( 'handleDeletionData' ) )
+                UserService.deleteUser( uId )
+                    .then( this.proxy( 'handleServiceMessage' ) )
                     .fail( this.proxy( 'handleException' ) );
 
-            },
-
-            handleDeletionData: function ( obj ) {
-                if ( !obj.deletedAt ) {
-                    this.send( {}, 500 );
-                }
-                this.send( {}, 200 );
-            },
-
-            handleUpdatePassword: function ( newPassword, user ) {
-
-                if ( user.length ) {
-                    user = user[0];
-                    user.updateAttributes( {
-                        password: crypto.createHash( 'sha1' ).update( newPassword ).digest( 'hex' )
-                    } ).success( function ( user ) {
-                            this.send( {status: 200, results: user} );
-                        }.bind( this )
-                        ).fail( this.proxy( 'handleException' ) );
-                } else {
-                    this.send( {status: 400, error: "Incorrect old password!"} );
-                }
-            },
+            }, //tested
 
             loginAction: function () {
                 passport.authenticate( 'local', this.proxy( 'handleLocalUser' ) )( this.req, this.res, this.next );
-            },
+            }, //tested
 
             handleLocalUser: function ( err, user ) {
                 if ( err ) return this.handleException( err );
                 if ( !user ) return this.send( {}, 403 );
                 this.loginUserJson( user );
-            },
+            }, //tested through loginAction
 
             loginUserJson: function ( user ) {
                 this.req.login( user, this.proxy( 'handleLoginJson', user ) );
-            }, //tested -->  putAction, loginAction
+            }, //tested through loginAction,  putAction, currentAction
 
             handleLoginJson: function ( user, err ) {
                 if ( err ) return this.handleException( err );
                 this.send( user, 200 );
-            }, //tested -->  putAction, loginAction
+            }, //tested through loginAction,  putAction
 
             currentAction: function () {
                 var user = this.req.user
-                    , reload = this.req.query.reload || false;
+                  , reload = this.req.query.reload || false;
 
                 if ( !user ) {
                     this.send( {}, 404 );
@@ -204,21 +182,12 @@ module.exports = function ( UserService ) {
                     .then( this.proxy( 'loginUserJson' ) )
                     .fail( this.proxy( 'handleException' ) );
 
-            },
-
-            authorizedUser: function ( user ) {
-                if ( user ) {
-                    this.req.login( user );
-                    this.res.send( 200 );
-                } else {
-                    this.res.send( 403 );
-                }
-            },
+            }, //tested
 
             logoutAction: function () {
                 this.req.logout();
                 this.res.send( {}, 200 );
-            },
+            }, //tested
 
             recoverAction: function () {
                 var email = this.req.body.email;
@@ -301,6 +270,21 @@ module.exports = function ( UserService ) {
 
                 this.handleUpdatePassword( newPassword, [user] );
 
+            },
+
+            handleUpdatePassword: function ( newPassword, user ) {
+
+                if ( user.length ) {
+                    user = user[0];
+                    user.updateAttributes( {
+                        password: crypto.createHash( 'sha1' ).update( newPassword ).digest( 'hex' )
+                    } ).success( function ( user ) {
+                            this.send( {status: 200, results: user} );
+                        }.bind( this )
+                        ).fail( this.proxy( 'handleException' ) );
+                } else {
+                    this.send( {status: 400, error: "Incorrect old password!"} );
+                }
             },
 
             confirmAction: function () {

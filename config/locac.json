@@ -1,0 +1,31 @@
+{
+    "environmentName": "LOCAL",
+
+    "memcacheHost": "localhost:11211",
+
+    "db": {
+        "username": "root",
+        "password": "qqq",
+        "database": "clevertech",
+        "options": {
+            "host": "localhost",
+            "dialect": "mysql",
+            "port": 3306
+        }
+    },
+
+    "testDb": {
+        "username": "root",
+        "password": "qqq",
+        "database": "clTest",
+        "options": {
+            "host": "localhost",
+            "dialect": "mysql",
+            "port": 3306
+        }
+    },
+
+    "mongoose": {
+        "uri": "mongodb://localhost/database"
+    }
+}

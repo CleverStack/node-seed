@@ -418,12 +418,12 @@ describe( 'controllers.UserController', function () {
 
         before( function( done ) {
 
-            Service.saveNewUser( {
+            Service.createUser( {
                 firstName: 'cdxsasdf',
                 username: 'xcxcxc@example.com',
                 email: 'sasasas@example.com',
                 password: 'secret_password'
-            } )
+            }, {} )
                 .then( function ( user ) {
 
                     expect( user ).to.be.an( 'object' ).and.be.ok;
@@ -435,6 +435,411 @@ describe( 'controllers.UserController', function () {
                 })
                 .fail( done );
         });
+
+        it( 'should call UserService.handleUpdateUser( userId, data ) if the data is complete', function ( done ) {
+            var data = {
+                firstname: 'petrushka'
+            };
+
+            var spy = sinon.spy( Service, 'handleUpdateUser' );
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'object' ).and.be.ok;
+                expect( result ).to.have.property( 'id' ).and.equal( new_user.id );
+                expect( result ).to.have.property( 'firstname' ).and.equal( data.firstname );
+
+                expect( spy.called ).to.be.true;
+                expect( spy.calledOnce ).to.be.true;
+
+                var spyCall = spy.getCall ( 0 ).args;
+
+                expect( spyCall ).to.be.an( 'array' );
+
+                expect( spyCall[0] ).to.be.an( 'number' ).and.equal( new_user.id );
+
+                expect( spyCall[1] ).to.be.an( 'object' ).and.be.ok;
+                expect( spyCall[1] ).to.have.property( 'firstname' ).and.equal( data.firstname );
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.user = { id: new_user.id };
+            ctrl.req.params = { id: new_user.id };
+            ctrl.req.body = data;
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.putAction();
+        } );
+
+        it( 'should not call UserService.handleUpdateUser if insufficiently userId', function ( done ) {
+            var data = {
+                firstname: 'petrushka'
+            };
+
+            var spy = sinon.spy( Service, 'handleUpdateUser' );
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 400 );
+
+                expect( result ).to.be.an( 'string' ).and.equal( 'Bad Request' );
+
+                expect( spy.called ).to.be.false;
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.user = { id: new_user.id };
+            ctrl.req.params = { id: null };
+            ctrl.req.body = data;
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.putAction();
+        } );
+
+        it( 'should call UserService.checkEmailAndUpdate( user, data ) if the data is complete', function ( done ) {
+            var data = {
+                firstname: 'petrush'
+            };
+
+            var spy = sinon.spy( Service, 'checkEmailAndUpdate' );
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'object' ).and.be.ok;
+                expect( result ).to.have.property( 'id' ).and.equal( new_user.id );
+                expect( result ).to.have.property( 'firstname' ).and.equal( data.firstname );
+
+                expect( spy.called ).to.be.true;
+                expect( spy.calledOnce ).to.be.true;
+
+                var spyCall = spy.getCall ( 0 ).args;
+
+                expect( spyCall ).to.be.an( 'array' );
+
+                expect( spyCall[0] ).to.be.an( 'object' ).and.be.ok;
+                expect( spyCall[0] ).to.have.property( 'id' ).and.equal( new_user.id );
+
+                expect( spyCall[1] ).to.be.an( 'object' ).and.be.ok;
+                expect( spyCall[1] ).to.have.property( 'firstname' ).and.equal( data.firstname );
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.user = { id: new_user.id };
+            ctrl.req.params = { id: new_user.id };
+            ctrl.req.body = data;
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.putAction();
+        } );
+
+        it( 'should not call UserService.checkEmailAndUpdate if user with such id do not exist', function ( done ) {
+            var data = {
+                firstname: 'petrushka'
+            };
+
+            var spy = sinon.spy( Service, 'checkEmailAndUpdate' );
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 403 );
+
+                expect( result ).to.be.an( 'string' ).and.equal( 'invalid id' );
+
+                expect( spy.called ).to.be.false;
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.user = { id: new_user.id };
+            ctrl.req.params = { id: new_user.id + 10000000 };
+            ctrl.req.body = data;
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.putAction();
+        } );
+
+        it( 'should call UserService.checkEmailAndUpdate( user, data ) if old password correct', function ( done ) {
+            var data = {
+                password: 'secret_password',
+                new_password: 'secret_password_new'
+            };
+
+            var spy = sinon.spy( Service, 'checkEmailAndUpdate' );
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'object' ).and.be.ok;
+                expect( result ).to.have.property( 'id' ).and.equal( new_user.id );
+
+                expect( spy.called ).to.be.true;
+                expect( spy.calledOnce ).to.be.true;
+
+                var spyCall = spy.getCall ( 0 ).args;
+
+                expect( spyCall ).to.be.an( 'array' );
+
+                expect( spyCall[0] ).to.be.an( 'object' ).and.be.ok;
+                expect( spyCall[0] ).to.have.property( 'id' ).and.equal( new_user.id );
+
+                expect( spyCall[1] ).to.be.an( 'object' ).and.be.ok;
+                expect( spyCall[1] ).to.have.property( 'password' ).and.equal( data.password );
+                expect( spyCall[1] ).to.have.property( 'new_password' ).and.equal( data.new_password );
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.user = { id: new_user.id };
+            ctrl.req.params = { id: new_user.id };
+            ctrl.req.body = data;
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.putAction();
+        } );
+
+        it( 'should not call UserService.checkEmailAndUpdate if old password incorrect', function ( done ) {
+            var data = {
+                password: 'secret_password',
+                new_password: 'secret_password_new'
+            };
+
+            var spy = sinon.spy( Service, 'checkEmailAndUpdate' );
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 403 );
+
+                expect( result ).to.be.an( 'string' ).and.equal( 'Invalid password' );
+
+                expect( spy.called ).to.be.false;
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.user = { id: new_user.id };
+            ctrl.req.params = { id: new_user.id };
+            ctrl.req.body = data;
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.putAction();
+        } );
+
+        it( 'should call UserService.updateUser( user, data ) if the email does not change', function ( done ) {
+            var data = {
+                password: 'secret_password_new',
+                new_password: 'secret_password'
+            };
+
+            var spy = sinon.spy( Service, 'updateUser' );
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'object' ).and.be.ok;
+                expect( result ).to.have.property( 'id' ).and.equal( new_user.id );
+
+                expect( spy.called ).to.be.true;
+                expect( spy.calledOnce ).to.be.true;
+
+                var spyCall = spy.getCall ( 0 ).args;
+
+                expect( spyCall ).to.be.an( 'array' );
+
+                expect( spyCall[0] ).to.be.an( 'object' ).and.be.ok;
+                expect( spyCall[0] ).to.have.property( 'id' ).and.equal( new_user.id );
+
+                expect( spyCall[1] ).to.be.an( 'object' ).and.be.ok;
+                expect( spyCall[1] ).to.have.property( 'password' ).and.equal( data.password );
+                expect( spyCall[1] ).to.have.property( 'new_password' ).and.equal( data.new_password );
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.user = { id: new_user.id };
+            ctrl.req.params = { id: new_user.id };
+            ctrl.req.body = data;
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.putAction();
+        } );
+
+        it( 'should call UserService.updateUser( user, data ) if the email change and valid', function ( done ) {
+            var data = {
+                email: 'qqq@mail.ru'
+            };
+
+            var spy = sinon.spy( Service, 'updateUser' );
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'object' ).and.be.ok;
+                expect( result ).to.have.property( 'id' ).and.equal( new_user.id );
+
+                expect( spy.called ).to.be.true;
+                expect( spy.calledOnce ).to.be.true;
+
+                var spyCall = spy.getCall ( 0 ).args;
+
+                expect( spyCall ).to.be.an( 'array' );
+
+                expect( spyCall[0] ).to.be.an( 'object' ).and.be.ok;
+                expect( spyCall[0] ).to.have.property( 'id' ).and.equal( new_user.id );
+
+                expect( spyCall[1] ).to.be.an( 'object' ).and.be.ok;
+                expect( spyCall[1] ).to.have.property( 'email' ).and.equal( data.email );
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.user = { id: new_user.id };
+            ctrl.req.params = { id: new_user.id };
+            ctrl.req.body = data;
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.putAction();
+        } );
+
+        it( 'should not call UserService.updateUser if the email change and already exist', function ( done ) {
+            var data = {
+                email: 'admin@example.com'
+            };
+
+            var spy = sinon.spy( Service, 'updateUser' );
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 400 );
+
+                expect( result ).to.be.an( 'string' ).and.equal( 'email already exists' );
+
+                expect( spy.called ).to.be.false;
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.user = { id: new_user.id };
+            ctrl.req.params = { id: new_user.id };
+            ctrl.req.body = data;
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.putAction();
+        } );
+
+        it( 'should call UserService.getUserFullDataJson( options ) If all previous conditions have been met', function ( done ) {
+            var data = {
+                email: 'qqq_new@mail.ru'
+            };
+
+            var spy = sinon.spy( Service, 'getUserFullDataJson' );
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'object' ).and.be.ok;
+                expect( result ).to.have.property( 'id' ).and.equal( new_user.id );
+
+                expect( spy.called ).to.be.true;
+                expect( spy.calledOnce ).to.be.true;
+
+                var spyCall = spy.getCall ( 0 ).args;
+
+                expect( spyCall ).to.be.an( 'array' ).and.have.length( 1 );
+
+                expect( spyCall[0] ).to.be.an( 'object' ).and.be.ok;
+                expect( spyCall[0] ).to.have.property( 'id' ).and.equal( new_user.id );
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.user = { id: new_user.id };
+            ctrl.req.params = { id: new_user.id };
+            ctrl.req.body = data;
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.putAction();
+        } );
 
         it( 'should be able to get the error if insufficiently userId', function ( done ) {
             var data = {
@@ -506,10 +911,10 @@ describe( 'controllers.UserController', function () {
 
         } );
 
-        it.skip( 'should hash password and to update firstname, lastname, email, phone, password and do not update other', function ( done ) {
+        it( 'should hash password and to update firstname, lastname, email, phone, password and do not update other', function ( done ) {
             var data = {
                 password: 'secret_password',
-                new_password: 'secret_password_new',
+                new_password: 'secret_password_updated',
 
                 firstname: 'mishka',
                 lastname: 'mikhajlov',
@@ -517,7 +922,7 @@ describe( 'controllers.UserController', function () {
                 phone: '845848485',
 
                 username: 'vasjok',
-                confirmed: true,
+                confirmed: false,
                 active: false
             };
 
@@ -528,9 +933,9 @@ describe( 'controllers.UserController', function () {
                 expect( status ).to.equal( 200 );
 
                 expect( user ).to.be.an( 'object' ).and.be.ok;
-                expect( user ).to.have.property( 'id' ).and.equal( new_ser.id );
+                expect( user ).to.have.property( 'id' ).and.equal( new_user.id );
 
-                UserService.findById( new_user.id )
+                Service.findById( new_user.id )
                     .then( function ( newUser ) {
 
                         expect( newUser ).to.be.an( 'object' ).and.be.ok;
@@ -547,6 +952,8 @@ describe( 'controllers.UserController', function () {
                         expect( newUser ).to.have.property( 'confirmed' ).and.not.equal( data.confirmed );
                         expect( newUser ).to.have.property( 'active' ).and.not.equal( data.active );
 
+                        new_user = newUser;
+
                         done();
                     } )
                     .fail( done );
@@ -556,6 +963,12 @@ describe( 'controllers.UserController', function () {
             ctrl.req.params = { id: new_user.id };
             ctrl.req.body = data;
 
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
             ctrl.putAction();
         } );
 
@@ -563,95 +976,682 @@ describe( 'controllers.UserController', function () {
 
     describe( 'loginAction()', function () {
 
-        it( 'should call req.login(user) if user with such credentials found', function ( done ) {
+        it( 'should call UserService.authenticate() anytime', function ( done ) {
 
-            before( function( done ) {
+            var spy = sinon.spy( Service, 'authenticate' );
 
-                Service
-                    .findById( new_user.id )
-                    .then( function( user ) {
+            ctrl.send = function ( result, status ) {
 
-                        user
-                            .updateAttributes( { confirmed: true, active: true } )
-                            .success( done )
-                            .error( done );
+                expect( status ).to.equal( 200 );
 
-                        done();
-                    }, done );
-            });
+                expect( result ).to.be.an( 'object' ).and.be.ok;
+                expect( result ).to.have.property( 'id' ).and.equal( new_user.id );
 
-            ctrl.send = function ( user, status ) {
+                expect( spy.called ).to.be.true;
+                expect( spy.calledOnce ).to.be.true;
 
-                expect( user ).to.be.an( 'object' ).and.be.ok;
-                expect( user ).to.have.property( 'id' ).and.equal( users[0].id );
+                var spyCall = spy.getCall ( 0 ).args[0];
 
-                done();
-            };
+                expect( spyCall ).to.be.an( 'object' ).and.be.ok;
+                expect( spyCall ).to.have.property( 'email' ).and.equal( new_user.email );
+                expect( spyCall ).to.have.property( 'password' ).and.equal( '46c8df75e98d0eea89d8414b9bd997b13f33caae' );
+                expect( spyCall ).to.have.property( 'confirmed' ).and.equal( true );
+                expect( spyCall ).to.have.property( 'active' ).and.equal( true );
 
-            ctrl.req.body = {
-                username: new_user.username,
-                password: 'secret_password'
-            };
-
-            ctrl.loginAction();
-        } );
-
-        it( 'should call .send( 200 ) if user if such credentials found', function ( done ) {
-
-            ctrl.req.login = function ( data, done ) {
-                done( null );
-            };
-
-            ctrl.send = function ( user, code ) {
-
-                expect( user ).to.be.an( 'object' ).and.be.ok;
-                expect( user ).to.have.property( 'id' ).and.equal( users[0].id );
-                expect( user ).to.have.property( 'username' ).and.equal( users[0].username );
-
-                expect( code ).to.equal( 200 );
+                spy.restore();
 
                 done();
             };
 
             ctrl.req.body = {
-                username: users[0].username,
-                password: '1234'
+                username: new_user.email,
+                password: 'secret_password_updated'
+            };
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
             };
 
             ctrl.loginAction();
         } );
 
-        it( 'should call .send( 403 ) if user is not found', function ( done ) {
-            ctrl.send = function ( data, code ) {
+        it( 'should call this.handleLocalUser( err, user )', function ( done ) {
 
-                expect( data ).to.be.an( 'object' ).and.be.empty;
+            var spy = sinon.spy( ctrl, 'handleLocalUser' );
 
-                expect( code ).to.equal( 200 );
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'object' ).and.be.ok;
+                expect( result ).to.have.property( 'id' ).and.equal( new_user.id );
+
+                expect( spy.called ).to.be.true;
+                expect( spy.calledOnce ).to.be.true;
+
+                var spyCall_err = spy.getCall ( 0 ).args[0];
+                var spyCall_user = spy.getCall ( 0 ).args[1];
+
+                expect( spyCall_err ).to.be.not.ok;
+
+                expect( spyCall_user ).to.be.an( 'object' ).and.be.ok;
+                expect( spyCall_user ).to.have.property( 'id' ).and.equal( new_user.id );
+                expect( spyCall_user ).to.have.property( 'email' ).and.equal( new_user.email );
+                expect( spyCall_user ).to.not.have.property( 'password' );
+                expect( spyCall_user ).to.have.property( 'confirmed' ).and.equal( true );
+                expect( spyCall_user ).to.have.property( 'active' ).and.equal( true );
+
+                spy.restore();
 
                 done();
             };
 
             ctrl.req.body = {
-                username: users[0].username,
-                password: '12345'
+                username: new_user.email,
+                password: 'secret_password_updated'
+            };
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
             };
 
             ctrl.loginAction();
         } );
+
+        it( 'should call this.loginUserJson( user ) if user was found', function ( done ) {
+
+            var spy = sinon.spy( ctrl, 'loginUserJson' );
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'object' ).and.be.ok;
+                expect( result ).to.have.property( 'id' ).and.equal( new_user.id );
+
+                expect( spy.called ).to.be.true;
+                expect( spy.calledOnce ).to.be.true;
+
+                var spyCall = spy.getCall ( 0 ).args[0];
+
+                expect( spyCall ).to.be.an( 'object' ).and.be.ok;
+                expect( spyCall ).to.have.property( 'id' ).and.equal( new_user.id );
+                expect( spyCall ).to.have.property( 'email' ).and.equal( new_user.email );
+                expect( spyCall ).to.not.have.property( 'password' );
+                expect( spyCall ).to.have.property( 'confirmed' ).and.equal( true );
+                expect( spyCall ).to.have.property( 'active' ).and.equal( true );
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.body = {
+                username: new_user.email,
+                password: 'secret_password_updated'
+            };
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.loginAction();
+        } );
+
+        it( 'should not call this.loginUserJson( user ) if user is not found', function ( done ) {
+
+            var spy = sinon.spy( ctrl, 'loginUserJson' );
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 403 );
+
+                expect( result ).to.be.an( 'object' ).and.be.empty;
+
+                expect( spy.called ).to.be.false;
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.body = {
+                username: new_user.email + '1',
+                password: 'secret_password_updated'
+            };
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.loginAction();
+        } );
+
+        it( 'should call this.req.login( user, cb ) if user was found', function ( done ) {
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'object' ).and.be.ok;
+                expect( result ).to.have.property( 'id' ).and.equal( new_user.id );
+
+                expect( spy.called ).to.be.true;
+                expect( spy.calledOnce ).to.be.true;
+
+                var spyCall = spy.getCall ( 0 ).args;
+
+                expect( spyCall ).to.be.an( 'array' ).and.have.length( 2 );
+
+                expect( spyCall[0] ).to.be.an( 'object' ).and.be.ok;
+                expect( spyCall[0] ).to.have.property( 'id' ).and.equal( new_user.id );
+                expect( spyCall[0] ).to.have.property( 'email' ).and.equal( new_user.email );
+                expect( spyCall[0] ).to.not.have.property( 'password' );
+                expect( spyCall[0] ).to.have.property( 'confirmed' ).and.equal( true );
+                expect( spyCall[0] ).to.have.property( 'active' ).and.equal( true );
+
+                expect( spyCall[1] ).to.be.an( 'function' ).and.be.ok;
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.body = {
+                username: new_user.email,
+                password: 'secret_password_updated'
+            };
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            var spy = sinon.spy( ctrl.req, 'login' );
+
+            ctrl.loginAction();
+        } );
+
+        it( 'should not call this.req.login( user, cb ) if user is not found', function ( done ) {
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 403 );
+
+                expect( result ).to.be.an( 'object' ).and.be.empty;
+
+                expect( spy.called ).to.be.false;
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.body = {
+                username: new_user.email + '1',
+                password: 'secret_password_updated'
+            };
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            var spy = sinon.spy( ctrl.req, 'login' );
+
+            ctrl.loginAction();
+        } );
+
+        it( 'should call this.handleLoginJson( user, err ) if user was found', function ( done ) {
+
+            var spy = sinon.spy( ctrl, 'handleLoginJson' );
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'object' ).and.be.ok;
+                expect( result ).to.have.property( 'id' ).and.equal( new_user.id );
+
+                expect( spy.called ).to.be.true;
+                expect( spy.calledOnce ).to.be.true;
+
+                var spyCall = spy.getCall ( 0 ).args;
+
+                expect( spyCall ).to.be.an( 'array' );
+
+                expect( spyCall[0] ).to.be.an( 'object' ).and.be.ok;
+                expect( spyCall[0] ).to.have.property( 'id' ).and.equal( new_user.id );
+                expect( spyCall[0] ).to.have.property( 'email' ).and.equal( new_user.email );
+                expect( spyCall[0] ).to.not.have.property( 'password' );
+                expect( spyCall[0] ).to.have.property( 'confirmed' ).and.equal( true );
+                expect( spyCall[0] ).to.have.property( 'active' ).and.equal( true );
+
+                expect( spyCall[1] ).to.not.be.ok;
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.body = {
+                username: new_user.email,
+                password: 'secret_password_updated'
+            };
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.loginAction();
+        } );
+
+        it( 'should not call this.handleLoginJson( user, err ) if user is not found', function ( done ) {
+
+            var spy = sinon.spy( ctrl, 'handleLoginJson' );
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 403 );
+
+                expect( result ).to.be.an( 'object' ).and.be.empty;
+
+                expect( spy.called ).to.be.false;
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.body = {
+                username: new_user.email + '1',
+                password: 'secret_password_updated'
+            };
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.loginAction();
+        } );
+
+        it( 'should be able to authenticate user', function ( done ) {
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'object' ).and.be.ok;
+                expect( result ).to.have.property( 'id' ).and.equal( new_user.id );
+
+                done();
+            };
+
+            ctrl.req.body = {
+                username: new_user.email,
+                password: 'secret_password_updated'
+            };
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.loginAction();
+        } );
+
+        it( 'should be able to get the error and empty object as result if user is not found', function ( done ) {
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 403 );
+
+                expect( result ).to.be.an( 'object' ).and.be.empty;
+
+                done();
+            };
+
+            ctrl.req.body = {
+                username: new_user.email,
+                password: 'secret_password_updated' + '15'
+            };
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.loginAction();
+        } );
+
     } );
 
     describe( 'logoutAction()', function () {
 
-        it( 'should call req.logout() and .send(200)', function ( done ) {
+        it( 'should call req.logout() and res.send( {}, 200 )', function ( done ) {
             ctrl.req.logout = sinon.spy();
             ctrl.res.send = sinon.spy();
             ctrl.logoutAction();
 
             expect( ctrl.req.logout.called ).to.be.true;
-            expect( ctrl.res.send.calledWith( 200 ) ).to.be.true;
+            expect( ctrl.req.logout.calledOnce ).to.be.true;
+
+            expect( ctrl.res.send.called ).to.be.true;
+            expect( ctrl.res.send.calledOnce ).to.be.true;
+
+            var spyCall = ctrl.res.send.getCall ( 0 ).args;
+
+            expect( spyCall ).to.be.an( 'array' ).and.have.length( 2 )
+            expect( spyCall[0] ).to.be.an( 'object' ).and.be.empty;
+            expect( spyCall[1] ).to.be.a( 'number' ).and.equal( 200 );
 
             done();
         } );
 
     } );
+
+    describe( 'currentAction()', function () {
+
+        it( 'should not call UserService.getUserFullDataJson( options ) if user is not login', function ( done ) {
+
+            var spy = sinon.spy( Service, 'getUserFullDataJson' );
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 404 );
+
+                expect( result ).to.be.an( 'object' ).and.be.empty;
+
+                expect( spy.called ).to.be.false;
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.user = null;
+
+            ctrl.currentAction();
+        } );
+
+        it( 'should not call UserService.getUserFullDataJson( options ) if user is login and do not require reload', function ( done ) {
+
+            var spy = sinon.spy( Service, 'getUserFullDataJson' );
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'object' ).and.be.ok;
+                expect( result ).to.have.property( 'id' ).and.be.ok;
+
+                expect( spy.called ).to.be.false;
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.user = { id: 4 };
+            ctrl.req.query = {};
+
+            ctrl.currentAction();
+        } );
+
+        it( 'should call UserService.getUserFullDataJson( options ) if user is login and require reload', function ( done ) {
+            var spy = sinon.spy( Service, 'getUserFullDataJson' );
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'object' ).and.be.ok;
+                expect( result ).to.have.property( 'id' ).and.equal( new_user.id );
+
+                expect( spy.called ).to.be.true;
+                expect( spy.calledOnce ).to.be.true;
+
+                var spyCall = spy.getCall ( 0 ).args;
+
+                expect( spyCall ).to.be.an( 'array' ).and.have.length( 1 );
+
+                expect( spyCall[0] ).to.be.an( 'object' ).and.be.ok;
+                expect( spyCall[0] ).to.have.property( 'id' ).and.equal( new_user.id );
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.user = { id: new_user.id };
+
+            ctrl.req.query = {
+                reload: true
+            };
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.currentAction();
+        } );
+
+        it( 'should call this.loginUserJson( user ) if user is login and require reload', function ( done ) {
+
+            var spy = sinon.spy( ctrl, 'loginUserJson' );
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'object' ).and.be.ok;
+                expect( result ).to.have.property( 'id' ).and.equal( new_user.id );
+
+                expect( spy.called ).to.be.true;
+                expect( spy.calledOnce ).to.be.true;
+
+                var spyCall = spy.getCall ( 0 ).args[0];
+
+                expect( spyCall ).to.be.an( 'object' ).and.be.ok;
+                expect( spyCall ).to.have.property( 'id' ).and.equal( new_user.id );
+                expect( spyCall ).to.have.property( 'email' ).and.equal( new_user.email );
+                expect( spyCall ).to.not.have.property( 'password' );
+                expect( spyCall ).to.have.property( 'confirmed' ).and.equal( true );
+                expect( spyCall ).to.have.property( 'active' ).and.equal( true );
+
+                spy.restore();
+
+                done();
+            };
+
+            ctrl.req.user = { id: new_user.id };
+
+            ctrl.req.query = {
+                reload: true
+            };
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.currentAction();
+        } );
+
+        it( 'should be able to get user if user is login and require reload', function ( done ) {
+
+            var user = new_user.toJSON();
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'object' ).and.be.ok;
+                expect( result ).to.have.property( 'id' ).and.equal( user.id );
+                expect( result ).to.have.property( 'username' ).and.equal( user.username );
+                expect( result ).to.have.property( 'email' ).and.equal( user.email );
+                expect( result ).to.have.property( 'firstname' ).and.equal( user.firstname );
+                expect( result ).to.have.property( 'phone' ).and.equal( user.phone );
+                expect( result ).to.have.property( 'confirmed' ).and.equal( true );
+                expect( result ).to.have.property( 'active' ).and.equal( true );
+
+                done();
+            };
+
+            ctrl.req.user = { id: new_user.id };
+
+            ctrl.req.query = {
+                reload: true
+            };
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.currentAction();
+        } );
+
+        it( 'should be able to get user if user is login and not require reload', function ( done ) {
+
+            var user = new_user.toJSON();
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'object' ).and.be.ok;
+                expect( result ).to.have.property( 'id' ).and.equal( user.id );
+                expect( result ).to.have.property( 'username' ).and.equal( user.username );
+                expect( result ).to.have.property( 'email' ).and.equal( user.email );
+                expect( result ).to.have.property( 'firstname' ).and.equal( user.firstname );
+                expect( result ).to.have.property( 'phone' ).and.equal( user.phone );
+                expect( result ).to.have.property( 'confirmed' ).and.equal( true );
+                expect( result ).to.have.property( 'active' ).and.equal( true );
+
+                done();
+            };
+
+            ctrl.req.user = user;
+
+            ctrl.req.query = {
+                reload: false
+            };
+
+            ctrl.req.login = function( user, callback ) {
+                if ( !!user && !!user.id ) {
+                    callback( null, user );
+                }
+            };
+
+            ctrl.currentAction();
+        } );
+
+        it( 'should be able to get the error if user is not login', function ( done ) {
+
+            ctrl.send = function ( result, status ) {
+
+                expect ( status ).to.equal ( 404 );
+
+                expect ( result ).to.be.an ( 'object' ).and.be.empty;
+
+                done ();
+            };
+
+            ctrl.req.body = {};
+
+            ctrl.req.user = null;
+
+            ctrl.currentAction();
+        } );
+
+    } );
+
+    describe( 'listAction()', function () {
+
+        it( 'should be able to get list of users', function ( done ) {
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'array' ).and.have.length.above( 1 );
+                expect( result[0] ).to.be.an( 'object' ).and.be.ok;
+                expect( result[0] ).to.have.property( 'id' ).and.be.ok;
+                expect( result[0] ).to.have.property( 'username' ).and.be.ok;
+                expect( result[0] ).to.have.property( 'email' ).and.be.ok;
+                expect( result[0] ).to.have.property( 'active' ).and.equal( true );
+                expect( result[0] ).to.not.have.property( 'password' );
+
+                done();
+            };
+
+            ctrl.listAction();
+        } );
+
+    } );
+
+    describe( 'getAction()', function () {
+
+        it( 'should be able to get user by id', function ( done ) {
+
+            var user = new_user.toJSON();
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'object' ).and.be.ok;
+                expect( result ).to.have.property( 'id' ).and.equal( user.id );
+                expect( result ).to.have.property( 'username' ).and.equal( user.username );
+                expect( result ).to.have.property( 'email' ).and.equal( user.email );
+                expect( result ).to.have.property( 'active' ).and.equal( user.active );
+                expect( result ).to.not.have.property( 'password' );
+
+                done();
+            };
+
+            ctrl.req.params = { id: new_user.id };
+
+            ctrl.getAction();
+        } );
+
+        it( 'should be able to get empty object if user do not exist', function ( done ) {
+
+            ctrl.send = function ( result, status ) {
+
+                expect( status ).to.equal( 200 );
+
+                expect( result ).to.be.an( 'object' ).and. be.empty;
+
+                done();
+            };
+
+            ctrl.req.params = { id: 15151515151151515 };
+
+            ctrl.getAction();
+        } );
+
+    } );
+
 } );

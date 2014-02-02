@@ -55,7 +55,7 @@ module.exports = function ( sequelize,
                 .success( function ( user ) {
 
                     if ( !user ) {
-                        return deferred.resolve();
+                        return deferred.resolve( {} );
                     }
 
                     var userJson = JSON.parse( JSON.stringify( user ) );
@@ -352,7 +352,55 @@ module.exports = function ( sequelize,
                 .error( deferred.reject );
 
             return deferred.promise;
-        } //tested
+        }, //tested
+
+        listUsers: function() {
+            var deferred = Q.defer();
+
+            ORMUserModel
+                .findAll( { where: { deletedAt: null } } )
+                .success( function( users ) {
+                    if ( !!users && !!users.length ) {
+                        deferred.resolve( users.map( function( u ) { return u.toJSON(); } ) );
+                    } else {
+                        deferred.resolve( {} );
+                    }
+                })
+                .error( deferred.reject );
+
+            return deferred.promise;
+        }, //tested
+
+        deleteUser: function( userId ) {
+            var deferred = Q.defer();
+
+            ORMUserModel
+                .find( userId )
+                .success( function( user ) {
+
+                    if ( !!user && !!user.id ) {
+
+                        user
+                            .destroy()
+                            .success( function( result ) {
+
+                                if ( !result.deletedAt ) {
+                                    deferred.resolve( { statuscode: 500, message: 'error' } );
+                                } else {
+                                    deferred.resolve( { statuscode: 200, message: 'user is deleted' } );
+                                }
+
+                            })
+                            .error( deferred.reject );
+
+                    } else {
+                        deferred.resolve( { statuscode: 403, message: 'user do not exist' } )
+                    }
+                })
+                .error( deferred.reject );
+
+            return deferred.promise;
+        }
 
     } );
 
