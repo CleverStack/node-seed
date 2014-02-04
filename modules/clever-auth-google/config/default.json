@@ -1,0 +1,23 @@
+{
+    "clever-auth-google": {
+        "secretKey": "youMustChangeMe",
+
+        "redis": {
+            "host": "localhost",
+            "port": "6379",
+            "prefix": "",
+            "key": ""
+        },
+
+        "google": {
+            "clientId": "117613345915-5ammdhvej2pkgbfuso2u2u1mo2akmfg7.apps.googleusercontent.com",
+            "clientSecret": "YkcZxpWEKr_Jijb_RaL0nNlC",
+            "clientEmail": "117613345915-5ammdhvej2pkgbfuso2u2u1mo2akmfg7@developer.gserviceaccount.com",
+            "redirectURIs": "http://localhost:8080/auth/google/return",
+            "javascriptOrigins": "http://localhost:8080",
+            "authURI": "http://accounts.google.com/o/oauth2/auth",
+            "tokenURI": "http://accounts.google.com/o/oauth2/token"
+        }
+
+    }
+}
