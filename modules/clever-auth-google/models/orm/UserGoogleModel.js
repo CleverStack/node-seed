@@ -26,7 +26,7 @@ module.exports = function ( sequelize, DataTypes ) {
                     isEmail: true
                 }
             },
-            googleId: {
+            googleid: {
                 type: DataTypes.STRING,
                 allowNull: false
             },
@@ -54,6 +54,9 @@ module.exports = function ( sequelize, DataTypes ) {
             },
             accessedAt: {
                 type: DataTypes.DATE
+            },
+            UserId: {
+                type: DataTypes.INTEGER
             }
         },
         {

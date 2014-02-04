@@ -22,17 +22,18 @@ module.exports = function ( UserGoogleService ) {
         function ( accessToken, refreshToken, profile, done ) {
 
             UserGoogleService
-                .authenticate( profile, accessToken )
+                .findOrCreate( profile, accessToken )
                 .then( function( gUser ) {
-                    return UserGoogleService.associate ( gUser, profile )
+                    return UserGoogleService.authenticate ( gUser, profile )
                 })
+                .then( UserGoogleService.updateAccessedDate )
                 .then( done.bind( null, null ) )
                 .fail( done );
         }
     ));
 
 
-    return (require( 'classes' ).Controller).extend(
+    return (require( 'classes' ).Controller).extend (
         {
             service: UserGoogleService
         },
@@ -41,15 +42,24 @@ module.exports = function ( UserGoogleService ) {
                 UserGoogleService.listUsers()
                     .then( this.proxy( 'handleServiceMessage' ) )
                     .fail( this.proxy( 'handleException' ) );
-            },
+            }, //tested
 
-            deleteAction: function () {
-                var uId = this.req.params.id;
+            getAction: function () {
+                var guId = this.req.params.id;
 
-                UserGoogleService.deleteUser( { id: uId } )
+                UserGoogleService
+                    .findUserById( guId )
                     .then( this.proxy( 'handleServiceMessage' ) )
                     .fail( this.proxy( 'handleException' ) );
-            },
+            }, //tested
+
+            deleteAction: function () {
+                var guId = this.req.params.id;
+
+                UserGoogleService.deleteUser( guId )
+                    .then( this.proxy( 'handleServiceMessage' ) )
+                    .fail( this.proxy( 'handleException' ) );
+            }, //tested
 
             loginAction: function () {
                 var params = {
@@ -60,9 +70,9 @@ module.exports = function ( UserGoogleService ) {
                     scope: "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"
                 };
 
-                this.send(200, { url: 'https://accounts.google.com/o/oauth2/auth?' + qs.stringify(params) } );
+                this.send( { url: 'https://accounts.google.com/o/oauth2/auth?' + qs.stringify( params ) }, 200 );
 
-            },
+            }, //tested
 
             returnAction: function () {
                 passport.authenticate( 'google', this.proxy( 'handleLocalUser' ) )( this.req, this.res, this.next );

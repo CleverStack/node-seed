@@ -21,16 +21,16 @@ module.exports = function ( sequelize,
                 email: profile._json.email,
                 firstname: profile._json.given_name,
                 lastname: profile._json.family_name,
-                picture: profile._json.picture,
+                picture: profile._json.picture || null,
                 verified: profile._json.verified_email,
                 link: profile._json.link,
                 gender: profile._json.gender,
                 locale: profile._json.locale,
-                token: accessToken
+                token: accessToken || null
             }
-        },
+        }, //tested
 
-        authenticate: function ( profile, accessToken ) {
+        findOrCreate: function ( profile, accessToken ) {
             var deferred = Q.defer()
               , data = this.formatData ( profile, accessToken );
 
@@ -63,9 +63,9 @@ module.exports = function ( sequelize,
             }
 
             return deferred.promise;
-        },
+        }, //tested
 
-        associate: function( gUser, profile ) {
+        authenticate: function( gUser, profile ) {
             var deferred = Q.defer()
               , data = this.formatData ( profile );
 
@@ -77,12 +77,17 @@ module.exports = function ( sequelize,
 
             if ( !!gUser && !!UserService ) {
 
-                if ( gUser.userId ) {
+                if ( gUser.UserId ) {
 
                     UserService
-                        .find( { where: { id: gUser.userId, email: gUser.email } } )
-                        .then( function( user ) {
-                            deferred.resolve( user.toJSON() );
+                        .find( { where: { id: gUser.UserId, email: gUser.email } } )
+                        .then( function( users ) {
+
+                            var user = !!users && !!users.length
+                                ? users[0]
+                                : { statuscode: 403, message: 'invalid' };
+
+                            deferred.resolve( user );
                         })
                         .fail( deferred.reject );
 
@@ -97,27 +102,26 @@ module.exports = function ( sequelize,
                             if ( !!user && !!user.id ) {
 
                                 gUser
-                                    .updateAttributes( { userId: user.id } )
-                                    .success( function() {
-                                        deferred.resolve( user.toJSON() );
-                                    })
+                                    .updateAttributes( { UserId: user.id } )
+                                    .success ( function () {
+                                        deferred.resolve ( user );
+                                    } )
                                     .error( deferred.reject );
 
                             } else {
 
                                 data.confirmed = true;
                                 data.username = data.email;
-                                data.accessedAt = moment.utc().format( 'YYYY-MM-DD HH:ss:mm' );
-                                data.password = crypto.createHash( 'sha1' ).update( Math.floor(Math.random() * 1e18) ).digest( 'hex' )
+                                data.password = crypto.createHash( 'sha1' ).update( Math.floor(Math.random() * 1e18) + '' ).digest( 'hex' )
 
                                 UserService
                                     .create( data )
                                     .then( function( user ) {
 
                                         gUser
-                                            .updateAttributes ( { userId: user.id } )
+                                            .updateAttributes ( { UserId: user.id } )
                                             .success ( function () {
-                                                deferred.resolve ( user.toJSON () );
+                                                deferred.resolve ( user );
                                             } )
                                             .error ( deferred.reject );
                                     })
@@ -128,11 +132,28 @@ module.exports = function ( sequelize,
                 }
 
             } else {
-                deferred.resolve( gUser.toJSON() );
+                deferred.resolve( gUser );
             }
 
             return deferred.promise;
-        },
+        }, //tested
+
+        updateAccessedDate: function( user ){
+            var deferred = Q.defer();
+
+            if ( !!user && !!user.id ) {
+                user
+                    .updateAttributes( { accessedAt: moment.utc().format( 'YYYY-MM-DD HH:ss:mm' ) } )
+                    .success( function() {
+                        deferred.resolve( user.toJSON() );
+                    })
+                    .error( deferred.reject );
+            } else {
+                deferred.resolve( user );
+            }
+
+            return deferred.promise;
+        }, //tested
 
         listUsers: function() {
             var deferred = Q.defer();
@@ -149,7 +170,25 @@ module.exports = function ( sequelize,
                 .error( deferred.reject );
 
             return deferred.promise;
-        },
+        }, //tested
+
+        findUserById: function( gUserId ) {
+            var deferred = Q.defer();
+
+            ORMUserGoogleModel
+                .find( gUserId )
+                .success( function( gUser ) {
+
+                    if ( !!gUser && !!gUser.id ){
+                        deferred.resolve( gUser.toJSON() );
+                    } else {
+                        deferred.resolve( { statuscode: 403, message: 'user do not exist' } );
+                    }
+                })
+                .error( deferred.reject );
+
+            return deferred.promise;
+        }, //tested
 
         deleteUser: function( gUserId ) {
             var deferred = Q.defer();
@@ -180,7 +219,7 @@ module.exports = function ( sequelize,
                 .error( deferred.reject );
 
             return deferred.promise;
-        }
+        } //tested
 
     } );
 

@@ -56,6 +56,7 @@
     "odm",
     "background-tasks",
     "clever-auth",
+    "clever-auth-google",
     "clever-email"
   ]
 }
