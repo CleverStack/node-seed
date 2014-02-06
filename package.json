@@ -54,8 +54,6 @@
   "bundledDependencies": [
     "orm",
     "odm",
-    "background-tasks",
-    "clever-auth",
-    "clever-email"
+    "clever-csv"
   ]
 }

@@ -1,0 +1,117 @@
+{
+  "name": "employee",
+  "displayName": "Employee",
+  "description": "We are using this csv to batch upload all personal info about employees",
+  "service": "CsvEmployeeService",
+  "method": "createFromCsvRow",
+  "fields": [
+    {
+      "name": "firstName",
+      "display": "First Name",
+      "hint": "",
+      "type": "text"
+    },
+    {
+      "name": "lastName",
+      "display": "Last Name",
+      "hint": "",
+      "type": "text"
+    },
+    {
+      "name": "fullName",
+      "display": "Full Name",
+      "hint": "",
+      "type": "text"
+    },
+    {
+      "name": "name",
+      "display": "Name",
+      "hint": "",
+      "type": "text"
+    },
+    {
+      "name": "phone",
+      "display": "Phone",
+      "hint": "",
+      "type": "text"
+    },
+    {
+      "name": "extension",
+      "display": "Extension",
+      "hint": "",
+      "type": "text"
+    },
+    {
+      "name": "homePhone",
+      "display": "Home Phone",
+      "hint": "",
+      "type": "text"
+    },
+    {
+      "name": "cellPhone",
+      "display": "Cell Phone",
+      "hint": "",
+      "type": "text"
+    },
+    {
+      "name": "workPhone",
+      "display": "Work Phone",
+      "hint": "",
+      "type": "text"
+    },
+    {
+      "name": "email",
+      "display": "Email",
+      "hint": "",
+      "type": "email"
+    },
+    {
+      "name": "skypeId",
+      "display": "Skype ID",
+      "hint": "",
+      "type": "text"
+    },
+    {
+      "name": "position",
+      "display": "Position",
+      "hint": "",
+      "type": "text"
+    },
+    {
+      "name": "title",
+      "display": "Title",
+      "hint": "",
+      "type": "text"
+    },
+    {
+      "name": "notes",
+      "display": "Notes",
+      "hint": "",
+      "type": "text"
+    },
+    {
+      "name": "department",
+      "display": "Department",
+      "hint": "",
+      "type": "text"
+    },
+    {
+      "name": "division",
+      "display": "Division",
+      "hint": "",
+      "type": "text"
+    },
+    {
+      "name": "active",
+      "display": "Active",
+      "hint": "",
+      "type": "text"
+    },
+    {
+      "name": "secondaryLanguage",
+      "display": "Secondary Language",
+      "hint": "",
+      "type": "text"
+    }
+  ]
+}

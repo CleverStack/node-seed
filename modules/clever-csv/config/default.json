@@ -1,0 +1,10 @@
+{
+    "clever-csv": {
+       "pathToCsvSchemaFiles": "./modules/clever-csv/files/schema/",
+       "pathToCsvFiles": "./modules/clever-csv/files/csv/",
+       "pathToTypesCsvFiles": "./modules/clever-csv/schema/csv/",
+
+        "pathToTestCsvFiles": "./modules/clever-csv/files/tests/",
+        "urlToTestCsvFile": "http://r1.fayloobmennik.net/files/go/131866713.html?check=41553158aa6e4dbb7028f016cb6b2e3b&file=3550297"
+    }
+}
