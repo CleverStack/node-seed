@@ -1,0 +1,21 @@
+{
+    "clever-auth-github": {
+        "secretKey": "youMustChangeMe",
+
+        "redis": {
+            "host": "localhost",
+            "port": "6379",
+            "prefix": "",
+            "key": ""
+        },
+
+        "github": {
+            "clientId": "486f044b3383cdc29388",
+            "clientSecret": "f28246b75d34625decc9d835a15107a51f1e8225",
+            "redirectURIs": "http://localhost:8080/auth/github/return"
+        },
+
+        "frontendURL": "http://localhost:9000/"
+
+    }
+}
