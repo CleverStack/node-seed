@@ -274,7 +274,7 @@ describe( 'service.UserGoogleService', function () {
 
                         expect( user ).to.be.an( 'object' ).and.be.ok;
                         expect( user ).to.have.property( 'id' ).and.equal( gUser.id );
-                        expect( user ).to.not.have.property( 'token' );
+                        expect( user ).to.have.property( 'token' ).and.be.ok;
                         expect( user ).to.have.property( 'firstname' ).and.equal( gUser.firstname );
                         expect( user ).to.have.property( 'lastname' ).and.equal( gUser.lastname );
                         expect( user ).to.have.property( 'email' ).and.equal( gUser.email );
@@ -285,7 +285,7 @@ describe( 'service.UserGoogleService', function () {
                     } )
                     .fail( done );
             } else {
-                console.log( 'UserService is not defined' );
+                console.log( 'UserService is defined' );
                 done();
             }
         } );
@@ -356,7 +356,7 @@ describe( 'service.UserGoogleService', function () {
                     } )
                     .fail( done );
             } else {
-                console.log( 'UserService is defined' );
+                console.log( 'UserService is not defined' );
                 done();
             }
 
@@ -398,7 +398,7 @@ describe( 'service.UserGoogleService', function () {
                     } )
                     .fail( done );
             } else {
-                console.log( 'UserService is defined' );
+                console.log( 'UserService is not defined' );
                 done();
             }
 
@@ -450,7 +450,7 @@ describe( 'service.UserGoogleService', function () {
                     })
                     .error( done );
             } else {
-                console.log( 'UserService is defined' );
+                console.log( 'UserService is not defined' );
                 done();
             }
 
@@ -514,7 +514,7 @@ describe( 'service.UserGoogleService', function () {
                     })
                     .error( done );
             } else {
-                console.log( 'UserService is defined' );
+                console.log( 'UserService is not defined' );
                 done();
             }
 
@@ -526,26 +526,34 @@ describe( 'service.UserGoogleService', function () {
 
         it( 'should be able to update user', function ( done ) {
 
-            user_1
-                .updateAttributes( { accessedAt: null } )
-                .success( function( result ) {
+            if ( !!UserService ) {
+                user_1
+                    .updateAttributes( { accessedAt: null } )
+                    .success( function( result ) {
 
-                    expect( result ).to.be.an( 'object' ).and.be.ok;
-                    expect( result ).to.have.property( 'id' ).and.equal( user_1.id );
-                    expect( result ).to.have.property( 'accessedAt' ).and.not.be.ok;
+                        expect( result ).to.be.an( 'object' ).and.be.ok;
+                        expect( result ).to.have.property( 'id' ).and.equal( user_1.id );
+                        expect( result ).to.have.property( 'accessedAt' ).and.not.be.ok;
 
-                    Service
-                        .updateAccessedDate( user_1 )
-                        .then( function( result ) {
+                        Service
+                            .updateAccessedDate( user_1 )
+                            .then( function( result ) {
 
-                            expect( result ).to.be.an( 'object' ).and.be.ok;
-                            expect( result ).to.have.property( 'id' ).and.equal( user_1.id );
-                            expect( result ).to.have.property( 'accessedAt' ).and.be.ok;
+                                expect( result ).to.be.an( 'object' ).and.be.ok;
+                                expect( result ).to.have.property( 'id' ).and.equal( user_1.id );
+                                expect( result ).to.have.property( 'accessedAt' ).and.be.ok;
 
-                            done();
-                        }, done );
-                })
-                .error( done );
+                                done();
+                            }, done );
+                    })
+                    .error( done );
+
+            } else {
+                console.log( 'UserService is not defined' );
+                done();
+            }
+
+
         } );
 
         it( 'should be able to update gUser', function ( done ) {
