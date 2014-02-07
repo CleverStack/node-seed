@@ -17,7 +17,9 @@
             "javascriptOrigins": "http://localhost:8080",
             "authURI": "http://accounts.google.com/o/oauth2/auth",
             "tokenURI": "http://accounts.google.com/o/oauth2/token"
-        }
+        },
+
+        "frontendURL": "http://localhost:9000/"
 
     }
 }

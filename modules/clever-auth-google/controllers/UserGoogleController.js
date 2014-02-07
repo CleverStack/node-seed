@@ -90,7 +90,11 @@ module.exports = function ( UserGoogleService ) {
 
             handleLoginJson: function ( user, err ) {
                 if ( err ) return this.handleException( err );
-                this.send( user, 200 );
+
+                this.res.statusCode = 302;
+                this.res.setHeader( 'body', user );
+                this.res.setHeader( 'Location', config.frontendURL );
+                this.res.end();
             },
 
             handleServiceMessage: function ( obj ) {
