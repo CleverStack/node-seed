@@ -80,8 +80,15 @@ module.exports = function ( UserGoogleService ) {
 
             handleLocalUser: function ( err, user ) {
                 if ( err ) return this.handleException( err );
-                if ( !user ) return this.send( {}, 403 );
-                this.loginUserJson( user );
+
+                if ( !user ) {
+                    this.res.statusCode = 302;
+                    this.res.setHeader( 'body', {} );
+                    this.res.setHeader( 'Location', config.frontendURL );
+                    this.res.end();
+                } else {
+                    this.loginUserJson( user );
+                }
             },
 
             loginUserJson: function ( user ) {
