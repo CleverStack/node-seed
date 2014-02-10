@@ -96,6 +96,35 @@ describe( 'service.UserGithubService', function () {
 
     describe( '.findOrCreate( profile, accessToken )', function () {
 
+        it( 'should not call ORMUserGithubModel.find() if email is not define', function ( done ) {
+            var accessToken = 'sdasdasdasdasdasdasdasda'
+                , profile = {
+                    _json: {
+                        id: '112064034597570891032',
+                        email: null,
+                        name: 'Volodymyr',
+                        html_url: 'https://github.com/denshikov-vovan',
+                        location: 'Ukraine',
+                        avatar_url: 'https://gravatar.com/avatar/e98ef168c69fd2a812a8dd46a775072a?d=https%3A%2F%2Fidenticons.github.com%2F814919104a88497c37d2154d918bba97.png&r=x'
+                    }
+                };
+
+            var spy = sinon.spy( Model, 'find' );
+
+            Service
+                .findOrCreate( profile, accessToken )
+                .then( function ( result ) {
+
+                    expect( result ).to.not.be.ok;
+
+                    expect( spy.called ).to.be.false;
+
+                    spy.restore();
+
+                    done();
+                }, done )
+        } );
+
         it( 'should call ORMUserGithubModel.find(), ORMUserGithubModel.create() and create gUser if github account do not already exist', function ( done ) {
             var accessToken = 'sdasdasdasdasdasdasdasda'
               , profile = {

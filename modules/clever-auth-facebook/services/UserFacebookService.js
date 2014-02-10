@@ -2,56 +2,60 @@ var Q = require( 'q' )
   , crypto = require( 'crypto' )
   , moment = require( 'moment' )
   , Sequelize = require( 'sequelize' )
-  , UserGithubService = null;
+  , UserFacebookService = null;
 
 module.exports = function ( sequelize,
-                            ORMUserGithubModel ) {
+                            ORMUserFacebookModel ) {
 
-    if ( UserGithubService && UserGithubService.instance ) {
-        return UserGithubService.instance;
+    if ( UserFacebookService && UserFacebookService.instance ) {
+        return UserFacebookService.instance;
     }
 
     var UserService = null;
 
-    UserGithubService = require( 'services' ).BaseService.extend( {
+    UserFacebookService = require( 'services' ).BaseService.extend( {
 
         formatData: function ( profile, accessToken ) {
             var name = !!profile._json.name ? profile._json.name.split( ' ' ) : [];
             return {
-                githubid: profile._json.id,
-                username: profile._json.login,
-                firstname: !!name.length ? name[ 0 ] : null,
-                lastname: !!name.length && name.length > 1 ? name[ name.length - 1 ] : null,
+                facebookid: profile._json.id,
+                username: profile._json.username,
+                firstname: profile._json.first_name,
+                lastname: profile._json.last_name,
                 email: profile._json.email,
-                picture: profile._json.avatar_url || null,
-                link: profile._json.html_url,
-                locale: profile._json.location || null,
+                picture: !!profile._json.picture
+                    ? typeof profile._json.picture == 'object' && profile._json.picture.data
+                        ? profile._json.picture.data.url
+                        : profile._json.picture
+                    : null,
+                link: profile._json.link,
+                locale: profile._json.locale || null,
                 token: accessToken || null
             }
-        }, //tested
+        },
 
         findOrCreate: function ( profile, accessToken ) {
             var deferred = Q.defer()
               , data = this.formatData ( profile, accessToken );
 
             if ( data.email ) {
-
-                ORMUserGithubModel
+                
+                ORMUserFacebookModel
                     .find ( { where: { email: data.email } } )
-                    .success ( function ( gUser ) {
+                    .success ( function ( fbUser ) {
 
-                        if ( !gUser ) {
-
+                        if ( !fbUser ) {
+    
                             data.accessedAt = moment.utc ().format ( 'YYYY-MM-DD HH:ss:mm' );
-
-                            ORMUserGithubModel
+    
+                            ORMUserFacebookModel
                                 .create ( data )
                                 .success ( deferred.resolve )
                                 .error ( deferred.reject );
-
+    
                         } else {
-
-                            gUser
+    
+                            fbUser
                                 .updateAttributes ( { accessedAt: moment.utc ().format ( 'YYYY-MM-DD HH:ss:mm' ), token: data.token } )
                                 .success ( deferred.resolve )
                                 .error ( deferred.reject );
@@ -62,12 +66,10 @@ module.exports = function ( sequelize,
                 deferred.resolve();
             }
 
-
-
             return deferred.promise;
         }, //tested
 
-        authenticate: function( gUser, profile ) {
+        authenticate: function( fbUser, profile ) {
             var deferred = Q.defer()
               , data = this.formatData ( profile );
 
@@ -77,12 +79,12 @@ module.exports = function ( sequelize,
                 console.log( err );
             }
 
-            if ( !!gUser && !!UserService ) {
+            if ( !!fbUser && !!UserService ) {
 
-                if ( gUser.UserId ) {
+                if ( fbUser.UserId ) {
 
                     UserService
-                        .find( { where: { id: gUser.UserId, email: gUser.email } } )
+                        .find( { where: { id: fbUser.UserId, email: fbUser.email } } )
                         .then( function( users ) {
 
                             var user = !!users && !!users.length
@@ -96,14 +98,14 @@ module.exports = function ( sequelize,
                 } else {
 
                     UserService
-                        .find( { where: { email: gUser.email } } )
+                        .find( { where: { email: fbUser.email } } )
                         .then( function( user ) {
 
                             user = user[0];
 
                             if ( !!user && !!user.id ) {
 
-                                gUser
+                                fbUser
                                     .updateAttributes( { UserId: user.id } )
                                     .success ( function () {
                                         deferred.resolve ( user );
@@ -120,7 +122,7 @@ module.exports = function ( sequelize,
                                     .create( data )
                                     .then( function( user ) {
 
-                                        gUser
+                                        fbUser
                                             .updateAttributes ( { UserId: user.id } )
                                             .success ( function () {
                                                 deferred.resolve ( user );
@@ -134,7 +136,7 @@ module.exports = function ( sequelize,
                 }
 
             } else {
-                deferred.resolve( gUser );
+                deferred.resolve( fbUser );
             }
 
             return deferred.promise;
@@ -160,11 +162,11 @@ module.exports = function ( sequelize,
         listUsers: function() {
             var deferred = Q.defer();
 
-            ORMUserGithubModel
+            ORMUserFacebookModel
                 .findAll( { where: { deletedAt: null } } )
-                .success( function( gUsers ) {
-                    if ( !!gUsers && !!gUsers.length ) {
-                        deferred.resolve( gUsers.map( function( u ) { return u.toJSON(); } ) );
+                .success( function( fbUsers ) {
+                    if ( !!fbUsers && !!fbUsers.length ) {
+                        deferred.resolve( fbUsers.map( function( u ) { return u.toJSON(); } ) );
                     } else {
                         deferred.resolve( {} );
                     }
@@ -174,15 +176,15 @@ module.exports = function ( sequelize,
             return deferred.promise;
         }, //tested
 
-        findUserById: function( gUserId ) {
+        findUserById: function( fbUserId ) {
             var deferred = Q.defer();
 
-            ORMUserGithubModel
-                .find( gUserId )
-                .success( function( gUser ) {
+            ORMUserFacebookModel
+                .find( fbUserId )
+                .success( function( fbUser ) {
 
-                    if ( !!gUser && !!gUser.id ){
-                        deferred.resolve( gUser.toJSON() );
+                    if ( !!fbUser && !!fbUser.id ){
+                        deferred.resolve( fbUser.toJSON() );
                     } else {
                         deferred.resolve( { statuscode: 403, message: 'user do not exist' } );
                     }
@@ -192,16 +194,16 @@ module.exports = function ( sequelize,
             return deferred.promise;
         }, //tested
 
-        deleteUser: function( gUserId ) {
+        deleteUser: function( fbUserId ) {
             var deferred = Q.defer();
 
-            ORMUserGithubModel
-                .find( gUserId )
-                .success( function( gUser ) {
+            ORMUserFacebookModel
+                .find( fbUserId )
+                .success( function( fbUser ) {
 
-                    if ( !!gUser && !!gUser.id ) {
+                    if ( !!fbUser && !!fbUser.id ) {
 
-                        gUser
+                        fbUser
                             .destroy()
                             .success( function( result ) {
 
@@ -225,8 +227,8 @@ module.exports = function ( sequelize,
 
     } );
 
-    UserGithubService.instance = new UserGithubService( sequelize );
-    UserGithubService.Model = ORMUserGithubModel;
+    UserFacebookService.instance = new UserFacebookService( sequelize );
+    UserFacebookService.Model = ORMUserFacebookModel;
 
-    return UserGithubService.instance;
+    return UserFacebookService.instance;
 };

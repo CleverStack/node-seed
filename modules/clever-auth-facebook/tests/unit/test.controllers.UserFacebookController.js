@@ -8,11 +8,11 @@ var expect = require( 'chai' ).expect
 
 var new_user;
 
-describe( 'controllers.UserGithubController', function () {
-    var Service, UserGithubController, ctrl, gUsers = [];
+describe( 'controllers.UserFacebookController', function () {
+    var Service, UserFacebookController, ctrl, fbUsers = [];
 
     before( function ( done ) {
-        testEnv( function ( _UserGithubService_, _UserGithubController_ ) {
+        testEnv( function ( _UserFacebookService_, _UserFacebookController_ ) {
             var req = {
                 params: { action: 'fakeAction'},
                 method: 'GET',
@@ -25,48 +25,62 @@ describe( 'controllers.UserGithubController', function () {
 
             var next = function () {};
 
-            Controller = _UserGithubController_;
-            Service = _UserGithubService_;
+            Controller = _UserFacebookController_;
+            Service = _UserFacebookService_;
             ctrl = new Controller( req, res, next );
 
             var profile_1 = {
                     _json: {
-                        id: '112064034597570891032',
-                        email: 'volodymyrm@clevertech.biz',
-                        name: 'Volodymyr Denshchykov',
-                        html_url: 'https://github.com/denshikov-vovan',
-                        location: 'Ukraine',
-                        avatar_url: 'https://gravatar.com/avatar/e98ef168c69fd2a812a8dd46a775072a?d=https%3A%2F%2Fidenticons.github.com%2F814919104a88497c37d2154d918bba97.png&r=x'
+                        id: '100001182151515151',
+                        name: 'Volodumyr Denshchykov',
+                        first_name: 'Volodumyr',
+                        last_name: 'Denshchykov',
+                        link: 'https://www.facebook.com/denshikov.vovan',
+                        gender: 'male',
+                        email: 'denshikov_vovan@mail.ru',
+                        timezone: 2,
+                        locale: 'ru_RU',
+                        verified: true,
+                        updated_time: '2014-02-10T16:21:17+0000',
+                        username: 'denshikov.vovan',
+                        picture: 'url_for_picture'
                     }
                 }
               , profile_2 = {
                     _json: {
-                        id: '112064034597570891032',
-                        email: 'volodymyrm1@clevertech.biz',
-                        name: 'Volodymyr Petrov',
-                        html_url: 'https://github.com/denshikov-vovan',
-                        location: 'Ukraine',
-                        avatar_url: 'https://gravatar.com/avatar/e98ef168c69fd2a812a8dd46a775072a?d=https%3A%2F%2Fidenticons.github.com%2F814919104a88497c37d2154d918bba97.png&r=x'
+                        id: '100001182151515151',
+                        name: 'Volodumyr Denshchykov',
+                        first_name: 'Volodumyr',
+                        last_name: 'Denshchykov',
+                        link: 'https://www.facebook.com/denshikov.vovan',
+                        gender: 'male',
+                        email: 'denshikov_vovanok@mail.ru',
+                        timezone: 2,
+                        locale: 'ru_RU',
+                        verified: true,
+                        updated_time: '2014-02-10T16:21:17+0000',
+                        username: 'denshikov.vovan',
+                        picture: 'url_for_picture'
                     }
                 };
 
             Service
                 .findOrCreate( profile_1, 'bhbhgvbljbhscvzkchvblzclvnzbkjxcv' )
-                .then( function( gUser ) {
+                .then( function( fbUser ) {
 
-                    expect( gUser ).to.be.an( 'object' ).and.be.ok;
-                    expect( gUser ).to.have.property( 'id' ).and.be.ok;
+                    expect( fbUser ).to.be.an( 'object' ).and.be.ok;
+                    expect( fbUser ).to.have.property( 'id' ).and.be.ok;
 
-                    gUsers.push( gUser );
+                    fbUsers.push( fbUser );
 
                     Service
                         .findOrCreate( profile_2, 'kjajkvl zsdvbakhvckhabskhv' )
-                        .then( function( gUser ) {
+                        .then( function( fbUser ) {
 
-                            expect( gUser ).to.be.an( 'object' ).and.be.ok;
-                            expect( gUser ).to.have.property( 'id' ).and.be.ok;
+                            expect( fbUser ).to.be.an( 'object' ).and.be.ok;
+                            expect( fbUser ).to.have.property( 'id' ).and.be.ok;
 
-                            gUsers.push( gUser );
+                            fbUsers.push( fbUser );
 
                             done();
                         }, done );
@@ -99,7 +113,7 @@ describe( 'controllers.UserGithubController', function () {
                 expect( status ).to.equal( 200 );
 
                 expect( result ).to.be.an( 'object' ).and.be.ok;
-                expect( result ).to.have.property( 'url' ).and.contain( 'https://github.com/login/oauth/authorize?' );
+                expect( result ).to.have.property( 'url' ).and.contain( 'https://www.facebook.com/dialog/oauth?' );
 
                 done();
             };
@@ -123,7 +137,7 @@ describe( 'controllers.UserGithubController', function () {
                 expect( result[0] ).to.have.property( 'firstname' ).and.be.ok;
                 expect( result[0] ).to.have.property( 'lastname' ).and.be.ok;
                 expect( result[0] ).to.have.property( 'email' ).and.be.ok;
-                expect( result[0] ).to.have.property( 'githubid' ).and.be.ok;
+                expect( result[0] ).to.have.property( 'facebookid' ).and.be.ok;
                 expect( result[0] ).to.not.have.property( 'token' );
 
                 done();
@@ -147,13 +161,13 @@ describe( 'controllers.UserGithubController', function () {
                 expect( result ).to.have.property( 'firstname' ).and.be.ok;
                 expect( result ).to.have.property( 'lastname' ).and.be.ok;
                 expect( result ).to.have.property( 'email' ).and.be.ok;
-                expect( result ).to.have.property( 'githubid' ).and.be.ok;
+                expect( result ).to.have.property( 'facebookid' ).and.be.ok;
                 expect( result ).to.not.have.property( 'token' );
 
                 done();
             };
 
-            ctrl.req.params = { id: gUsers[0].id };
+            ctrl.req.params = { id: fbUsers[0].id };
 
             ctrl.getAction();
         } );
@@ -189,7 +203,7 @@ describe( 'controllers.UserGithubController', function () {
                 done();
             };
 
-            ctrl.req.params = { id: gUsers[0].id };
+            ctrl.req.params = { id: fbUsers[0].id };
 
             ctrl.deleteAction();
         } );

@@ -1,11 +1,12 @@
-var config = require ( 'config' )[ 'clever-auth-github' ]
+var config = require ( 'config' )[ 'clever-auth-facebook' ]
   , passport = require ( 'passport' )
   , qs = require ( 'qs' )
-  , GitHubStrategy = require('passport-github').Strategy;
+  , FacebookStrategy = require('passport-facebook').Strategy;
 
-var state = +new Date() + '';
+var state = +new Date() + ''
+  , scope = 'email,user_about_me';
 
-module.exports = function ( UserGithubService ) {
+module.exports = function ( UserFacebookService ) {
 
     passport.serializeUser( function ( user, done ) {
         done( null, user );
@@ -15,22 +16,21 @@ module.exports = function ( UserGithubService ) {
         done( null, user )
     } );
 
-    passport.use( new GitHubStrategy(
+    passport.use( new FacebookStrategy(
         {
-            clientID: config.github.clientId,
-            clientSecret: config.github.clientSecret,
-            callbackURL: config.github.redirectURIs,
-            state: state,
-            scope: 'user'
+            clientID: config.facebook.clientId,
+            clientSecret: config.facebook.clientSecret,
+            callbackURL: config.facebook.redirectURIs,
+            scope: scope
         },
         function ( accessToken, refreshToken, profile, done ) {
 
-            UserGithubService
+            UserFacebookService
                 .findOrCreate( profile, accessToken )
-                .then( function( gUser ) {
-                    return UserGithubService.authenticate ( gUser, profile )
+                .then( function( fbUser ) {
+                    return UserFacebookService.authenticate ( fbUser, profile )
                 })
-                .then( UserGithubService.updateAccessedDate )
+                .then( UserFacebookService.updateAccessedDate )
                 .then( done.bind( null, null ) )
                 .fail( done );
         }
@@ -39,47 +39,46 @@ module.exports = function ( UserGithubService ) {
 
     return (require( 'classes' ).Controller).extend (
         {
-            service: UserGithubService
+            service: UserFacebookService
         },
         {
             listAction: function () {
-                UserGithubService.listUsers()
+                UserFacebookService.listUsers()
                     .then( this.proxy( 'handleServiceMessage' ) )
                     .fail( this.proxy( 'handleException' ) );
             }, //tested
 
             getAction: function () {
-                var guId = this.req.params.id;
+                var fbuId = this.req.params.id;
 
-                UserGithubService
-                    .findUserById( guId )
+                UserFacebookService
+                    .findUserById( fbuId )
                     .then( this.proxy( 'handleServiceMessage' ) )
                     .fail( this.proxy( 'handleException' ) );
             }, //tested
 
             deleteAction: function () {
-                var guId = this.req.params.id;
+                var fbuId = this.req.params.id;
 
-                UserGithubService
-                    .deleteUser( guId )
+                UserFacebookService
+                    .deleteUser( fbuId )
                     .then( this.proxy( 'handleServiceMessage' ) )
                     .fail( this.proxy( 'handleException' ) );
             }, //tested
 
             loginAction: function () {
                 var params = {
-                    client_id: config.github.clientId,
-                    redirect_uri: config.github.redirectURIs,
-                    scope: 'user',
-                    state: state
+                    client_id: config.facebook.clientId,
+                    redirect_uri: config.facebook.redirectURIs,
+                    scope: scope
                 };
 
-                this.send( { url: 'https://github.com/login/oauth/authorize?' + qs.stringify( params ) }, 200 );
+                this.send( { url: 'https://www.facebook.com/dialog/oauth?' + qs.stringify( params ) }, 200 );
 
             }, //tested
 
             returnAction: function () {
-                passport.authenticate( 'github', this.proxy( 'handleLocalUser' ) )( this.req, this.res, this.next );
+                passport.authenticate( 'facebook', this.proxy( 'handleLocalUser' ) )( this.req, this.res, this.next );
             },
 
             handleLocalUser: function ( err, user ) {

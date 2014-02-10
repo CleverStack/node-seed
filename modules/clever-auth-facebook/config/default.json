@@ -1,0 +1,21 @@
+{
+    "clever-auth-facebook": {
+        "secretKey": "youMustChangeMe",
+
+        "redis": {
+            "host": "localhost",
+            "port": "6379",
+            "prefix": "",
+            "key": ""
+        },
+
+        "facebook": {
+            "clientId": "247066242129783",
+            "clientSecret": "b9ee18a9c582994aeac022c2713256ee",
+            "redirectURIs": "http://localhost:8080/auth/facebook/return"
+        },
+
+        "frontendURL": "http://localhost:9000/"
+
+    }
+}

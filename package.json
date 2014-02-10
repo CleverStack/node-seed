@@ -56,6 +56,6 @@
     "odm",
     "clever-auth",
     "clever-auth-github",
-    "clever-auth-google"
+    "clever-auth-facebook"
   ]
 }
