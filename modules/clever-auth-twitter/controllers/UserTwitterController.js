@@ -4,8 +4,6 @@ var config = require ( 'config' )[ 'clever-auth-twitter' ]
   , request = require ( 'request' )
   , TwitterStrategy = require('passport-twitter').Strategy;
 
-var token;
-
 module.exports = function ( UserTwitterService ) {
 
     passport.serializeUser( function ( user, done ) {
@@ -23,11 +21,11 @@ module.exports = function ( UserTwitterService ) {
             callbackURL: config.twitter.redirectURIs
         },
         function ( token, tokenSecret, profile, done ) {
-console.log(profile)
+
             UserTwitterService
                 .findOrCreate( profile, accessToken )
-                .then( function( gUser ) {
-                    return UserTwitterService.authenticate ( gUser, profile )
+                .then( function( twUser ) {
+                    return UserTwitterService.authenticate ( twUser, profile )
                 })
                 .then( UserTwitterService.updateAccessedDate )
                 .then( done.bind( null, null ) )
@@ -45,24 +43,24 @@ console.log(profile)
                 UserTwitterService.listUsers()
                     .then( this.proxy( 'handleServiceMessage' ) )
                     .fail( this.proxy( 'handleException' ) );
-            }, //tested
+            },
 
             getAction: function () {
-                var guId = this.req.params.id;
+                var twuId = this.req.params.id;
 
                 UserTwitterService
-                    .findUserById( guId )
+                    .findUserById( twuId )
                     .then( this.proxy( 'handleServiceMessage' ) )
                     .fail( this.proxy( 'handleException' ) );
-            }, //tested
+            },
 
             deleteAction: function () {
-                var guId = this.req.params.id;
+                var twuId = this.req.params.id;
 
-                UserTwitterService.deleteUser( guId )
+                UserTwitterService.deleteUser( twuId )
                     .then( this.proxy( 'handleServiceMessage' ) )
                     .fail( this.proxy( 'handleException' ) );
-            }, //tested
+            },
 
             loginAction: function () {
                 var self = this
@@ -76,8 +74,8 @@ console.log(profile)
 
                 request.post ( { url: url, oauth: params }, function ( err, req, body ) {
 
-                    token = qs.parse( body )
-                    var url = 'https://api.twitter.com/oauth/authenticate?';
+                    var token = qs.parse( body )
+                      , url = 'https://api.twitter.com/oauth/authenticate?';
 
                     var params = {
                         oauth_token: token.oauth_token
@@ -85,16 +83,12 @@ console.log(profile)
 
                     self.send( { url: url + qs.stringify( params ) }, 200 );
 
-                    })
-//                })
+                });
 
-            }, //tested
+            },
 
             returnAction: function () {
-
                 passport.authenticate( 'twitter', this.proxy( 'handleLocalUser' ) )( this.req, this.res, this.next );
-
-//
             },
 
             handleLocalUser: function ( err, user ) {

@@ -3,8 +3,7 @@ var config = require ( 'config' )[ 'clever-auth-facebook' ]
   , qs = require ( 'qs' )
   , FacebookStrategy = require('passport-facebook').Strategy;
 
-var state = +new Date() + ''
-  , scope = 'email,user_about_me';
+var scope = 'email,user_about_me';
 
 module.exports = function ( UserFacebookService ) {
 
