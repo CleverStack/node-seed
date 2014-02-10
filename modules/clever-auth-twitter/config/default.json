@@ -1,0 +1,21 @@
+{
+    "clever-auth-twitter": {
+        "secretKey": "youMustChangeMe",
+
+        "redis": {
+            "host": "localhost",
+            "port": "6379",
+            "prefix": "",
+            "key": ""
+        },
+
+        "twitter": {
+            "APIKey": "dNFtIYkruK6ZET8T8QobLQ",
+            "APISecret": "EN8YSnv9aLNYgCh9MUbQt2Py7U8AlMHmUCU7iQ4ig",
+            "redirectURIs": "http://127.0.0.1:8080/auth/twitter/return"
+        },
+
+        "frontendURL": "http://localhost:9000/"
+
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "name": "clever-auth-twitter",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "passport": "~0.1.18",
+        "connect-redis": "~1.4.6",
+        "q": "",
+        "sequelize": "1.7.0-beta8",
+        "moment": "",
+        "passport-twitter": "",
+        "qs": "*",
+        "request": "~2.33.0"
+    },
+    "author": {
+        "name": "Clevertech",
+        "email": "info@clevertech.biz",
+        "web": "http://www.clevertech.biz"
+    },
+    "collaborators": [
+        ""
+    ],
+    "description": "",
+    "keywords": [
+        ""
+    ],
+    "main": "module.js",
+    "devDependencies": {
+        "chai": "*",
+        "mocha": "*",
+        "sinon": ""
+    }
+}
