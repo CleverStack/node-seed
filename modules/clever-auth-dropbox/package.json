@@ -1,0 +1,32 @@
+{
+    "name": "clever-auth-dropbox",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "passport": "~0.1.18",
+        "connect-redis": "~1.4.6",
+        "q": "",
+        "sequelize": "1.7.0-beta8",
+        "moment": "",
+        "passport-dropbox-oauth2": "",
+        "qs": "*"
+    },
+    "author": {
+        "name": "Clevertech",
+        "email": "info@clevertech.biz",
+        "web": "http://www.clevertech.biz"
+    },
+    "collaborators": [
+        ""
+    ],
+    "description": "",
+    "keywords": [
+        ""
+    ],
+    "main": "module.js",
+    "devDependencies": {
+        "chai": "*",
+        "mocha": "*",
+        "sinon": ""
+    }
+}

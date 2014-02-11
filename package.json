@@ -54,9 +54,8 @@
   "bundledDependencies": [
     "orm",
     "odm",
-    "background-tasks",
     "clever-auth",
-    "clever-auth-google",
-    "clever-email"
+    "clever-auth-linkedin",
+    "clever-auth-dropbox"
   ]
 }

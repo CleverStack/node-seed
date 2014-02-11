@@ -1,0 +1,21 @@
+{
+    "clever-auth-linkedin": {
+        "secretKey": "youMustChangeMe",
+
+        "redis": {
+            "host": "localhost",
+            "port": "6379",
+            "prefix": "",
+            "key": ""
+        },
+
+        "linkedin": {
+            "AppKey": "77dnae99wih7t1",
+            "AppSecret": "Llr2J8zlPnrYWNSn",
+            "redirectURIs": "http://localhost:8080/auth/linkedin/return"
+        },
+
+        "frontendURL": "http://localhost:9000/"
+
+    }
+}

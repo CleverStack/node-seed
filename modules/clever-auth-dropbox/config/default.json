@@ -1,0 +1,21 @@
+{
+    "clever-auth-dropbox": {
+        "secretKey": "youMustChangeMe",
+
+        "redis": {
+            "host": "localhost",
+            "port": "6379",
+            "prefix": "",
+            "key": ""
+        },
+
+        "dropbox": {
+            "AppKey": "8hbtahx62cl0x8c",
+            "AppSecret": "l1cp2c2u3gsll1h",
+            "redirectURIs": "http://localhost:8080/auth/dropbox/return"
+        },
+
+        "frontendURL": "http://localhost:9000/"
+
+    }
+}

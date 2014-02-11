@@ -11,17 +11,6 @@
             }
         },
         "modelAssociations": {
-            "UserModel": {},
-            "EmailModel": {
-                "hasMany": [  "EmailAttachmentModel" ],
-                "belongsTo": [ "UserModel" ]
-            },
-            "EmailUserModel":{
-                "belongsTo" : [ "EmailModel", "UserModel" ]
-            },
-            "EmailAttachmentModel": {
-                "belongsTo": [ "EmailModel" ]
-            }
 
         }
     }
