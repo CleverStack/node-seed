@@ -1,0 +1,13 @@
+{
+    "clever-survey": {
+
+        "modelAssociations": {
+            "SurveyModel": {
+                "hasMany"   : [ "SurveyQuestionModel" ]
+            },
+            "SurveyQuestionModel" : {
+                "belongsTo" : [ "SurveyModel" ]
+            }
+        }
+    }
+}
