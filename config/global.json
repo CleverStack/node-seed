@@ -10,7 +10,7 @@
     "cors": {
       "origin": true,
       "credentials": true,
-      "headers": [ "x-requested-with", "content-type" ],
+      "headers": [ "x-requested-with", "content-type", "X-XSRF-TOKEN" ],
       "methods": [ "GET", "PUT", "POST", "DELETE", "OPTIONS" ],
       "maxAge": 1000000000
     }
