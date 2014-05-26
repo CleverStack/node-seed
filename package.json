@@ -1,7 +1,7 @@
 {
   "main": "app.js",
   "name": "cleverstack-node-seed",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "author": {
     "name": "Clevertech",
     "email": "info@clevertech.biz",
@@ -26,6 +26,7 @@
   "dependencies": {
     "express": "~3.4.7",
     "clever-controller": "~1.0.2",
+    "clever-injector": "~1.0.0",
     "nconf": "~0.6.9",
     "uberclass": "~1.0.1",
     "debug": "~0.7.2",
@@ -55,5 +56,8 @@
     "grunt-exec": "~0.4.2",
     "should": "~2.1.1"
   },
-  "bundledDependencies": []
+  "bundledDependencies": [
+    "clever-odm",
+    "clever-orm"
+  ]
 }
