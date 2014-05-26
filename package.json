@@ -1,7 +1,7 @@
 {
   "main": "app.js",
   "name": "cleverstack-node-seed",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "author": {
     "name": "Clevertech",
     "email": "info@clevertech.biz",
