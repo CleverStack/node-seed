@@ -1,11 +1,11 @@
 {
   "main": "app.js",
-  "name": "cleverstack-node-seed",
+  "name": "node-seed",
   "version": "0.1.1",
   "author": {
-    "name": "Clevertech",
-    "email": "info@clevertech.biz",
-    "web": "http://www.clevertech.biz"
+    "name": "CleverStack",
+    "email": "admin@cleverstack.io",
+    "web": "http://cleverstack.io"
   },
   "collaborators": [
     "Richard Gustin <richard@clevertech.biz>",
