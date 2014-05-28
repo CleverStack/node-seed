@@ -1,4 +1,4 @@
-CleverStack Node Seed [![Build Status](https://secure.travis-ci.org/clevertech/cleverstack-node-seed.png?branch=master)](https://travis-ci.org/clevertech/cleverstack-node-seed) [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
+CleverStack Node Seed [![Build Status](https://secure.travis-ci.org/CleverStack/node-seed.png?branch=master)](https://travis-ci.org/CleverStack/node-seed) [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 ====================
 
 ![CleverStack Node Seed](http://cleverstack.github.io/assets/img/logos/node-seed-logo-clean.png "CleverStack Node Seed")
