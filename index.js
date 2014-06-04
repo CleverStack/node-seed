@@ -4,10 +4,7 @@ var cors  = require( 'cors' );
 // Bootstrap the environment
 var env = utils.bootstrapEnv();
 
-// Load all the modules
-env.moduleLoader.loadModules();
-
-// Configure the app before routes
+// Configure the app before loading modules
 env.app.configure(function() {
     env.app.use( env.express.urlencoded() );
     env.app.use( env.express.json() );
@@ -16,6 +13,9 @@ env.app.configure(function() {
     env.app.use( env.express.favicon() );
     env.app.use( env.express.methodOverride() );
 });
+
+// Load all the modules
+env.moduleLoader.loadModules();
 
 // Initialize all the modules
 env.moduleLoader.initializeRoutes( injector );
