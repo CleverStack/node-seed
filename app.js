@@ -2,6 +2,8 @@ var cluster = require( 'cluster' )
   , config = require( './config' )
   , packageJson = require( './package.json' )
   , path = require( 'path' )
+  , os = require( 'os' )
+  , isWin = /^win32/.test( os.platform() )
   , fs = require( 'fs' );
 
 function loadModulesAppFiles( moduleName ) {
@@ -13,8 +15,10 @@ function loadModulesAppFiles( moduleName ) {
     });
 }
 
-// Set the node path - this works only because the other processes are forked.
-process.env.NODE_PATH = process.env.NODE_PATH ? './lib/:./modules/:' + process.env.NODE_PATH : './lib/:./modules/';
+// Set the node path - this works only because the other processes are forked. (Be sure to use the right delimiter)
+process.env.NODE_PATH = process.env.NODE_PATH 
+    ? [ './lib/', './modules', process.env.NODE_PATH ].join( isWin ? ';' : ':' )
+    : [ './lib/', './modules' ].join( isWin ? ';' : ':' );
 
 if ( cluster.isMaster ) {
     cluster.on('exit', function( worker, code, signal ) {
