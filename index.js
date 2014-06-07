@@ -17,6 +17,14 @@ env.app.configure(function() {
     env.app.use( cors( env.config.cors ) );
 });
 
+// Add some classes for simplicity
+var classes = require( 'classes' );
+injector.instance( 'Class', classes.Class );
+injector.instance( 'Model', classes.Model );
+injector.instance( 'Service', classes.Service );
+injector.instance( 'Controller', classes.Controller );
+injector.instance( 'Module', classes.Module );
+
 // Load all the modules
 env.moduleLoader.loadModules();
 
