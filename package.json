@@ -20,20 +20,21 @@
     "test": "grunt test --verbose"
   },
   "dependencies": {
-    "express": "~3.4.7",
-    "clever-controller": "~1.1.2",
-    "clever-injector": "~1.0.0",
-    "nconf": "~0.6.9",
-    "uberclass": "~1.0.1",
-    "debug": "~0.7.2",
-    "matchdep": "~0.3.0",
     "async": "~0.2.9",
-    "underscore": "~1.5.2",
-    "q": "~1.0.0",
-    "i": "~0.3.2",
+    "bluebird": "^2.0.2",
+    "clever-controller": "~1.1.3",
+    "clever-injector": "~1.0.0",
+    "cors": "~2.1.1",
+    "debug": "~0.7.2",
     "deepmerge": "~0.2.7",
+    "express": "~3.4.7",
+    "i": "~0.3.2",
+    "matchdep": "~0.3.0",
+    "nconf": "~0.6.9",
+    "q": "~1.0.0",
     "should": "~3.1.2",
-    "cors": "~2.1.1"
+    "uberclass": "~1.0.1",
+    "underscore": "~1.5.2"
   },
   "devDependencies": {
     "grunt-contrib-watch": "",

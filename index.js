@@ -19,10 +19,11 @@ env.app.configure(function() {
 
 // Add some classes for simplicity
 var classes = require( 'classes' );
+injector.instance( 'Class', classes.Class );
 injector.instance( 'Model', classes.Model );
+injector.instance( 'Service', classes.Service );
 injector.instance( 'Controller', classes.Controller );
-injector.instance( 'EventedClass', classes.EventedClass );
-injector.instance( 'ModuleClass', classes.ModuleClass );
+injector.instance( 'Module', classes.Module );
 
 // Load all the modules
 env.moduleLoader.loadModules();
