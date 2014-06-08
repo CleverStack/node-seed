@@ -1,0 +1,6 @@
+{
+	"test-module": {
+		"hello": "world",
+		"global": "should be changed by global.json"
+	}
+}

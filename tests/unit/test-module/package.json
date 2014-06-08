@@ -1,0 +1,6 @@
+{
+  "name": "test-module",
+  "version": "0.0.1",
+  "main": "module.js",
+  "private": true
+}
