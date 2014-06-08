@@ -1,6 +1,9 @@
 CleverStack Node Seed
 ====================
-[![GitHub version](https://badge.fury.io/gh/cleverstack%2Fclever-orm.png)](http://badge.fury.io/gh/cleverstack%2Fclever-orm) [![Code Climate](https://codeclimate.com/github/CleverStack/node-seed.png)](https://codeclimate.com/github/CleverStack/node-seed) [![Build Status](https://secure.travis-ci.org/CleverStack/node-seed.png?branch=master)](https://travis-ci.org/CleverStack/node-seed) [![Dependency Status](https://david-dm.org/CleverStack/node-seed.svg?theme=shields.io)](https://david-dm.org/CleverStack/node-seed) [![devDependency Status](https://david-dm.org/CleverStack/node-seed/dev-status.svg?theme=shields.io)](https://david-dm.org/CleverStack/node-seed#info=devDependencies) [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
+[![GitHub version](https://badge.fury.io/gh/cleverstack%2Fnode-seed.png)](http://badge.fury.io/gh/cleverstack%2Fnode-seed) [![Dependency Status](https://david-dm.org/CleverStack/node-seed.png)](https://david-dm.org/CleverStack/node-seed) [![devDependency Status](https://david-dm.org/CleverStack/node-seed/dev-status.png)](https://david-dm.org/CleverStack/node-seed#info=devDependencies) [![Code Climate](https://codeclimate.com/github/CleverStack/node-seed.png)](https://codeclimate.com/github/CleverStack/node-seed) 
+[![Build Status](https://secure.travis-ci.org/CleverStack/node-seed.png?branch=master)](https://travis-ci.org/CleverStack/node-seed) 
+[![Coverage](https://codeclimate.com/github/CleverStack/node-seed/coverage.png)](https://codeclimate.com/github/CleverStack/node-seed) 
+[![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/) 
 
 ![CleverStack Node Seed](http://cleverstack.github.io/assets/img/logos/node-seed-logo-clean.png "CleverStack Node Seed")
 
@@ -10,7 +13,7 @@ CleverStack Node Seed provides you with a cutting edge NodeJS development workfl
 
 ## Documentation
 
-See [cleverstack.io](http://cleverstack.io/getting-started/#backend) for more detailed information on the Node seed.
+See [cleverstack.io](http://cleverstack.io/documentation/#backend) for more detailed information on the Node seed or visit the [Getting Started Guide](http://cleverstack.io/getting-started/)
 
 ## Install
 
