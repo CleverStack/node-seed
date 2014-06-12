@@ -4,7 +4,9 @@ var path = require( 'path' )
   , fs = require( 'fs' )
   , packageJson = require( __dirname + '/package.json' )
   , merge = require( 'deepmerge' )
-  , getModulePaths = require( __dirname + '/lib/utils/getModulePaths.js' );
+  , getModulePaths = require( __dirname + '/lib/utils/getModulePaths.js' )
+  , os = require( 'os' )
+  , isWin = /^win32/.test( os.platform() );
 
 // Set the node path - this works only because the other processes are forked.
 process.env.NODE_PATH = process.env.NODE_PATH 
