@@ -12,15 +12,11 @@ var expect      = require( 'chai' ).expect
   , fixtureDir  = path.resolve( path.join( __dirname, 'test-module' ) )
   , models      = [ { name: 'Testing' }, { name: 'Testing' } ];
 
-packageJson.bundledDependencies.push( 'test-module' );
-
 describe ( 'Controller', function () {
 
     before( function( done ) {
-        moduleLdr.on( 'modulesLoaded', function() {
-            TestController = injector.getInstance( 'testModule' ).controllers.TestController;
-            done();
-        });
+        TestController = injector.getInstance( 'testModule' ).controllers.TestController;
+        done();
     });
 
     function fakeRequest( req ) {

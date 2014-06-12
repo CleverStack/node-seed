@@ -1,27 +1,21 @@
 var utils       = require( 'utils' )
   , env         = utils.bootstrapEnv()
   , moduleLdr   = env.moduleLoader
-  , ncp         = require( 'ncp' );
+  , expect      = require( 'chai' ).expect
+  , injector    = require( 'injector' );
 
 describe( 'test.utils.bootstrapEnv', function() {
-    before( function( done ) {
-        this.timeout( 10000 );
-
-
-
-        moduleLdr.on( 'modulesLoaded', function() {
-            TestController = injector.getInstance( 'testModule' ).controllers.TestController;
-            moduleLdr.initializeRoutes();
-        });
-
-        moduleLdr.on( 'routesInitialized', function() {
-            done();
-        });
-
-        moduleLdr.loadModules();
-    });
 
     it( 'Should have bootstrapped the environment', function( done ) {
-        expect( env.to.be.a( 'object' ) );
+        expect( env ).to.be.an( 'object' );
+        expect( env ).to.have.property( 'config' );
+        expect( env ).to.have.property( 'express' );
+        expect( env ).to.have.property( 'app' );
+        expect( env ).to.have.property( 'moduleLoader' );
+        expect( env ).to.have.property( 'webPort' );
+        expect( env ).to.have.property( 'packageJson' );
+        
+        done();
     });
+
 });
