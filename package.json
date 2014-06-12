@@ -2,7 +2,7 @@
   "main": "app.js",
   "name": "node-seed",
   "description": "Cleverstack Node-Seed",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": {
     "name": "CleverStack",
     "email": "admin@cleverstack.io",
@@ -53,8 +53,5 @@
     "grunt-exec": "~0.4.2",
     "should": "~2.1.1"
   },
-  "bundledDependencies": [
-    "clever-orm",
-    "clever-auth"
-  ]
+  "bundledDependencies": []
 }
