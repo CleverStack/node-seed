@@ -7,7 +7,9 @@ var path = require( 'path' )
   , getModulePaths = require( __dirname + '/lib/utils/getModulePaths.js' );
 
 // Set the node path - this works only because the other processes are forked.
-process.env.NODE_PATH = process.env.NODE_PATH ? './lib/:./modules/:' + process.env.NODE_PATH : './lib/:./modules/';
+process.env.NODE_PATH = process.env.NODE_PATH 
+    ? [ './tests/unit/', './lib/', './modules', process.env.NODE_PATH ].join( isWin ? ';' : ':' )
+    : [ './tests/unit/', './lib/', './modules' ].join( isWin ? ';' : ':' );
 
 module.exports = function( grunt ) {
     // load all grunt tasks
