@@ -1,7 +1,4 @@
-var utils       = require( 'utils' )
-  , env         = utils.bootstrapEnv()
-  , moduleLdr   = env.moduleLoader
-  , expect      = require( 'chai' ).expect
+var expect      = require( 'chai' ).expect
   , async       = require( 'async' )
   , sinon       = require( 'sinon' )
   , underscore  = require( 'underscore' )
@@ -9,8 +6,8 @@ var utils       = require( 'utils' )
   , util        = require( 'util' )
   , injector    = require( 'injector' )
   , debug       = require( 'debug' )( 'ControllerTests' )
-  , ModuleLdr   = injector.getInstance( 'moduleLoader' )
   , packageJson = injector.getInstance( 'packageJson' )
+  , moduleLdr   = injector.getInstance( 'moduleLoader' )
   , Emitter     = require( 'events' ).EventEmitter
   , fixtureDir  = path.resolve( path.join( __dirname, 'test-module' ) )
   , models      = [ { name: 'Testing' }, { name: 'Testing' } ];
@@ -18,6 +15,13 @@ var utils       = require( 'utils' )
 packageJson.bundledDependencies.push( 'test-module' );
 
 describe ( 'Controller', function () {
+
+    before( function( done ) {
+        moduleLdr.on( 'modulesLoaded', function() {
+            TestController = injector.getInstance( 'testModule' ).controllers.TestController;
+            done();
+        });
+    });
 
     function fakeRequest( req ) {
         req.method  = req.method || 'GET';
@@ -44,21 +48,6 @@ describe ( 'Controller', function () {
             }
         };
     };
-
-    before( function( done ) {
-        this.timeout( 10000 );
-
-        moduleLdr.on( 'modulesLoaded', function() {
-            TestController = injector.getInstance( 'testModule' ).controllers.TestController;
-            moduleLdr.initializeRoutes();
-        });
-
-        moduleLdr.on( 'routesInitialized', function() {
-            done();
-        });
-
-        moduleLdr.loadModules();
-    });
 
     describe( 'Configuration and features', function() {
         it( 'Does not route when Class.autoRouting = false' );

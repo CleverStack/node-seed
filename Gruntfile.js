@@ -41,7 +41,7 @@ module.exports = function( grunt ) {
                     reporter: 'spec',
                     timeout: 5000
                 },
-                src: [ 'tests/unit/*.js' ].concat( getModulePaths( 'tests', 'unit', '*.js' ) )
+                src: [ 'tests/unit/test.utils.bootstrapEnv.js', 'tests/unit/test.classes.Controller.js' ]
             },
             e2e: {
                 options: {
