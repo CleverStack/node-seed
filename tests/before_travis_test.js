@@ -1,148 +1,112 @@
-var Q = require( 'q' )
-  , spawn = require( 'child_process' ).spawn
-  , path  = require( 'path' )
-  , fs    = require( 'fs' )
-  , ncp   = require('ncp').ncp;
+var Promise = require( 'bluebird' )
+  , spawn   = require( 'child_process' ).spawn
+  , path    = require( 'path' )
+  , fs      = require( 'fs' )
+  , rimraf  = require( 'rimraf' )
+  , ncp     = require( 'ncp' );
 
-//install clever-orm module to test project
-function installORM () {
-    var defered = Q.defer()
-      , proc = spawn ( 'clever', [ '-v', '-f', 'install', 'clever-orm' ], { cwd: path.resolve( path.join( __dirname, '..' ) ) } );
+function installTestModule() {
+    return new Promise( function( resolve, reject ) {
+        var pkgJson     = path.resolve( path.join( __dirname, '..', 'package.json' ) )
+          , packageJson = require( pkgJson )
+          , source      = path.resolve( path.join( __dirname, 'unit', 'test-module' ) )
+          , dest        = path.resolve( path.join( __dirname, '..', 'modules', 'test-module' ) );
 
-    console.log( 'step #1 - install clever-orm module - begin\n' );
+        console.log( 'step #2 - install test-module and add to bundledDependencies - begin' );
 
-    proc.stdout.on('data', function (data) {
-        var str = data.toString()
-          , objs = [
-                { reg: /Database username/ , write: 'travis\n' },
-                { reg: /Database password/ , write: '\n' },
-                { reg: /Database name/     , write: 'test_db\n' },
-                { reg: /Database dialect/  , write: '\n' },
-                { reg: /Database port/     , write: '3306\n' },
-                { reg: /Database host/     , write: '127.0.0.1\n' },
-            ];
-
-        if ( str.match( /ing/ ) !== null ) {
-            console.log( str )
-        } 
-
-        objs.forEach ( function ( obj ) {
-            if ( str.match( obj.reg ) !== null ) {
-                proc.stdin.write( obj.write );
-            } 
-        });
-    });
-
-    proc.stderr.on('data', function (data) {
-        console.log( 'Error in step #1 - ' + data.toString() + '\n');
-        defered.reject ( data.toString() );
-    });
-
-    proc.on('close', function (code) {
-        console.log('step #1 process exited with code ' + code + '\n' );
-        defered.resolve();
-    });
-
-    return defered.promise;
-}
-
-//create and update config files
-function configFiles(  ) {
-    var deferred = Q.defer()
-      , ormFile = path.join( __dirname, '..', 'modules', 'clever-orm', 'config', 'default.json' )
-      , comFile = path.join( __dirname, '..', 'config', 'test.json' )
-      , ormData = {
-            "clever-orm": {
-            "db": {
-                "username": "travis",
-                "password": "",
-                "database": "test_db",
-                "options": {
-                    "host": "127.0.0.1",
-                    "dialect": "mysql",
-                    "port": 3306
-                    },
-                },
-                "modelAssociations": {}
-            }
-        }
-      , comData = {
-            "environmentName": "TEST",
-            "memcacheHost": "127.0.0.1:11211",
-            "clever-orm": {
-                "db": {
-                    "username": "travis",
-                    "password": "",
-                    "database": "test_db",
-                    "options": {
-                        "dialect": "mysql",
-                        "host": "127.0.0.1",
-                        "port": "3306"
+        rimraf( dest, function( e ) {
+            if ( e === null ) {
+                ncp( source, dest, function( err ) {
+                    if ( err !== null ) {
+                        console.log( 'Error in step #2 - ' + err + '\n');
+                        reject( e );
+                    } else if ( packageJson.bundledDependencies.indexOf( 'test-module' ) === -1 ) {
+                        packageJson.bundledDependencies.push( 'test-module' );
+                        fs.writeFile( pkgJson, JSON.stringify( packageJson, null, '  ' ), function( e ) {
+                            if ( !!e ) {
+                                console.log( 'Error in step #2 - ' + e + '\n');
+                                reject( e );
+                            } else {
+                                console.log( 'step #2 - completed' );
+                                resolve();
+                            }
+                        });
+                    } else {
+                        console.log( 'step #2 - completed' );
+                        resolve();
                     }
-                }
+                });
+            } else {
+                console.log( 'Error in step #2 - ' + e + '\n' );
+                reject();
             }
-        };
-
-    console.log( 'step #2 - create and update config files - begin\n' );
-
-    fs.writeFile ( ormFile, JSON.stringify ( ormData ), function ( err ) {
-
-        if ( err ) {
-            console.log( 'Error in step #2 - ' + err + '\n');
-            return deferred.reject ( err );
-        }
-
-        fs.writeFile ( comFile, JSON.stringify ( comData ), function ( err ) {
-
-            if ( err ) {
-                console.log( 'Error in step #2 - ' + err + '\n');
-                return deferred.reject ( err );
-            }
-
-            console.log('step #2 process exited with code 0\n' );
-            deferred.resolve();
         });
-    });
 
-    return deferred.promise;    
+    });
 }
 
-//added clever-orm module in bundledDependencies
-function bundled(  ) {
-    var deferred = Q.defer()
-      , file = path.join( __dirname, '..', 'package.json' );
+function rebaseDb() {
+    return new Promise( function( resolve, reject ) {
+        var proc = spawn( 'grunt', [ 'db' ], { stdio: 'inherit', cwd: path.resolve( path.join( __dirname, '..' ) ) } );
 
-    console.log( 'step #3 - added clever-orm module in bundledDependencies\n' );
+        console.log( 'step #3 - rebase db' );
 
-    fs.readFile ( file, function ( err, data ) {
+        proc.stderr.on('data', function (data) {
+            console.log( 'Error in step #3 - ' + data.toString() + '\n');
+            reject ( data.toString() );
+        });
 
-        if ( err ) {
-            console.log( 'Error in step #3 - ' + err + '\n');
-            return deferred.reject ( err );
-        }
-
-        data = JSON.parse ( data );
-
-        data.bundledDependencies.push ( 'clever-orm' );
-
-        fs.writeFile ( file, JSON.stringify ( data ), function ( err ) {
-
-            if ( err ) {
-                console.log( 'Error in step #3 - ' + err + '\n');
-                return deferred.reject ( err );
-            }
-
-            console.log('step #3 process exited with code 0\n' );
-            deferred.resolve();
+        proc.on('close', function (code) {
+            console.log('step #3 process exited with code ' + code + '\n' );
+            resolve();
         });
     });
+}
 
-    return deferred.promise;    
+function installORM () {
+    return new Promise( function( resolve, reject ) {
+        var objs = [
+                { reg: /Database username/ , write: 'travis\n'   , done: false },
+                { reg: /Database password/ , write: '\n'         , done: false },
+                { reg: /Database name/     , write: 'test_db\n'  , done: false },
+                { reg: /Database dialect/  , write: '\n'         , done: false },
+                { reg: /Database port/     , write: '3306\n'     , done: false },
+                { reg: /Database host/     , write: '127.0.0.1\n', done: false },
+            ]
+          , proc = spawn ( 'clever', [ 'install', 'clever-orm' ], { cwd: path.resolve( path.join( __dirname, '..' ) ) } );
+
+        console.log( 'step #1 - install clever-orm module - begin\n' );
+
+        proc.stdout.on('data', function (data) {
+            var str = data.toString();
+
+            if ( str.match( /ing/ ) !== null ) {
+                console.log( str )
+            } 
+
+            objs.forEach ( function ( obj, i ) {
+                if ( obj.done !== true && str.match( obj.reg ) !== null ) {
+                    objs[i].done = true;
+                    proc.stdin.write( obj.write );
+                } 
+            });
+        });
+
+        proc.stderr.on('data', function (data) {
+            console.log( 'Error in step #1 - ' + data.toString() + '\n');
+            reject ( data.toString() );
+        });
+
+        proc.on('close', function (code) {
+            console.log('step #1 process exited with code ' + code + '\n' );
+            resolve();
+        });
+    });
 }
 
 installORM()
-    .then ( configFiles )
-    .then ( bundled )
-    .fail ( function (err) {
+    .then( installTestModule )
+    .then( rebaseDb )
+    .catch( function (err) {
         console.log('Error - ' + err );
     });

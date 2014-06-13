@@ -6,10 +6,6 @@ var expect      = require( 'chai' ).expect
   , util        = require( 'util' )
   , injector    = require( 'injector' )
   , debug       = require( 'debug' )( 'ControllerTests' )
-  , packageJson = injector.getInstance( 'packageJson' )
-  , moduleLdr   = injector.getInstance( 'moduleLoader' )
-  , Emitter     = require( 'events' ).EventEmitter
-  , fixtureDir  = path.resolve( path.join( __dirname, 'test-module' ) )
   , models      = [ { name: 'Testing' }, { name: 'Testing' } ];
 
 describe ( 'Controller', function () {
