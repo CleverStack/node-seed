@@ -7,7 +7,7 @@ var Q = require( 'q' )
 //install clever-orm module to test project
 function installORM () {
     var defered = Q.defer()
-      , proc = spawn ( 'clever', [ 'install', 'clever-orm' ], { cwd: path.resolve( path.join( __dirname, '..', '..' ) ) } );
+      , proc = spawn ( 'clever', [ '-v', '-f', 'install', 'clever-orm' ], { cwd: path.resolve( path.join( __dirname, '..' ) ) } );
 
     console.log( 'step #1 - install clever-orm module - begin\n' );
 
@@ -49,8 +49,8 @@ function installORM () {
 //create and update config files
 function configFiles(  ) {
     var deferred = Q.defer()
-      , ormFile = path.join( __dirname, '../', prName, 'backend', 'modules', 'clever-orm', 'config', 'default.json' )
-      , comFile = path.join( __dirname, '../', prName, 'backend', 'config', 'test.json' )
+      , ormFile = path.join( __dirname, '..', 'modules', 'clever-orm', 'config', 'default.json' )
+      , comFile = path.join( __dirname, '..', 'config', 'test.json' )
       , ormData = {
             "clever-orm": {
             "db": {
@@ -107,10 +107,10 @@ function configFiles(  ) {
     return deferred.promise;    
 }
 
-//added clever-auth module in bundledDependencies
+//added clever-orm module in bundledDependencies
 function bundled(  ) {
     var deferred = Q.defer()
-      , file = path.join( __dirname, '../', prName, 'backend', 'package.json' );
+      , file = path.join( __dirname, '..', 'package.json' );
 
     console.log( 'step #3 - added clever-orm module in bundledDependencies\n' );
 
