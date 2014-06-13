@@ -1,8 +1,19 @@
-before_script:
+before_install:
   - npm install -g grunt-cli
+  - npm install -g bower
+  - npm install -g cleverstack-cli
+  - npm install ncp
+  - npm install q
+
+before_script:
+  - mysql -e 'create database test_db;'
+  - node tests/before_travis_test.js
+  - export NODE_ENV=test
+  - export NODE_PATH=./tests/unit/:./lib/:./modules/
+  - cd testProject/backend
 
 script:
-  - "npm run test"
+  - "clever test unit"
 
 notifications:
   email:
