@@ -37,21 +37,23 @@
     "underscore": "~1.5.2"
   },
   "devDependencies": {
-    "grunt-contrib-watch": "",
+    "chai": "",
+    "grunt-concurrent": "~0.3.0",
     "grunt-contrib-clean": "",
-    "grunt-contrib-jshint": "",
     "grunt-contrib-connect": "~0.3.0",
+    "grunt-contrib-jshint": "",
+    "grunt-contrib-watch": "",
+    "grunt-exec": "~0.4.2",
     "grunt-mocha-test": "",
     "grunt-nodemon": "",
+    "karma": "",
     "matchdep": "",
     "mocha": "",
-    "chai": "",
+    "ncp": "^0.5.1",
+    "rimraf": "^2.2.8",
+    "should": "~2.1.1",
     "sinon": "",
-    "karma": "",
-    "supertest": "",
-    "grunt-concurrent": "~0.3.0",
-    "grunt-exec": "~0.4.2",
-    "should": "~2.1.1"
+    "supertest": ""
   },
   "bundledDependencies": []
 }
