@@ -80,7 +80,7 @@ function installORM () {
         });
 
         proc.on('close', function (code) {
-            console.dir(require(path.resolve( path.join( __dirname, '..', 'package.json' )));
+            console.dir( require( path.resolve( path.join( __dirname, '..', 'package.json' ) ) ) );
             console.log('step #2 process exited with code ' + code + '\n' );
             resolve();
         });
