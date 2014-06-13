@@ -12,6 +12,7 @@ describe ( 'Controller', function () {
 
     before( function( done ) {
         TestController = injector.getInstance( 'testModule' ).controllers.TestController;
+        console.dir(require('config'));
         done();
     });
 
