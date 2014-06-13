@@ -12,7 +12,7 @@ before_script:
   - export NODE_PATH=./tests/unit/:./lib/:./modules/
 
 script:
-  - "clever test unit"
+  - "npm test"
 
 notifications:
   email:
