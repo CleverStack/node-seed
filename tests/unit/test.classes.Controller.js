@@ -12,7 +12,6 @@ describe ( 'Controller', function () {
 
     before( function( done ) {
         TestController = injector.getInstance( 'testModule' ).controllers.TestController;
-        console.dir(require('config'));
         done();
     });
 
@@ -29,14 +28,12 @@ describe ( 'Controller', function () {
     function fakeResponse( cb ) {
         return {
             json: function( code, message ) {
-                console.dir( arguments );
                 setTimeout( function() {
                     cb( code, JSON.parse( JSON.stringify( message ) ) )                    
                 }, 10 );
             },
 
             send: function( code, message ) {
-                console.dir( arguments );
                 setTimeout( function() {
                     cb( code, message )
                 }, 10 );
