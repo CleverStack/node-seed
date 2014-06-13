@@ -10,7 +10,6 @@ before_script:
   - node tests/before_travis_test.js
   - export NODE_ENV=test
   - export NODE_PATH=./tests/unit/:./lib/:./modules/
-  - cd testProject/backend
 
 script:
   - "clever test unit"
