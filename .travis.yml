@@ -2,14 +2,12 @@ before_install:
   - npm install -g grunt-cli
   - npm install -g bower
   - npm install -g cleverstack-cli
-  - npm install ncp
-  - npm install q
 
 before_script:
   - mysql -e 'create database test_db;'
-  - node tests/before_travis_test.js
   - export NODE_ENV=test
   - export NODE_PATH=./lib/:./modules/
+  - node tests/before_travis_test.js
 
 script:
   - "npm test"
@@ -21,7 +19,7 @@ notifications:
     - "chat.freenode.net#cleverstack"
 
 env:
-  - NODE_ENV=prod NODE_PATH=./lib/:./modules/
+  - NODE_ENV=test NODE_PATH=./lib/:./modules/
 
 language: node_js
 
