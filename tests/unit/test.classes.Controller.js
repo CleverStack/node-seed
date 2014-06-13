@@ -6,10 +6,6 @@ var expect      = require( 'chai' ).expect
   , util        = require( 'util' )
   , injector    = require( 'injector' )
   , debug       = require( 'debug' )( 'ControllerTests' )
-  , packageJson = injector.getInstance( 'packageJson' )
-  , moduleLdr   = injector.getInstance( 'moduleLoader' )
-  , Emitter     = require( 'events' ).EventEmitter
-  , fixtureDir  = path.resolve( path.join( __dirname, 'test-module' ) )
   , models      = [ { name: 'Testing' }, { name: 'Testing' } ];
 
 describe ( 'Controller', function () {
@@ -33,11 +29,13 @@ describe ( 'Controller', function () {
         return {
             json: function( code, message ) {
                 setTimeout( function() {
+                    console.dir( arguments );
                     cb( code, JSON.parse( JSON.stringify( message ) ) )                    
                 }, 10 );
             },
 
             send: function( code, message ) {
+                console.dir( arguments );
                 setTimeout( function() {
                     cb( code, message )
                 }, 10 );
