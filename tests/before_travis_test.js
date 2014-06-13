@@ -12,36 +12,54 @@ function installTestModule() {
           , source      = path.resolve( path.join( __dirname, 'unit', 'test-module' ) )
           , dest        = path.resolve( path.join( __dirname, '..', 'modules', 'test-module' ) );
 
-        console.log( 'step #1 - install test-module and add to bundledDependencies - begin' );
+        console.log( 'step #2 - install test-module and add to bundledDependencies - begin' );
 
         rimraf( dest, function( e ) {
             if ( e === null ) {
                 ncp( source, dest, function( err ) {
                     if ( err !== null ) {
-                        console.log( 'Error in step #1 - ' + err + '\n');
+                        console.log( 'Error in step #2 - ' + err + '\n');
                         reject( e );
                     } else if ( packageJson.bundledDependencies.indexOf( 'test-module' ) === -1 ) {
                         packageJson.bundledDependencies.push( 'test-module' );
                         fs.writeFile( pkgJson, JSON.stringify( packageJson, null, '  ' ), function( e ) {
                             if ( !!e ) {
-                                console.log( 'Error in step #1 - ' + e + '\n');
+                                console.log( 'Error in step #2 - ' + e + '\n');
                                 reject( e );
                             } else {
-                                console.log( 'step #1 - completed' );
+                                console.log( 'step #2 - completed' );
                                 resolve();
                             }
                         });
                     } else {
-                        console.log( 'step #1 - completed' );
+                        console.log( 'step #2 - completed' );
                         resolve();
                     }
                 });
             } else {
-                console.log( 'Error in step #1 - ' + e + '\n' );
+                console.log( 'Error in step #2 - ' + e + '\n' );
                 reject();
             }
         });
 
+    });
+}
+
+function rebaseDb() {
+    return new Promise( function( resolve, reject ) {
+        var proc = spawn( 'grunt', [ 'db' ], { stdio: 'inherit', cwd: path.resolve( path.join( __dirname, '..' ) ) } );
+
+        console.log( 'step #3 - rebase db' );
+
+        proc.stderr.on('data', function (data) {
+            console.log( 'Error in step #3 - ' + data.toString() + '\n');
+            reject ( data.toString() );
+        });
+
+        proc.on('close', function (code) {
+            console.log('step #3 process exited with code ' + code + '\n' );
+            resolve();
+        });
     });
 }
 
@@ -57,7 +75,7 @@ function installORM () {
             ]
           , proc = spawn ( 'clever', [ 'install', 'clever-orm' ], { cwd: path.resolve( path.join( __dirname, '..' ) ) } );
 
-        console.log( 'step #2 - install clever-orm module - begin\n' );
+        console.log( 'step #1 - install clever-orm module - begin\n' );
 
         proc.stdout.on('data', function (data) {
             var str = data.toString();
@@ -75,20 +93,20 @@ function installORM () {
         });
 
         proc.stderr.on('data', function (data) {
-            console.log( 'Error in step #2 - ' + data.toString() + '\n');
+            console.log( 'Error in step #1 - ' + data.toString() + '\n');
             reject ( data.toString() );
         });
 
         proc.on('close', function (code) {
-            console.dir( require( path.resolve( path.join( __dirname, '..', 'package.json' ) ) ) );
-            console.log('step #2 process exited with code ' + code + '\n' );
+            console.log('step #1 process exited with code ' + code + '\n' );
             resolve();
         });
     });
 }
 
-installTestModule()
-    .then( installORM )
+installORM()
+    .then( installTestModule )
+    .then( rebaseDb )
     .catch( function (err) {
         console.log('Error - ' + err );
     });
