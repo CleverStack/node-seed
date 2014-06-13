@@ -107,10 +107,10 @@ function configFiles(  ) {
     return deferred.promise;    
 }
 
-//added clever-auth module in bundledDependencies
+//added clever-orm module in bundledDependencies
 function bundled(  ) {
     var deferred = Q.defer()
-      , file = path.join( __dirname, '../', prName, 'backend', 'package.json' );
+      , file = path.join( __dirname, '..', 'package.json' );
 
     console.log( 'step #3 - added clever-orm module in bundledDependencies\n' );
 
