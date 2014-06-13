@@ -1,5 +1,6 @@
-var Q = require( 'q' )
-  , spawn = require( 'child_process' ).spawn;
+var Q     = require( 'q' )
+  , spawn = require( 'child_process' ).spawn
+  , path  = require( 'path' );
 
 function installORM () {
     var defered = Q.defer()
@@ -13,7 +14,7 @@ function installORM () {
         ]
       , proc = spawn ( 'clever', [ 'install', 'clever-orm' ], { cwd: path.resolve( path.join( __dirname, '..' ) ) } );
 
-    console.log( 'step #2 - install clever-orm module - begin\n' );
+    console.log( 'step #1 - install clever-orm module - begin\n' );
 
     proc.stdout.on('data', function (data) {
         var str = data.toString();
@@ -31,12 +32,12 @@ function installORM () {
     });
 
     proc.stderr.on('data', function (data) {
-        console.log( 'Error in step #2 - ' + data.toString() + '\n');
+        console.log( 'Error in step #1 - ' + data.toString() + '\n');
         defered.reject ( data.toString() );
     });
 
     proc.on('close', function (code) {
-        console.log('step #2 process exited with code ' + code + '\n' );
+        console.log('step #1 process exited with code ' + code + '\n' );
         defered.resolve();
     });
 
