@@ -115,27 +115,12 @@ function bundled() {
     return deferred.promise;    
 }
 
-function rebase() {
-    var deferred = Q.defer()
-      , proc = spawn( 'grunt', [ 'db' ], { cwd: path.resolve( path.join( __dirname, '..' ) ) } );
-
-    proc.stderr.on('data', function (data) {
-        console.log( 'Error in step #4 - ' + data.toString() + '\n');
-        defered.reject ( data.toString() );
-    });
-
-    proc.on('close', function (code) {
-        console.log('step #4 process exited with code ' + code + '\n' );
-        defered.resolve();
-    });
-
-    return deferred.promise;
-}
-
 installORM()
-    .then( configFiles )
-    .then( bundled )
-    .then( rebase )
+    // .then( configFiles )
+    // .then( bundled )
+    .then( function() {
+        console.log( 'Installed ORM module' );
+    })
     .fail( function (err) {
         console.log('Error - ' + err );
     });
