@@ -1,30 +1,47 @@
 var Promise = require( 'bluebird' )
   , spawn   = require( 'child_process' ).spawn
   , path    = require( 'path' )
-  , fs      = require( 'fs' );
+  , fs      = require( 'fs' )
+  , rimraf  = require( 'rimraf' )
+  , ncp     = require( 'ncp' );
 
-function addTestModuleToPackageJson() {
+function installTestModule() {
     return new Promise( function( resolve, reject ) {
         var pkgJson     = path.resolve( path.join( __dirname, '..', 'package.json' ) )
-          , packageJson = require( pkgJson );
+          , packageJson = require( pkgJson )
+          , source      = path.resolve( path.join( __dirname, 'unit', 'test-module' ) )
+          , dest        = path.resolve( path.join( __dirname, '..', 'modules', 'test-module' ) );
 
-        console.log( 'step #1 - add test-module to bundledDependencies - begin' );
+        console.log( 'step #1 - install test-module and add to bundledDependencies - begin' );
 
-        if ( packageJson.bundledDependencies.indexOf( 'test-module' ) === -1 ) {
-            packageJson.bundledDependencies.push( 'test-module' );
-            fs.writeFile( pkgJson, JSON.stringify( packageJson, null, '  ' ), function( e ) {
-                if ( !!e ) {
-                    console.log( 'Error in step #1 - ' + e + '\n');
-                    reject( e );
-                } else {
-                    console.log( 'step #1 - completed' );
-                    resolve();
-                }
-            });
-        } else {
-            console.log( 'step #1 - completed' );
-            resolve();
-        }
+        rimraf( dest, function( e ) {
+            if ( e === null ) {
+                ncp( source, dest, function( err ) {
+                    if ( err !== null ) {
+                        console.log( 'Error in step #1 - ' + err + '\n');
+                        reject( e );
+                    } else if ( packageJson.bundledDependencies.indexOf( 'test-module' ) === -1 ) {
+                        packageJson.bundledDependencies.push( 'test-module' );
+                        fs.writeFile( pkgJson, JSON.stringify( packageJson, null, '  ' ), function( e ) {
+                            if ( !!e ) {
+                                console.log( 'Error in step #1 - ' + e + '\n');
+                                reject( e );
+                            } else {
+                                console.log( 'step #1 - completed' );
+                                resolve();
+                            }
+                        });
+                    } else {
+                        console.log( 'step #1 - completed' );
+                        resolve();
+                    }
+                });
+            } else {
+                console.log( 'Error in step #1 - ' + e + '\n' );
+                reject();
+            }
+        });
+
     });
 }
 
@@ -69,7 +86,7 @@ function installORM () {
     });
 }
 
-addTestModuleToPackageJson()
+installTestModule()
     .then( installORM )
     .catch( function (err) {
         console.log('Error - ' + err );
