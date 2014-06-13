@@ -32,8 +32,8 @@ module.exports = Module.extend(
     },
 
     preInit: function() {
-        this.calledMethods.push( 'preSetup' );
-        this.debug( 'preSetup' );
+        this.calledMethods.push( 'preInit' );
+        this.debug( 'preInit' );
     },
 
     init: function() {
@@ -45,5 +45,34 @@ module.exports = Module.extend(
         this.calledMethods.push( 'preResources' );
         this.debug( 'preResources' );
         this.emit( 'resourcesReady' );
+    },
+
+    configureApp: function( app, express ) {
+        this.calledMethods.push( 'configureApp' );
+        this.debug( 'configureApp' );
+        this.emit( 'appReady' );
+    },
+
+    preResources: function() {
+        this.calledMethods.push( 'preResources' );
+        this.debug( 'preResources' );
+        this.emit( 'resourcesReady' );
+    },
+
+    modulesLoaded: function() {
+        this.calledMethods.push( 'modulesLoaded' );
+        this.debug( 'modulesLoaded' );
+        this.emit( 'ready' );
+    },
+
+    preResources: function() {
+        this.calledMethods.push( 'preResources' );
+        this.debug( 'preResources' );
+        this.emit( 'resourcesReady' );
+    },
+
+    preShutdown: function() {
+        this.calledMethods.push( 'preShutdown' );
+        this.debug( 'preShutdown' );
     }
 });

@@ -4,10 +4,14 @@ var path = require( 'path' )
   , fs = require( 'fs' )
   , packageJson = require( __dirname + '/package.json' )
   , merge = require( 'deepmerge' )
-  , getModulePaths = require( __dirname + '/lib/utils/getModulePaths.js' );
+  , getModulePaths = require( __dirname + '/lib/utils/getModulePaths.js' )
+  , os = require( 'os' )
+  , isWin = /^win32/.test( os.platform() );
 
 // Set the node path - this works only because the other processes are forked.
-process.env.NODE_PATH = process.env.NODE_PATH ? './lib/:./modules/:' + process.env.NODE_PATH : './lib/:./modules/';
+process.env.NODE_PATH = process.env.NODE_PATH 
+    ? [ './tests/unit/', './lib/', './modules', process.env.NODE_PATH ].join( isWin ? ';' : ':' )
+    : [ './tests/unit/', './lib/', './modules' ].join( isWin ? ';' : ':' );
 
 module.exports = function( grunt ) {
     // load all grunt tasks
@@ -41,7 +45,7 @@ module.exports = function( grunt ) {
                     reporter: 'spec',
                     timeout: 5000
                 },
-                src: [ 'tests/unit/*.js' ].concat( getModulePaths( 'tests', 'unit', '*.js' ) )
+                src: [ 'tests/unit/test.utils.bootstrapEnv.js', 'tests/unit/test.utils.moduleLoader.js', 'tests/unit/test.classes.Module.js', 'tests/unit/test.classes.Controller.js', 'tests/unit/*.js' ].concat( getModulePaths( 'tests', 'unit', '*.js' ) )
             },
             e2e: {
                 options: {

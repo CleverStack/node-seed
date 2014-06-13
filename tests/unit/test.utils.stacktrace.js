@@ -1,8 +1,7 @@
 'use strict';
 
 // Bootstrap the testing environmen
-var testEnv = require( 'utils' ).testEnv()
-  , stacktrace = require('utils').stacktrace
+var stacktrace = require('utils').stacktrace
   , should = require( 'should' );
 
 describe('utils', function () {
