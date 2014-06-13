@@ -7,7 +7,7 @@ var Q = require( 'q' )
 //install clever-orm module to test project
 function installORM () {
     var defered = Q.defer()
-      , proc = spawn ( 'clever', [ '-v', '-f', 'install', 'clever-orm' ], { cwd: path.resolve( path.join( __dirname, '..' ) ) } );
+      , proc = spawn ( 'clever', [ 'install', 'clever-orm' ], { cwd: path.resolve( path.join( __dirname, '..' ) ) } );
 
     console.log( 'step #1 - install clever-orm module - begin\n' );
 
@@ -49,23 +49,7 @@ function installORM () {
 //create and update config files
 function configFiles(  ) {
     var deferred = Q.defer()
-      , ormFile = path.join( __dirname, '..', 'modules', 'clever-orm', 'config', 'default.json' )
       , comFile = path.join( __dirname, '..', 'config', 'test.json' )
-      , ormData = {
-            "clever-orm": {
-            "db": {
-                "username": "travis",
-                "password": "",
-                "database": "test_db",
-                "options": {
-                    "host": "127.0.0.1",
-                    "dialect": "mysql",
-                    "port": 3306
-                    },
-                },
-                "modelAssociations": {}
-            }
-        }
       , comData = {
             "environmentName": "TEST",
             "memcacheHost": "127.0.0.1:11211",
@@ -84,31 +68,22 @@ function configFiles(  ) {
         };
 
     console.log( 'step #2 - create and update config files - begin\n' );
-
-    fs.writeFile ( ormFile, JSON.stringify ( ormData ), function ( err ) {
+    fs.writeFile ( comFile, JSON.stringify ( comData ), function ( err ) {
 
         if ( err ) {
             console.log( 'Error in step #2 - ' + err + '\n');
             return deferred.reject ( err );
         }
 
-        fs.writeFile ( comFile, JSON.stringify ( comData ), function ( err ) {
-
-            if ( err ) {
-                console.log( 'Error in step #2 - ' + err + '\n');
-                return deferred.reject ( err );
-            }
-
-            console.log('step #2 process exited with code 0\n' );
-            deferred.resolve();
-        });
+        console.log('step #2 process exited with code 0\n' );
+        deferred.resolve();
     });
 
     return deferred.promise;    
 }
 
 //added clever-orm module in bundledDependencies
-function bundled(  ) {
+function bundled() {
     var deferred = Q.defer()
       , file = path.join( __dirname, '..', 'package.json' );
 
