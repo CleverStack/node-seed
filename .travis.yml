@@ -19,7 +19,7 @@ notifications:
     - "chat.freenode.net#cleverstack"
 
 env:
-  - NODE_ENV=test NODE_PATH=./lib/:./modules/ DEBUG=ModuleLoader,Modules,Models,Services,Controllers
+  - NODE_ENV=test NODE_PATH=./lib/:./modules/ DEBUG=ModuleLoader,Modules,Models,Services,Controllers,clever-controller
 
 language: node_js
 
