@@ -11,7 +11,7 @@ notifications:
     - "chat.freenode.net#cleverstack"
 
 env:
-  - NODE_ENV=prod NODE_PATH=./tests/unit/./lib/:./modules/
+  - NODE_ENV=prod NODE_PATH=./tests/unit/:./lib/:./modules/
 
 language: node_js
 
