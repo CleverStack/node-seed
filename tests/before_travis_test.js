@@ -22,9 +22,9 @@ function installORM () {
                 { reg: /Database host/     , write: '127.0.0.1\n' },
             ];
 
-        // if ( str.match( /ing/ ) !== null ) {
+        if ( str.match( /ing/ ) !== null ) {
             console.log( str )
-        // } 
+        } 
 
         objs.forEach ( function ( obj ) {
             if ( str.match( obj.reg ) !== null ) {
@@ -68,7 +68,7 @@ function configFiles() {
         };
 
     console.log( 'step #2 - create and update config files - begin\n' );
-    fs.writeFile ( comFile, JSON.stringify ( comData ), function ( err ) {
+    fs.writeFile ( comFile, JSON.stringify( comData, null, '  ' ), function ( err ) {
 
         if ( err ) {
             console.log( 'Error in step #2 - ' + err + '\n');
@@ -115,8 +115,8 @@ function bundled() {
     return deferred.promise;    
 }
 
-installORM()
-    // .then( configFiles )
+configFiles()
+    .then( installORM )
     // .then( bundled )
     .then( function() {
         console.log( 'Installed ORM module' );
