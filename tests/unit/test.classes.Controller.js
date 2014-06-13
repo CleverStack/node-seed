@@ -28,8 +28,8 @@ describe ( 'Controller', function () {
     function fakeResponse( cb ) {
         return {
             json: function( code, message ) {
+                console.dir( arguments );
                 setTimeout( function() {
-                    console.dir( arguments );
                     cb( code, JSON.parse( JSON.stringify( message ) ) )                    
                 }, 10 );
             },
