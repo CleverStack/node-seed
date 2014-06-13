@@ -22,9 +22,9 @@ function installORM () {
                 { reg: /Database host/     , write: '127.0.0.1\n' },
             ];
 
-        if ( str.match( /ing/ ) !== null ) {
+        // if ( str.match( /ing/ ) !== null ) {
             console.log( str )
-        } 
+        // } 
 
         objs.forEach ( function ( obj ) {
             if ( str.match( obj.reg ) !== null ) {
@@ -47,7 +47,7 @@ function installORM () {
 }
 
 //create and update config files
-function configFiles(  ) {
+function configFiles() {
     var deferred = Q.defer()
       , comFile = path.join( __dirname, '..', 'config', 'test.json' )
       , comData = {
