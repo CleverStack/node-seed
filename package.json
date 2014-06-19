@@ -22,7 +22,7 @@
   "dependencies": {
     "async": "~0.2.9",
     "bluebird": "^2.0.2",
-    "clever-controller": "~1.1.3",
+    "clever-controller": "~1.1.4",
     "clever-injector": "~1.0.0",
     "cors": "~2.1.1",
     "debug": "~0.7.2",
