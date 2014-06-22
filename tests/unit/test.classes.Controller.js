@@ -67,6 +67,7 @@ describe ( 'Controller', function () {
                     });
 
                 var res = fakeResponse( function( code, result ) {
+                    console.dir( arguments );
                     expect( code ).to.equal( 200 );
                     expect( result ).to.be.an( 'object' );
                     expect( ctrl.action ).to.equal( 'postAction' );
