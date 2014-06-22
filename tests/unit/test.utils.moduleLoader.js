@@ -39,7 +39,13 @@ describe( 'test.utils.moduleLoader', function() {
         this.timeout( 10000 );
         
         moduleLdr.on( 'modulesLoaded', function() {
-            done();
+            injector
+                .getInstance( 'sequelize' )
+                .sync( { force: true } )
+                .success( function() {
+                    done();
+                })
+                .error( done );
         });
         moduleLdr.loadModules();
     });
