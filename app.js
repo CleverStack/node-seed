@@ -1,41 +1,39 @@
-var cluster = require( 'cluster' )
-  , config = require( './config' )
-  , packageJson = require( './package.json' )
-  , path = require( 'path' )
-  , os = require( 'os' )
-  , isWin = /^win32/.test( os.platform() )
-  , fs = require( 'fs' );
+var cluster     = require( 'cluster' )
+  , debug       = require( 'debug' )( cluster.isMaster ? 'Cluster' : 'Worker' )
+  , config      = require( './config' )
+  , os          = require( 'os' )
+  , numWorkers  = config.numChildren ? config.numChildren : os.cpus()
+  , helpers     = require( './lib/utils/helpers.js' )
+  , chalk       = require( 'chalk' );
 
-function loadModulesAppFiles( moduleName ) {
-    packageJson.bundledDependencies.forEach(function( moduleName ) {
-        var file = [ path.resolve( './' ), 'modules', moduleName, 'bin', 'app.js' ].join( path.sep );
-        if ( fs.existsSync( file ) ) {
-            require( file )( cluster, config, packageJson );
-        }
-    });
-}
+// Cleanup the NODE_PATH for module loading
+process.env.NODE_PATH = helpers.nodePath();
 
-// Set the node path - this works only because the other processes are forked. (Be sure to use the right delimiter)
-process.env.NODE_PATH = process.env.NODE_PATH 
-    ? [ './lib/', './modules', process.env.NODE_PATH ].join( isWin ? ';' : ':' )
-    : [ './lib/', './modules' ].join( isWin ? ';' : ':' );
+// Allow modules to hook into this file
+helpers.loadModulesFileByName( 'app.js', config, cluster, debug );
 
+// Master process
 if ( cluster.isMaster ) {
-    cluster.on('exit', function( worker, code, signal ) {
-        console.dir( arguments );
-        cluster.fork();
+
+    debug( 'started with pid %s', chalk.yellow( process.pid ) );
+
+    // Output the current NODE_PATH for debugging
+    debug( 'NODE_PATH is "%s"', process.env.NODE_PATH );
+
+    // Make sure we manage child processes exiting
+    cluster.on( 'exit', function( worker, code, signal ) {
+        debug( 'Worker %s has died with code %s and signal %s - Forking new process in 1 second...', worker.pid, code, signal );
+        setTimeout( cluster.fork.bind( cluster ), 1000 );
     });
 
-    for ( var i=0; i<config.numChildren; ++i ) {
+    // Create worker processes
+    for ( var i = 0; i < numWorkers; ++i ) {
         cluster.fork();
     }
 
-    // moduleName/bin/app.js hook
-    loadModulesAppFiles();
 } else {
 
-    // moduleName/bin/app.js hook
-    loadModulesAppFiles();
+    // Load a single application worker instance
+    require( './index.js' );
 
-    require('./index.js');
 }
