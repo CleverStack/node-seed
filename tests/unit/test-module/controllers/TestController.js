@@ -5,9 +5,12 @@ module.exports = function ( Controller, TestService ) {
         service: TestService
     },
     {
-    	putAction: function() {
-    		this.putCalled = true;
-    		return this._super.apply( this, arguments );
-    	}
+        customAction: function() {
+            this.send( { message: 'Hello from customAction' }, 200 );
+        },
+
+        hidden: function() {
+            this.send( { message: 'You will never see the contents of this function via the browser!' }, 200 );
+        }
     });
 };

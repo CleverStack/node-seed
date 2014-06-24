@@ -39,6 +39,7 @@ describe( 'test.utils.moduleLoader', function() {
         this.timeout( 10000 );
         
         moduleLdr.on( 'modulesLoaded', function() {
+            // @TODO this only supports the orm module!!!
             injector
                 .getInstance( 'sequelize' )
                 .sync( { force: true } )
