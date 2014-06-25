@@ -11,6 +11,17 @@ CleverStack Node Seed
 CleverStack Node Seed provides you with a cutting edge NodeJS development workflow. It's been designed to provide you with a super fast test driven back-end development lifecycle. Everything you need should be just one command away, if it's not please open an issue or fork and submit a pull request.
 </blockquote>
 
+## Some Highlights
+* NodeJS Async Non-Blocking Core.
+* Modular Coding Structure based on NPM.
+* Grunt powered tasks, including Server with Live Restart using nodemon.
+* Databases supported: MySQL, PostgreSQL, SQLite or MongoDB.
+* Official ORM (Object Relational Mapper) Module provides an enterprise SQL based solution out of the box.
+* Official ODM (Object Document Mapper) Module provides an enterprise NoSQL based solution out of the box.
+* Clustered application with high Concurrency out of the box.
+* NodeJS Background Tasks Module which allows CPU intensive (blocking) operations to take place in separate processes, allowing your HTTP Web Server Processes to continue serving HTTP Requests.
+* Unit & E2E (Integration) Testing with Mocha and Request.
+
 ## Documentation
 
 See [cleverstack.io](http://cleverstack.io/documentation/#backend) for more detailed information on the Node seed or visit the [Getting Started Guide](http://cleverstack.io/getting-started/)
@@ -26,4 +37,4 @@ Install is made easy using the CleverStack CLI, first install [node.js](http://n
 
 ## License
 
-CleverStack is copyright of [Clevertech](http://clevertech.biz) and is licensed under the MIT License.
+See our [LICENSE](https://github.com/CleverStack/node-seed/blob/master/LICENSE)
