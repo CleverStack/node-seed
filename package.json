@@ -2,7 +2,7 @@
     "private": true,
     "name": "node-seed",
     "description": "Cleverstack Node-Seed",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "main": "app.js",
     "author": {
         "name": "CleverStack",
@@ -41,7 +41,8 @@
         "matchdep": "~0.3.0",
         "nconf": "~0.6.9",
         "uberclass": "~1.0.1",
-        "underscore": "~1.6.0"
+        "underscore": "~1.6.0",
+        "validator": "~3.16.0"
     },
     "devDependencies": {
         "chai": "~1.9.1",
