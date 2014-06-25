@@ -1,5 +1,5 @@
 var cluster     = require( 'cluster' )
-  , debug       = require( 'debug' )( cluster.isMaster ? 'Cluster' : 'Worker' )
+  , debug       = require( 'debug' )( cluster.isMaster ? 'Master' : 'Worker' )
   , config      = require( './config' )
   , os          = require( 'os' )
   , numWorkers  = config.numChildren ? config.numChildren : os.cpus()
