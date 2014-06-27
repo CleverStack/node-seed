@@ -1,17 +1,14 @@
 'use strict';
 
-var path = require( 'path' )
-  , fs = require( 'fs' )
-  , packageJson = require( __dirname + '/package.json' )
-  , merge = require( 'deepmerge' )
-  , getModulePaths = require( __dirname + '/lib/utils/getModulePaths.js' )
-  , os = require( 'os' )
-  , isWin = /^win32/.test( os.platform() );
+var path            = require( 'path' )
+  , fs              = require( 'fs' )
+  , packageJson     = require( __dirname + '/package.json' )
+  , merge           = require( 'deepmerge' )
+  , getModulePaths  = require( path.join( __dirname, 'lib', 'utils', 'getModulePaths.js' ) )
+  , helpers         = require( path.join( __dirname, 'lib', 'utils', 'helpers.js' ) )
 
-// Set the node path - this works only because the other processes are forked.
-process.env.NODE_PATH = process.env.NODE_PATH 
-    ? [ './tests/unit/', './lib/', './modules', process.env.NODE_PATH ].join( isWin ? ';' : ':' )
-    : [ './tests/unit/', './lib/', './modules' ].join( isWin ? ';' : ':' );
+// Cleanup the NODE_PATH for module loading
+process.env.NODE_PATH = helpers.nodePath();
 
 module.exports = function( grunt ) {
     // load all grunt tasks
