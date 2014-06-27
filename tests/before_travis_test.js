@@ -47,23 +47,31 @@ function installTestModule() {
 
 function rebaseDb() {
     return new Promise( function( resolve, reject ) {
-        var proc = spawn( 'grunt', [ 'db' ], { stdio: 'inherit', cwd: path.resolve( path.join( __dirname, '..' ) ) } );
+        var proc = spawn( 'grunt', [ 'db' ], { cwd: path.resolve( path.join( __dirname, '..' ) ) } );
 
         console.log( 'step #3 - rebase db' );
 
-        proc.stderr.on('data', function (data) {
+        proc.stdout.on('data', function( data ) {
+            console.log( data.toString() );
+        });
+
+        proc.stderr.on('data', function( data ) {
             console.log( 'Error in step #3 - ' + data.toString() + '\n');
             reject ( data.toString() );
         });
 
-        proc.on('close', function (code) {
+        proc.on('close', function( code ) {
             console.log('step #3 process exited with code ' + code + '\n' );
-            resolve();
+            if ( code !== 0 ) {
+                reject( code );
+            } else {
+                resolve();
+            }
         });
     });
 }
 
-function installORM () {
+function installORM() {
     return new Promise( function( resolve, reject ) {
         var objs = [
                 { reg: /Database username/ , write: 'travis\n'   , done: false },
