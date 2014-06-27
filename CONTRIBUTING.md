@@ -8,7 +8,7 @@ Contributing to a project is not only adding slabs of code, fixing bugs, or crea
 
 > I just wanted to thank you for not only looking into contributing towards CleverStack, but for even taking your time to considering it. I'm personally always available to lend out a hand, and I hope you never feel as if you can't reach out to me. I always look forward to discussing ideas, solving problems, and colloborating with others.
 
-> - Daniel Durante
+> - Richard Gustin
 
 ## Submitting bug reports, issues, or enhancement requests.
 
