@@ -7,7 +7,7 @@ var expect      = require( 'chai' ).expect
   , injector    = require( 'injector' )
   , models      = [ { name: 'Testing' }, { name: 'Testing' } ];
 
-describe ( 'Controller', function () {
+describe( 'Controller', function () {
 
     before( function( done ) {
         TestController = injector.getInstance( 'testModule' ).controllers.TestController;
@@ -374,16 +374,16 @@ describe ( 'Controller', function () {
                     method: 'GET',
                     url: '/test/99999999',
                     query: {
-                        id: '99999999'
+                        id: 99999999
                     },
                     params: {
-                        id: '99999999'
+                        id: 99999999
                     }
                 });
 
                 var res = fakeResponse( function( code, result ) {
-                    expect( result ).to.eql( 'Test doesn\'t exist.' );
-                    expect( code ).to.equal( 403 );
+                    expect( result ).to.eql( { statusCode: 404, message: 'Test doesn\'t exist.' } );
+                    expect( code ).to.equal( 404 );
                     expect( ctrl.action ).to.equal( 'getAction' );
 
                     done();
@@ -520,19 +520,19 @@ describe ( 'Controller', function () {
                 
                 var req = fakeRequest({
                     method: 'PUT',
-                    body: { id: '9999999' },
+                    body: { id: 9999999 },
                     url: '/test/9999999',
                     params: {
-                        id: '9999999'
+                        id: 9999999
                     },
                     query: {
-                        id: '9999999'
+                        id: 9999999
                     }
                 });
 
                 var res = fakeResponse( function( code, result ) {
-                    expect( result ).to.eql( 'Test doesn\'t exist.' );
-                    expect( code ).to.equal( 403 );
+                    expect( result ).to.eql( { statusCode: 404, message: 'Test doesn\'t exist.' } );
+                    expect( code ).to.equal( 404 );
                     expect( ctrl.action ).to.equal( 'putAction' );
 
                     done();
@@ -574,19 +574,19 @@ describe ( 'Controller', function () {
                 
                 var req = fakeRequest({
                     method: 'DELETE',
-                    body: { id: '9999999' },
+                    body: { id: 9999999 },
                     url: '/test/9999999',
                     params: {
-                        id: '9999999'
+                        id: 9999999
                     },
                     query: {
-                        id: '9999999'
+                        id: 9999999
                     }
                 });
 
                 var res = fakeResponse( function( code, result ) {
-                    expect( result ).to.eql( 'Test doesn\'t exist.' );
-                    expect( code ).to.equal( 403 );
+                    expect( result ).to.eql( { statusCode: 404, message: 'Test doesn\'t exist.' } );
+                    expect( code ).to.equal( 404 );
                     expect( ctrl.action ).to.equal( 'deleteAction' );
 
                     done();
@@ -788,31 +788,9 @@ describe ( 'Controller', function () {
                 });
 
                 var res = fakeResponse( function( code, result ) {
-                    expect( result ).to.eql( 'Test doesn\'t exist.' );
-                    expect( code ).to.equal( 403 );
+                    expect( result ).to.eql( { statusCode: 404, message: 'Test doesn\'t exist.' } );
+                    expect( code ).to.equal( 404 );
                     expect( ctrl.action ).to.equal( 'getAction' );
-
-                    done();
-                });
-
-                this.timeout( 10000 );
-                ctrl = TestController.callback( 'newInstance' )( req, res );
-            });
-
-            it( 'Should not list non existant models when there is no id specified in either the QueryString or URI', function( done ) {
-                var ctrl = null;
-
-                var req = fakeRequest({
-                    method: 'GET',
-                    url: '/test/get',
-                    params: {
-                        action: 'get'
-                    }
-                });
-
-                var res = fakeResponse( function( code, result ) {
-                    expect( result ).to.eql( { error: 'Unhandled exception: You must specify either an id or an object containing fields to find a Test' } );
-                    expect( code ).to.equal( 500 );
 
                     done();
                 });
@@ -930,20 +908,20 @@ describe ( 'Controller', function () {
                 
                 var req = fakeRequest({
                     method: 'PUT',
-                    body: { id: '9999999' },
+                    body: { id: 9999999 },
                     url: '/test/put/9999999',
                     params: {
                         action: 'put',
-                        id: '9999999'
+                        id: 9999999
                     },
                     query: {
-                        id: '9999999'
+                        id: 9999999
                     }
                 });
 
                 var res = fakeResponse( function( code, result ) {
-                    expect( result ).to.eql( 'Test doesn\'t exist.' );
-                    expect( code ).to.equal( 403 );
+                    expect( result ).to.eql( { statusCode: 404, message: 'Test doesn\'t exist.' } );
+                    expect( code ).to.equal( 404 );
                     expect( ctrl.action ).to.equal( 'putAction' );
 
                     done();
@@ -986,20 +964,20 @@ describe ( 'Controller', function () {
                 
                 var req = fakeRequest({
                     method: 'GET',
-                    body: { id: '9999999' },
+                    body: { id: 9999999 },
                     url: '/test/delete/9999999',
                     params: {
                         action: 'delete',
-                        id: '9999999'
+                        id: 9999999
                     },
                     query: {
-                        id: '9999999'
+                        id: 9999999
                     }
                 });
 
                 var res = fakeResponse( function( code, result ) {
-                    expect( result ).to.eql( 'Test doesn\'t exist.' );
-                    expect( code ).to.equal( 403 );
+                    expect( result ).to.eql( { statusCode: 404, message: 'Test doesn\'t exist.' } );
+                    expect( code ).to.equal( 404 );
                     expect( ctrl.action ).to.equal( 'deleteAction' );
 
                     done();
