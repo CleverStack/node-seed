@@ -11,6 +11,9 @@ module.exports = function ( Model ) {
             primaryKey: true,
             autoIncrement: true
         },
-        name: String
+        name: {
+            type: String,
+            required: true
+        }
     });
 };
