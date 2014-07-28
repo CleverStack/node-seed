@@ -1,9 +1,6 @@
 var expect      = require( 'chai' ).expect
-  , async       = require( 'async' )
   , sinon       = require( 'sinon' )
   , underscore  = require( 'underscore' )
-  , path        = require( 'path' )
-  , util        = require( 'util' )
   , injector    = require( 'injector' )
   , models      = [ { name: 'Testing' }, { name: 'Testing' } ];
 
@@ -178,15 +175,21 @@ describe( 'Controller', function () {
                 });
 
                 var res = fakeResponse( function( code, result ) {
+                    expect( code ).to.equal( 400 );
+
                     expect( result ).to.be.an( 'object' );
-                    expect( code ).to.equal( 500 );
+                    expect( result ).to.have.property( 'statusCode' ).and.to.eql( 400 );
+                    expect( result ).to.have.property( 'message' ).and.to.eql( 'Invalid data provided to Model.create({})' );
+
+                    expect( spy.called ).to.eql( true );
                     expect( ctrl.action ).to.equal( 'postAction' );
 
-                    expect( result ).to.have.property( 'error' );
-                    expect( result.error ).to.contain( 'Invalid data' );
+                    spy.restore();
 
                     done();
                 });
+
+                var spy = sinon.spy( TestController.prototype, 'postAction' );
 
                 this.timeout( 10000 );
                 ctrl = TestController.callback( 'newInstance' )( req, res );
@@ -650,15 +653,17 @@ describe( 'Controller', function () {
                 });
 
                 var res = fakeResponse( function( code, result ) {
-                    expect( code ).to.equal( 500 );
+                    expect( code ).to.equal( 400 );
                     expect( result ).to.be.an( 'object' );
+                    expect( spy.called ).to.eql( true );
                     expect( ctrl.action ).to.equal( 'postAction' );
 
-                    expect( result ).to.have.property( 'error' );
-                    expect( result.error ).to.contain( 'Invalid data' );
+                    spy.restore();
 
                     done();
                 });
+
+                var spy = sinon.spy( TestController.prototype, 'postAction' );
 
                 this.timeout( 10000 );
                 ctrl = TestController.callback( 'newInstance' )( req, res );
