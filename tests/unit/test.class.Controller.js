@@ -38,13 +38,15 @@ describe( 'Controller', function () {
         };
     }
 
-    it( 'Allows route to be strictly defined', function( done ) {
+    it( 'Allows route to be strictly defined as string', function( done ) {
         expect( TestMiddlewareAndRouteController.route ).to.eql( '/testcustomroute|/testcustomroutes' );
         done();
     });
 
+    it( 'Allows route to be strictly defined as an array' );
+
     it( 'Allows route (non plural and plural) to be guessed based on filename', function( done ) {
-        expect( TestController.route ).to.eql( '/test|/tests' );
+        expect( TestController.route ).to.eql( '/test/:id/?|/test/:id/:action/?|/tests/?|/tests/:action/?' );
         done();
     });
 
