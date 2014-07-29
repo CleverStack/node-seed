@@ -95,9 +95,9 @@ module.exports = function( grunt ) {
     });
 
     // Register all project wide tasks with grunt
-    grunt.registerTask( 'test', [ 'mochaTest:unit', 'mochaTest:e2e' ] );
-    grunt.registerTask( 'test:unit', [ 'mochaTest:unit' ] );
-    grunt.registerTask( 'test:e2e', [ 'mochaTest:e2e' ] );
+    grunt.registerTask( 'test', [ 'mochaTest:unit', 'mochaTest:e2e', 'db' ] );
+    grunt.registerTask( 'test:unit', [ 'mochaTest:unit', 'db' ] );
+    grunt.registerTask( 'test:e2e', [ 'mochaTest:e2e', 'db' ] );
     grunt.registerTask( 'test:ci', [ 'watch:tests' ] );
     grunt.registerTask( 'server', [ 'concurrent:servers' ] );
     grunt.registerTask( 'server:web', [ 'nodemon:web' ] );
