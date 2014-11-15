@@ -3,6 +3,7 @@
         {
             "name":             "Default Account",
             "email":            "default@cleverstack.io",
+            "subDomain":        "default",
             "active":           true,
 
             "associations":     {
