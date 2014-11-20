@@ -43,10 +43,10 @@ describe( 'test.utils.moduleLoader', function() {
             injector
                 .getInstance( 'sequelize' )
                 .sync( { force: true } )
-                .success( function() {
+                .then( function() {
                     done();
                 })
-                .error( done );
+                .catch( done );
         });
         moduleLdr.loadModules();
     });
