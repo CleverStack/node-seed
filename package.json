@@ -77,7 +77,6 @@
     "test": "grunt test --verbose"
   },
   "bundledDependencies": [
-    "clever-orm",
-    "clever-auth"
+    
   ]
 }
