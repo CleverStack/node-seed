@@ -1,35 +1,3 @@
 {
-  "UserModel": [
-    {
-      "firstname": "Clever",
-      "lastname": "Stack",
-      "email": "default@cleverstack.io",
-      "username": "default",
-      "password": "a31a61e94f3799a9385dab9966c4c22c9f5790c4",
-      "hasAdminRight": true,
-      "confirmed": true,
-      "active": true,
-      "associations": {
-        "RoleModel": [
-          {
-            "name": "Admin",
-            "AccountId": 1
-          }
-        ],
-        "AccountModel": [
-          {
-            "name": "Default Account"
-          }
-        ]
-      }
-    }
-  ],
-  "AccountModel": [
-    {
-      "name": "Default Account",
-      "email": "default@cleverstack.io",
-      "subDomain": "default",
-      "active": true
-    }
-  ]
+  
 }
