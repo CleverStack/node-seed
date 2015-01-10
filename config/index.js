@@ -29,7 +29,7 @@ modules.forEach(function( moduleName ) {
 config = require( 'nconf' ).loadFilesSync( [].concat( configFiles.global, configFiles.env ) );
 
 
-if ( modules.indexOf( 'clever-orm' ) !== -1 ) {
+if ( modules.indexOf( 'clever-orm' ) !== -1 || modules.indexOf( 'clever-odm' ) !== -1 ) {
     var modelAssociations = {};
 
     modules.forEach( function( moduleName ) {
@@ -50,7 +50,13 @@ if ( modules.indexOf( 'clever-orm' ) !== -1 ) {
         }
     });
 
-    config[ 'clever-orm' ].modelAssociations = modelAssociations;
+    if ( modules.indexOf( 'clever-orm' ) !== -1 ) {
+        config[ 'clever-orm' ].modelAssociations = modelAssociations;  
+    }
+
+    if ( modules.indexOf( 'clever-odm' ) !== -1 ) {
+        config[ 'clever-odm' ].modelAssociations = modelAssociations;  
+    }
 }
 
 module.exports = config;
