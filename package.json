@@ -2,7 +2,7 @@
   "private": true,
   "name": "node-seed",
   "description": "Cleverstack Node-Seed",
-  "version": "1.2.0-rc-2",
+  "version": "1.2.0-rc-3",
   "main": "app.js",
   "author": {
     "name": "CleverStack",
