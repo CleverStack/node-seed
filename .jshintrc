@@ -12,6 +12,9 @@
         "waitsFor": false,
         "runs": false
     },
+    "predef": [
+        "-Promise"
+    ],
     "node": true,
     "camelcase": false,
     "curly": true,
