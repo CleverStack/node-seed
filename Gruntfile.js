@@ -20,6 +20,13 @@ module.exports = function( grunt ) {
             tests: {
                 files: [ 'lib/**/*.js', 'modules/**/*.js' ],
                 tasks: [ 'mochaTest:ci' ]
+            },
+            schema: {
+                files: [
+                    'schema/seedData.json',
+                    getModulePaths( 'schema', 'seedData.json' )
+                ],
+                tasks: [ 'jsonlint', 'db' ]
             }
         },
         nodemon: {
@@ -61,7 +68,7 @@ module.exports = function( grunt ) {
         },
         concurrent: {
             servers: {
-                tasks: [ 'server:web' ],
+                tasks: [ 'watch:schema', 'nodemon:web' ],
                 options: {
                     logConcurrentOutput: true
                 }
@@ -75,13 +82,22 @@ module.exports = function( grunt ) {
                     './modules/**/test*/**/*.js'
                 ]
             },
-            all:              [
+            all: [
                 './Gruntfile.js',
                 './index.js',
                 './app.js',
                 './lib/**/*.js',
                 getModulePaths( '*.js' )
             ]
+        },
+        jsonlint: {
+            all: {
+                src: [
+                    './schema/seedData.json',
+                    getModulePaths( 'schema', 'seedData.json' ),
+                    './package.json'
+                ]
+            }
         }
     };
 
@@ -111,12 +127,12 @@ module.exports = function( grunt ) {
     });
 
     // Register all project wide tasks with grunt
-    grunt.registerTask( 'test', [ 'mochaTest:unit', 'mochaTest:e2e', 'db' ] );
-    grunt.registerTask( 'test:unit', [ 'mochaTest:unit', 'db' ] );
-    grunt.registerTask( 'test:e2e', [ 'mochaTest:e2e', 'db' ] );
-    grunt.registerTask( 'test:ci', [ 'watch:tests' ] );
-    grunt.registerTask( 'server', [ 'concurrent:servers' ] );
-    grunt.registerTask( 'server:web', [ 'nodemon:web' ] );
-    grunt.registerTask( 'serve', [ 'server'] );
-    grunt.registerTask( 'default', [ 'server'] );
+    grunt.registerTask( 'test',         [ 'mochaTest:unit', 'mochaTest:e2e', 'db' ] );
+    grunt.registerTask( 'test:unit',    [ 'mochaTest:unit', 'db' ] );
+    grunt.registerTask( 'test:e2e',     [ 'mochaTest:e2e', 'db' ] );
+    grunt.registerTask( 'test:ci',      [ 'watch:tests' ] );
+    grunt.registerTask( 'server',       [ 'concurrent:servers' ] );
+    grunt.registerTask( 'server:web',   [ 'server' ] );
+    grunt.registerTask( 'serve',        [ 'server'] );
+    grunt.registerTask( 'default',      [ 'server'] );
 };
