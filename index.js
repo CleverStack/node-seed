@@ -10,7 +10,6 @@ var utils     = require( 'utils' )
   , cors      = require( 'cors' )
   , chalk     = require( 'chalk' )
   , debug     = require( 'debug' )( 'Worker' )
-  , express   = env.express
   , app       = module.exports = env.app;
 
 debug( 'started with pid %s', chalk.yellow( process.pid ) );
@@ -18,6 +17,7 @@ debug( 'started with pid %s', chalk.yellow( process.pid ) );
 moduleLdr.on( 'preLoadModules', function() {
     debug( 'Configuring express application...' );
 
+    app.use( resTime() );
     app.use( timeout( '30s' ) );
     app.use( parser.urlencoded( { extended: true } ) );
     app.use( parser.json() );
