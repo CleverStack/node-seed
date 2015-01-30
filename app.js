@@ -22,8 +22,8 @@ if ( cluster.isMaster ) {
 
     // Make sure we manage child processes exiting
     cluster.on( 'exit', function( worker, code, signal ) {
-        debug( 'Worker %s has died with code %s and signal %s - Forking new process in 1 second...', worker.pid, code, signal );
-        setTimeout( cluster.fork.bind( cluster ), 1000 );
+        debug( 'Worker %s has died with code %s and signal %s - Forking new process in 2.5 seconds...', worker.pid, code, signal );
+        setTimeout( cluster.fork.bind( cluster ), 2500 );
     });
 
     // Create worker processes
