@@ -66,6 +66,22 @@ module.exports = function( grunt ) {
                     logConcurrentOutput: true
                 }
             }
+        },
+        jshint: {
+            options: {
+                jshintrc:       '.jshintrc',
+                reporter:       require( 'jshint-stylish' ),
+                ignores: [
+                    './modules/**/test*/**/*.js'
+                ]
+            },
+            all:              [
+                './Gruntfile.js',
+                './index.js',
+                './app.js',
+                './lib/**/*.js',
+                getModulePaths( '*.js' )
+            ]
         }
     };
 
