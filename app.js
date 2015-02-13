@@ -1,5 +1,5 @@
 var cluster     = require( 'cluster' )
-  , debug       = require( 'debug' )( cluster.isMaster ? 'Master' : 'Worker' )
+  , debug       = require( 'debug' )( cluster.isMaster ? 'cleverstack:cluster' : 'cleverstack:server' )
   , config      = require( './config' )
   , os          = require( 'os' )
   , numWorkers  = config.numChildren ? config.numChildren : os.cpus()
@@ -32,6 +32,9 @@ if ( cluster.isMaster ) {
     }
 
 } else {
+
+    // Allow modules to hook into this file by putting an index.js file in any modules /bin folder
+    helpers.loadModulesFileByName( 'index.js', config, cluster, debug );
 
     // Load a single application worker instance
     require( './index.js' );
