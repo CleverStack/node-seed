@@ -9,7 +9,7 @@ var utils     = require( 'utils' )
   , moduleLdr = env.moduleLoader
   , cors      = require( 'cors' )
   , chalk     = require( 'chalk' )
-  , debug     = require( 'debug' )( 'Worker' )
+  , debug     = require( 'debug' )( 'cleverstack:server' )
   , app       = module.exports = env.app;
 
 debug( 'started with pid %s', chalk.yellow( process.pid ) );
@@ -18,7 +18,7 @@ moduleLdr.on( 'preLoadModules', function() {
     debug( 'Configuring express application...' );
 
     app.use( resTime() );
-    app.use( timeout( '30s' ) );
+    // app.use( timeout( '30s' ) );
     app.use( parser.urlencoded( { extended: true } ) );
     app.use( parser.json() );
     app.use( logger( 'dev' ) );
