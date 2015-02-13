@@ -6,7 +6,8 @@ var utils       = require( 'utils' )
   , injector    = require( 'injector' )
   , ncp         = require( 'ncp' )
   , fs          = require( 'fs' )
-  , path        = require( 'path' );
+  , path        = require( 'path' )
+  , async       = require( 'async' )
 
 describe( 'test.utils.moduleLoader', function() {
 
@@ -36,17 +37,37 @@ describe( 'test.utils.moduleLoader', function() {
     });
 
     it( 'should load modules', function( done ) {
-        this.timeout( 10000 );
+        this.timeout( 20000 );
         
         moduleLdr.on( 'modulesLoaded', function() {
-            // @TODO this only supports the orm module!!!
-            injector
-                .getInstance( 'sequelize' )
-                .sync( { force: true } )
-                .then( function() {
+            async.parallel(
+                [
+                    function ormDb( callback ) {
+                        if ( packageJson.bundledDependencies.indexOf( 'clever-orm' ) !== -1 ) {
+                            injector
+                                .getInstance( 'sequelize' )
+                                .sync( { force: true } )
+                                .then( function() {
+                                    callback( null );
+                                })
+                                .catch( callback );   
+                        } else {
+                            callback( null );
+                        }
+                    },
+
+                    function odmDb( callback ) {
+                        callback( null );
+                    }
+                ],
+                function( err ) {
+                    if ( err !== undefined && err !== null ) {
+                        console.dir( err );
+                        return done( err );
+                    }
                     done();
-                })
-                .catch( done );
+                }
+            );
         });
         moduleLdr.loadModules();
     });

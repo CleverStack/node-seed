@@ -7,8 +7,12 @@ var expect      = require( 'chai' ).expect
 describe( 'Controller', function () {
 
     before( function( done ) {
-        TestController = injector.getInstance( 'testModule' ).controllers.TestController;
-        TestMiddlewareAndRouteController = injector.getInstance( 'testModule' ).controllers.TestMiddlewareAndRouteController;
+        testModule                          = injector.getInstance( 'testModule' );
+
+        TestController                      = testModule.controllers.TestController;
+        TestMiddlewareAndRouteController    = testModule.controllers.TestMiddlewareAndRouteController;
+        TestModel                           = testModule.models.TestModel;
+
         done();
     });
 
@@ -158,9 +162,9 @@ describe( 'Controller', function () {
                     expect( result ).to.have.property( 'createdAt' );
                     expect( result ).to.have.property( 'updatedAt' );
                     
-                    model.id = result.id;
-                    model.createdAt = result.createdAt;
-                    model.updatedAt = result.updatedAt;
+                    model.id           = result.id;
+                    model.createdAt    = result.createdAt;
+                    model.updatedAt    = result.updatedAt;
 
                     done();
                 });
@@ -181,7 +185,7 @@ describe( 'Controller', function () {
 
                     expect( result ).to.be.an( 'object' );
                     expect( result ).to.have.property( 'statusCode' ).and.to.eql( 400 );
-                    expect( result ).to.have.property( 'message' ).and.to.eql( 'Invalid data provided to Model.create({})' );
+                    expect( result ).to.have.property( 'message' ).and.to.eql( 'name is required.' );
 
                     expect( spy.called ).to.eql( true );
                     expect( ctrl.action ).to.equal( 'postAction' );
@@ -198,17 +202,17 @@ describe( 'Controller', function () {
             });
 
             it( 'Should redirect/call .putAction() if you post data with an id in the QueryString like /test?id=1', function( done ) {
-                var ctrl = null
-                  , model = models[ 0 ];
+                var ctrl    = null
+                  , model   = models[ 0 ];
 
-                model.name = 'Should call putAction() if you post data with an id like POST /model';
+                model.name  = 'Should call putAction() if you post data with an id like POST /model';
 
-                var req = fakeRequest({
-                    method: 'POST',
-                    body: underscore.extend( {}, model )
+                var req     = fakeRequest({
+                    method  : 'POST',
+                    body    : underscore.extend( {}, model )
                 });
 
-                var res = fakeResponse( function( code, result ) {
+                var res     = fakeResponse( function( code, result ) {
                     expect( result ).to.be.an( 'object' );
                     expect( code ).to.equal( 200 );
                     expect( ctrl.action ).to.equal( 'putAction' );
@@ -224,7 +228,7 @@ describe( 'Controller', function () {
 
                     model.deletedAt = result.deletedAt;
 
-                    expect( result ).to.eql( model );
+                    expect( result ).to.eql( underscore.omit( model, TestModel.deletedAt, TestModel.createdAt, TestModel.updatedAt ) );
 
                     done();
                 });
@@ -612,11 +616,11 @@ describe( 'Controller', function () {
                   , model = models[ 1 ];
 
                 var req = fakeRequest({
-                        method: 'POST',
-                        body: underscore.extend( {}, model ),
-                        url: '/test/post',
-                        params: {
-                            action: 'post'
+                        method  : 'POST',
+                        body    : underscore.extend( {}, model ),
+                        url     : '/test/post',
+                        params  : {
+                            action  : 'post'
                         }
                     });
 
@@ -630,11 +634,11 @@ describe( 'Controller', function () {
                     expect( result ).to.have.property( 'createdAt' );
                     expect( result ).to.have.property( 'updatedAt' );
                     
-                    model.id = result.id;
-                    model.createdAt = result.createdAt;
-                    model.updatedAt = result.updatedAt;
+                    model.id                        = result.id;
+                    model.createdAt    = result.createdAt;
+                    model.updatedAt    = result.updatedAt;
 
-                    model.deletedAt = null;
+                    model.deletedAt    = null;
 
                     done();
                 });

@@ -152,7 +152,7 @@ describe( 'Service', function () {
     });
 
     describe( 'update( idOrWhere, data )', function() {
-        it( 'should be able to update a user', function( done ) {
+        it( 'should be able to update a Test model', function( done ) {
             test.name = 'test.class.Service - updated';
             TestService
                 .update( test.id, test )
@@ -165,7 +165,7 @@ describe( 'Service', function () {
                 })
                 .catch( done );
         });
-        it( 'should not be able to update an invalid user', function( done ) {
+        it( 'should not be able to update an invalid Test model', function( done ) {
             TestService
                 .update( 999999, { id: 999999, name: 'invalid' } )
                 .then( done )
@@ -179,7 +179,7 @@ describe( 'Service', function () {
     });
 
     describe( 'destroy( idOrWhere )', function() {
-        it( 'should destroy (delete) a user', function( done ) {
+        it( 'should destroy (delete) a Test model', function( done ) {
             TestService
                 .destroy( test.id )
                 .then( function( model ) {
@@ -189,12 +189,11 @@ describe( 'Service', function () {
                 })
                 .catch( done );
         });
-        it( 'should not be able to destroy (delete) a non existant user', function( done ) {
+        it( 'should not be able to destroy (delete) a non existant Test model', function( done ) {
             TestService
                 .update( 999999 )
                 .then( done )
                 .catch( function( err ) {
-                    console.dir(err);
                     expect( err instanceof exceptions.InvalidData ).to.eql( true );
                     expect( err ).to.have.property( 'message' ).and.to.eql( 'Unable to update Test, you did not provide any data.' );
 
