@@ -228,7 +228,7 @@ describe( 'Controller', function () {
 
                     model.deletedAt = result.deletedAt;
 
-                    expect( result ).to.eql( underscore.omit( model, TestModel.deletedAt, TestModel.createdAt, TestModel.updatedAt ) );
+                    expect( result ).to.eql( model );
 
                     done();
                 });
