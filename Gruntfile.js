@@ -31,9 +31,9 @@ module.exports = function( grunt ) {
         },
         nodemon: {
             web: {
-                script: 'app.js',
+                script: 'cluster.js',
                 options: {
-                    file: 'app.js',
+                    file: 'cluster.js',
                     ignoredFiles: [ 'README.md', 'node_modules/**' ],
                     watchedExtensions: [ 'js' ],
                     watchedFolders: [ 'lib','modules' ],
@@ -85,7 +85,7 @@ module.exports = function( grunt ) {
             all: [
                 './Gruntfile.js',
                 './index.js',
-                './app.js',
+                './cluster.js',
                 './lib/**/*.js',
                 getModulePaths( '*.js' )
             ]

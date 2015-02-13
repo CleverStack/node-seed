@@ -1,42 +1,45 @@
-var cluster     = require( 'cluster' )
-  , debug       = require( 'debug' )( cluster.isMaster ? 'cleverstack:cluster' : 'cleverstack:server' )
-  , config      = require( './config' )
-  , os          = require( 'os' )
-  , numWorkers  = config.numChildren ? config.numChildren : os.cpus()
-  , helpers     = require( './lib/utils/helpers.js' )
-  , chalk       = require( 'chalk' );
+var utils     = require( 'utils' )
+  , parser    = require( 'body-parser' )
+  , compress  = require( 'compression' )
+  , override  = require( 'method-override' )
+  , resTime   = require( 'response-time' )
+  , timeout   = require( 'connect-timeout' )
+  , logger    = require( 'morgan' )
+  , env       = utils.bootstrapEnv()
+  , moduleLdr = env.moduleLoader
+  , cors      = require( 'cors' )
+  , chalk     = require( 'chalk' )
+  , debug     = require( 'debug' )( 'cleverstack:server' )
+  , app       = module.exports = env.app;
 
-// Cleanup the NODE_PATH for module loading
-process.env.NODE_PATH = helpers.nodePath();
+debug( 'started with pid %s', chalk.yellow( process.pid ) );
 
-// Allow modules to hook into this file
-helpers.loadModulesFileByName( 'app.js', config, cluster, debug );
+moduleLdr.on( 'preLoadModules', function() {
+    debug( 'Configuring express application...' );
 
-// Master process
-if ( cluster.isMaster ) {
+    app.use( resTime() );
+    // app.use( timeout( '30s' ) );
+    app.use( parser.urlencoded( { extended: true } ) );
+    app.use( parser.json() );
+    app.use( logger( 'dev' ) );
+    app.use( compress() );
+    app.use( override() );
+    app.use( cors( env.config.cors ) );
+});
 
-    debug( 'started with pid %s', chalk.yellow( process.pid ) );
+moduleLdr.on( 'modulesLoaded', function() {
+    debug( 'Initializing routes...' );
 
-    // Output the current NODE_PATH for debugging
-    debug( 'NODE_PATH is "%s"', process.env.NODE_PATH );
+    moduleLdr.initializeRoutes();
+});
 
-    // Make sure we manage child processes exiting
-    cluster.on( 'exit', function( worker, code, signal ) {
-        debug( 'Worker %s has died with code %s and signal %s - Forking new process in 2.5 seconds...', worker.pid, code, signal );
-        setTimeout( cluster.fork.bind( cluster ), 2500 );
+moduleLdr.on( 'routesInitialized', function() {
+    debug( 'Setting up router and starting http server...' );
+
+    app.listen( env.webPort, function() {
+        debug( 'Started web server on port %s in enviromment %s', chalk.yellow( env.webPort ), chalk.yellow( process.env.NODE_ENV ? process.env.NODE_ENV : "LOCAL" ) );
     });
+});
 
-    // Create worker processes
-    for ( var i = 0; i < numWorkers; ++i ) {
-        cluster.fork();
-    }
-
-} else {
-
-    // Allow modules to hook into this file by putting an index.js file in any modules /bin folder
-    helpers.loadModulesFileByName( 'index.js', config, cluster, debug );
-
-    // Load a single application worker instance
-    require( './index.js' );
-
-}
+debug( 'Loading modules...' );
+moduleLdr.loadModules();
