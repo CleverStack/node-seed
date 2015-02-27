@@ -1,17 +1,17 @@
 {
-    "webPort": 8080,
+  "webPort": 8080,
 
-    "numChildren": 1,
+  "numChildren": 1,
 
-    "params": {
-        "appName": ""
-    },
+  "params": {
+      "appName": ""
+  },
 
-    "cors": {
-      "origin": true,
-      "credentials": true,
-      "headers": [ "x-requested-with", "content-type", "X-XSRF-TOKEN" ],
-      "methods": [ "GET", "PUT", "POST", "DELETE", "OPTIONS" ],
-      "maxAge": 1000000000
-    }
+  "cors": {
+    "origin": true,
+    "credentials": true,
+    "headers": [ "x-requested-with", "content-type", "X-XSRF-TOKEN" ],
+    "methods": [ "GET", "PUT", "POST", "DELETE", "OPTIONS" ],
+    "maxAge": 1000000000
+  }
 }
