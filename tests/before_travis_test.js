@@ -74,13 +74,14 @@ function rebaseDb() {
 function installORM() {
     return new Promise( function( resolve, reject ) {
         var objs = [
-                { reg: /Database username/ , write: 'travis\n'   , done: false },
-                { reg: /Database password/ , write: '\n'         , done: false },
-                { reg: /Database name/     , write: 'test_db\n'  , done: false },
-                { reg: /Database dialect/  , write: '\n'         , done: false },
-                { reg: /Database port/     , write: '3306\n'     , done: false },
-                { reg: /Database host/     , write: '127.0.0.1\n', done: false },
-            ]
+            { reg: /What environment is this configuration for\?/, write: '\n', done: false },
+            { reg: /Database username/ , write: 'travis\n'   , done: false },
+            { reg: /Database password/ , write: '\n'         , done: false },
+            { reg: /Database name/     , write: 'test_db\n'  , done: false },
+            { reg: /Database dialect/  , write: 'mysql\n'    , done: false },
+            { reg: /Database host/     , write: '127.0.0.1\n', done: false },
+            { reg: /Database port/     , write: '3306\n'     , done: false },
+          ]
           , proc = spawn ( 'clever', [ 'install', 'clever-orm' ], { cwd: path.resolve( path.join( __dirname, '..' ) ) } );
 
         console.log( 'step #1 - install clever-orm module - begin\n' );
