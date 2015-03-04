@@ -13,5 +13,17 @@
     "headers": [ "x-requested-with", "content-type", "X-XSRF-TOKEN" ],
     "methods": [ "GET", "PUT", "POST", "DELETE", "OPTIONS" ],
     "maxAge": 1000000000
+  },
+
+  "tasks": {
+    "grunt": [
+      "watch",
+      "nodemon",
+      "mochaTest",
+      "concurrent",
+      "jshint",
+      "jsonlint"
+    ],
+    "gulp": []
   }
 }

@@ -4,6 +4,7 @@ var path            = require('path')
   , fs              = require('fs')
   , packageJson     = require(__dirname + '/package.json')
   , merge           = require('deepmerge')
+  , config          = require(path.join(__dirname, config))
   , helpers         = require(path.join(__dirname, 'lib', 'utils', 'helpers.js'))
   , registerFuncs   = []
   , gruntConfig     = {};
@@ -37,7 +38,7 @@ module.exports = function(grunt) {
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
   // Load the grunt task config files
-  loadGruntConfigs(['watch', 'nodemon', 'mochaTest', 'concurrent', 'jshint', 'jsonlint']);
+  loadGruntConfigs(config.tasks.grunt);
 
   // Load all modules Gruntfiles.js
   packageJson.bundledDependencies.forEach(function(moduleName) {
