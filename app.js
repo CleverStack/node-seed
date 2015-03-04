@@ -38,3 +38,5 @@ helpers.loadModulesFileByName(__filename, env.config, require('cluster'), debug)
 
 debug('Loading modules...');
 moduleLoader.loadModules();
+
+module.exports = app;
