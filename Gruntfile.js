@@ -1,138 +1,63 @@
 'use strict';
 
-var path            = require( 'path' )
-  , fs              = require( 'fs' )
-  , packageJson     = require( __dirname + '/package.json' )
-  , merge           = require( 'deepmerge' )
-  , getModulePaths  = require( path.join( __dirname, 'lib', 'utils', 'getModulePaths.js' ) )
-  , helpers         = require( path.join( __dirname, 'lib', 'utils', 'helpers.js' ) )
+var path            = require('path')
+  , fs              = require('fs')
+  , packageJson     = require(__dirname + '/package.json')
+  , merge           = require('deepmerge')
+  , helpers         = require(path.join(__dirname, 'lib', 'utils', 'helpers.js'))
+  , registerFuncs   = []
+  , gruntConfig     = {};
 
-// Cleanup the NODE_PATH for module loading
+// Clean and set the NODE_PATH for magic modules
 process.env.NODE_PATH = helpers.nodePath();
 
-module.exports = function( grunt ) {
-  // load all grunt tasks
-  require( 'matchdep' ).filterDev( 'grunt-*' ).forEach( grunt.loadNpmTasks );
+/**
+ * Helper function to load grunt task configuration objects and register tasks
+ * @param  {String} taskNames the names of the tasks you want to load
+ */
+function loadGruntConfigs(taskNames) {
+  taskNames.forEach(function(taskName) {
+    var gruntTask   = require(path.resolve(path.join(__dirname, 'tasks', 'grunt', taskName + '.js')))
+      , hasRegister = gruntTask.config && gruntTask.register
+      , taskConfig  = {};
 
-  // Create the project wide
-  var gruntConfig = {
-    watch: {
-      tests: {
-        files: [ 'lib/**/*.js', 'modules/**/*.js' ],
-        tasks: [ 'mochaTest:ci' ]
-      },
-      schema: {
-        files: [
-          'schema/seedData.json',
-          getModulePaths( 'schema', 'seedData.json' )
-        ],
-        tasks: [ 'jsonlint', 'db' ]
-      }
-    },
-    nodemon: {
-      web: {
-        script: 'cluster.js',
-        options: {
-          file: 'cluster.js',
-          ignoredFiles: [ 'README.md', 'node_modules/**' ],
-          watchedExtensions: [ 'js' ],
-          watchedFolders: [ 'config','lib','modules' ],
-          delayTime: 1,
-          cwd: __dirname
-        }
-      }
-    },
-    mochaTest: {
-      unit: {
-        options: {
-          require: [ 'chai' ],
-          reporter: 'spec',
-          timeout: 5000
-        },
-        src: [ 'tests/unit/test.utils.bootstrapEnv.js', 'tests/unit/test.utils.moduleLoader.js', 'tests/unit/test.class.Module.js', 'tests/unit/test.class.Controller.js', 'tests/unit/test.class.Service.js', 'tests/unit/*.js' ].concat( getModulePaths( 'tests', 'unit', '*.js' ) )
-      },
-      e2e: {
-        options: {
-          require: 'chai',
-          reporter: 'spec'
-        },
-        src: [ 'tests/integration/*.js' ].concat( getModulePaths( 'tests', 'integration', '*.js' ) )
-      },
-      ci: {
-        options: {
-          require: 'chai',
-          reporter: 'min'
-        },
-        src: [ 'tests/**/*.js' ].concat( getModulePaths( 'tests', 'unit', '*.js' ), getModulePaths( 'tests', 'integration', '*.js' ) )
-      }
-    },
-    concurrent: {
-      servers: {
-        tasks: [ 'watch:schema', 'nodemon:web' ],
-        options: {
-          logConcurrentOutput: true
-        }
-      }
-    },
-    jshint: {
-      options: {
-        jshintrc:       '.jshintrc',
-        reporter:       require( 'jshint-stylish' ),
-        ignores: [
-          './modules/**/test*/**/*.js'
-        ]
-      },
-      all: [
-        './Gruntfile.js',
-        './index.js',
-        './cluster.js',
-        './lib/**/*.js',
-        getModulePaths( '*.js' )
-      ]
-    },
-    jsonlint: {
-      all: {
-        src: [
-          './schema/seedData.json',
-          getModulePaths( 'schema', 'seedData.json' ),
-          './package.json'
-        ]
-      }
+    // Extend the main grunt config with this tasks config
+    taskConfig[taskName] = !!hasRegister ? gruntTask.config : gruntTask;
+    gruntConfig          = merge(gruntConfig, taskConfig);
+
+    // Allow registration of grunt tasks
+    if (!!hasRegister) {
+      registerFuncs.push(gruntTask.register);
     }
-  };
+  });
+}
 
-  // Module's Gruntfiles.js
-  var callbacks = [];
+module.exports = function(grunt) {
+  // load all grunt tasks
+  require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+
+  // Load the grunt task config files
+  loadGruntConfigs(['watch', 'nodemon', 'mochaTest', 'concurrent', 'jshint', 'jsonlint']);
 
   // Load all modules Gruntfiles.js
-  packageJson.bundledDependencies.forEach(function( moduleName ) {
-    var moduleGruntfile = [ path.resolve( __dirname ), 'modules', moduleName, 'Gruntfile.js' ].join( path.sep );
-    if ( fs.existsSync( moduleGruntfile ) ) {
-      var gruntfile = require( moduleGruntfile )( grunt );
+  packageJson.bundledDependencies.forEach(function(moduleName) {
+    var moduleGruntfile = [path.resolve(__dirname), 'modules', moduleName, 'Gruntfile.js'].join(path.sep);
+    if (fs.existsSync(moduleGruntfile)) {
+      var gruntfile = require(moduleGruntfile)(grunt);
 
       // Merge (deep) the grunt config objects
-      gruntConfig = merge( gruntConfig, gruntfile[ 0 ] );
+      gruntConfig = merge(gruntConfig, gruntfile[0]);
 
       // Add the register function to our callbacks
-      callbacks.push( gruntfile[ 1 ] );
+      registerFuncs.push(gruntfile[1]);
     }
   });
 
   // Initialize the config
-  grunt.initConfig( gruntConfig );
+  grunt.initConfig(gruntConfig);
 
   // Fire the callbacks and allow the modules to register their tasks
-  callbacks.forEach( function( cb ) {
-    cb( grunt );
+  registerFuncs.forEach(function(registerTasks) {
+    registerTasks(grunt);
   });
-
-  // Register all project wide tasks with grunt
-  grunt.registerTask( 'test',         [ 'mochaTest:unit', 'mochaTest:e2e', 'db' ] );
-  grunt.registerTask( 'test:unit',    [ 'mochaTest:unit', 'db' ] );
-  grunt.registerTask( 'test:e2e',     [ 'mochaTest:e2e', 'db' ] );
-  grunt.registerTask( 'test:ci',      [ 'watch:tests' ] );
-  grunt.registerTask( 'server',       [ 'concurrent:servers' ] );
-  grunt.registerTask( 'server:web',   [ 'server' ] );
-  grunt.registerTask( 'serve',        [ 'server'] );
-  grunt.registerTask( 'default',      [ 'server'] );
 };
