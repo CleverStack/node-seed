@@ -1,3 +1,6 @@
+var path    = require('path')
+  , appRoot = path.resolve(path.join(__dirname, '..', '..'));
+
 module.exports = {
   web: {
     script: 'cluster.js',
@@ -7,7 +10,7 @@ module.exports = {
       watchedExtensions: ['js'],
       watchedFolders: ['config','lib','modules'],
       delayTime: 1,
-      cwd: __dirname
+      cwd: appRoot
     }
   }
 }
