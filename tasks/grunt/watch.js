@@ -4,18 +4,18 @@ var utils = require('utils');
 
 module.exports = {
   tests: {
-    files: ['lib/**/*.js', 'modules/**/*.js'],
-    tasks: ['mochaTest:ci']
+    tasks: ['mochaTest:ci'],
+    files: ['lib/**/*.js', 'modules/**/*.js']
   },
   schema: {
+    tasks: ['jsonlint', 'db'],
     files: [
       'schema/seedData.json',
       utils.getModulePaths('schema', 'seedData.json')
-    ],
-    tasks: ['jsonlint', 'db']
+    ]
   },
   docs: {
-    files: ['./*.js', './lib/**/*.js'].concat(utils.getModulePaths('**', '*.js')),
-    tasks: ['jsdoc:docs']
+    tasks: ['jsdoc:docs'],
+    files: ['./*.js', './lib/**/*.js'].concat(utils.getModulePaths('**', '*.js'))
   }
 }

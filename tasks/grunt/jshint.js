@@ -4,8 +4,8 @@ var utils = require('utils');
 
 module.exports = {
   options: {
-    jshintrc:       '.jshintrc',
-    reporter:       require('jshint-stylish'),
+    jshintrc: '.jshintrc',
+    reporter: require('jshint-stylish'),
     ignores: [
       './modules/**/test*/**/*.js'
     ]

@@ -1,16 +1,24 @@
-var path    = require('path')
-  , appRoot = path.resolve(path.join(__dirname, '..', '..'));
+var path = require('path');
 
 module.exports = {
   cluster: {
-    script: 'cluster.js',
+    script : 'cluster.js',
     options: {
-      file: 'cluster.js',
-      ignoredFiles: ['README.md', 'node_modules/**'],
-      watchedExtensions: ['js'],
-      watchedFolders: ['config','lib','modules'],
-      delayTime: 1,
-      cwd: appRoot
+      cwd       : path.resolve(path.join(__dirname, '..', '..')),
+      file      : 'cluster.js',
+      delayTime : 1,
+      ignoredFiles: [
+        'README.md',
+        'node_modules/**'
+      ],
+      watchedFolders: [
+        'config',
+        'lib',
+        'modules'
+      ],
+      watchedExtensions: [
+        'js'
+      ]
     }
   }
 }
