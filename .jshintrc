@@ -26,6 +26,5 @@
   "laxcomma": true,
   "quotmark": false,
   "strict": false,
-  "expr": true,
-  "es5": true
+  "expr": true
 }

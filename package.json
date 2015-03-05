@@ -90,6 +90,11 @@
     "test": "grunt test --verbose"
   },
   "bundledDependencies": [
-    
+    "clever-roles",
+    "clever-accounts",
+    "clever-auth",
+    "clever-odm",
+    "clever-orm",
+    "clever-users"
   ]
 }
