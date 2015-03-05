@@ -2,7 +2,7 @@ var path    = require('path')
   , appRoot = path.resolve(path.join(__dirname, '..', '..'));
 
 module.exports = {
-  web: {
+  cluster: {
     script: 'cluster.js',
     options: {
       file: 'cluster.js',

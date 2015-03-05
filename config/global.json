@@ -17,13 +17,15 @@
 
   "tasks": {
     "grunt": [
+      "exec",
       "watch",
       "nodemon",
       "mochaTest",
       "concurrent",
       "jshint",
       "jsonlint",
-      "jsdoc2md"
+      "jsdoc2md",
+      "node-inspector"
     ],
     "gulp": []
   }
