@@ -29,7 +29,7 @@ if (!cluster.isMaster) {
   });
 
   // Spawn app processes
-  for (var i = 0; i < config.numChildren ? config.numChildren : os.cpus(); ++i) {
+  for (var i = 0; i < (config.numChildren ? config.numChildren : os.cpus()); ++i) {
     cluster.fork();
   }
 }
