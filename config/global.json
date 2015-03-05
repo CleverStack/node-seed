@@ -22,7 +22,8 @@
       "mochaTest",
       "concurrent",
       "jshint",
-      "jsonlint"
+      "jsonlint",
+      "jsdoc2md"
     ],
     "gulp": []
   }
