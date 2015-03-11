@@ -4,7 +4,7 @@ Contributing to a project is not only adding slabs of code, fixing bugs, or crea
 
 > CleverStack aims to not be a framework or a stack, but an ecosystem. ([An ecosystem is a community of living organisms (plants, animals and microbes) in conjunction with the nonliving components of their environment (things like air, water and mineral soil), interacting as a system](http://en.wikipedia.org/wiki/Ecosystem).)
 
-> The vision for CleverStack is not to be the best performance framework (although, there is certainly concern for that), including support for all of the gadgets and gizmos (this too, is welcomed), or to be the next buzzword (it would be cool to see others talking about it though) it's more about shifting a developer into a different mindset. A mindset in which not only takes the [modularization principles](http://en.wikipedia.org/wiki/Modular_programming) on a vertical scale (e.g. reducing developing time), but a horizontal scale too (e.g. not needing to focus on every single detail, but being able to take a step back and look at your environment across the horizon).
+> The vision for CleverStack is not to be the best performance framework (although, there is certainly concern for that), to include and support for all of the gadgets and gizmos (this too, is welcomed), or to be the next buzzword like mean (it would be cool to see others talking about it though) it's more about shifting a developer into a different mindset. A mindset in which not only takes the [modularization principles](http://en.wikipedia.org/wiki/Modular_programming) on a vertical scale (e.g. reducing developing time), but a horizontal scale too (e.g. not needing to focus on every single detail, but being able to take a step back and look at your environment across the horizon).
 
 > I just wanted to thank you for not only looking into contributing towards CleverStack, but for even taking your time to considering it. I'm personally always available to lend out a hand, and I hope you never feel as if you can't reach out to me. I always look forward to discussing ideas, solving problems, and colloborating with others.
 
@@ -16,7 +16,7 @@ There are currently a few resources available to reach out to us:
 
 1. [GitHub Issues](https://github.com/CleverStack/node-seed/issues)
 2. [Stack Overflow](http://stackoverflow.com/questions/tagged/cleverstack)
-3. [Google Groups/Mailing list](https://groups.google.com/forum/#!forum/cleverstack)
+3. [Google Groups/Mailing list](https://groups.google.com/forum/#!forum/clever-stack)
 4. [IRC](http://webchat.freenode.net/?randomnick=1&channels=%23cleverstack&uio=d4)
 
 ## Submitting Pull Requests
