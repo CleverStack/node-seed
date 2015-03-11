@@ -2,7 +2,7 @@
   "private": true,
   "name": "node-seed",
   "description": "Cleverstack Node-Seed",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "main": "cluster.js",
   "author": {
     "name": "CleverStack",
