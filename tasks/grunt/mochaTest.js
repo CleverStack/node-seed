@@ -17,11 +17,6 @@ module.exports = {
         'tests/unit/classes/ModuleLoader.js',
         'tests/unit/classes/Module.js',
         'tests/unit/classes/*.js',
-        // 'tests/unit/test.utils.bootstrapEnv.js',
-        // 'tests/unit/test.class.ModuleLoader.js',
-        // 'tests/unit/test.class.Module.js',
-        // 'tests/unit/test.class.Controller.js',
-        // 'tests/unit/test.class.Service.js',
         'tests/unit/*.js'
       ].concat(utils.getModulePaths('tests', 'unit', '*.js'))
     },
