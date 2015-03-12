@@ -10,7 +10,7 @@ module.exports = {
   },
   all: [
     './Gruntfile.js',
-    './index.js',
+    './app.js',
     './cluster.js',
     './lib/**/*.js',
     './modules/**/*.js',
