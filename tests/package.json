@@ -1,0 +1,96 @@
+{
+  "private": true,
+  "name": "node-seed",
+  "description": "Cleverstack Node-Seed",
+  "version": "1.2.0",
+  "main": "cluster.js",
+  "author": {
+    "name": "CleverStack",
+    "email": "admin@cleverstack.io",
+    "web": "http://cleverstack.io"
+  },
+  "collaborators": [
+    "Richard Gustin <richard.gustin86@gmail.com>",
+    "Daniel Young <young.daniel88@gmail.com>",
+    "Leandro Ostera <leostera@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CleverStack/node-seed.git"
+  },
+  "bugs": {
+    "url": "https://github.com/CleverStack/node-seed/issues"
+  },
+  "keywords": [
+    "cleverstack",
+    "cleverstack-backend",
+    "framework",
+    "seed",
+    "restful",
+    "api",
+    "restful api",
+    "orm",
+    "odm"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "async": "~0.9.0",
+    "bluebird": "~2.9.2",
+    "body-parser": "~1.12.0",
+    "chalk": "~1.0.0",
+    "clever-controller": "~1.2.0",
+    "clever-injector": "~1.0.2",
+    "compression": "~1.4.1",
+    "connect-timeout": "~1.6.0",
+    "cors": "~2.5.2",
+    "debug": "~2.1.0",
+    "deepmerge": "~0.2.7",
+    "ejs": "~2.3.1",
+    "express": "~4.12.2",
+    "i": "~0.3.2",
+    "matchdep": "~0.3.0",
+    "method-override": "~2.3.1",
+    "moment": "~2.9.0",
+    "morgan": "~1.5.1",
+    "nconf": "~0.7.1",
+    "require-folder-tree": "^1.0.6",
+    "response-time": "~2.3.0",
+    "sendgrid": "~1.6.0",
+    "uberclass": "~1.0.1",
+    "underscore": "~1.8.1",
+    "validator": "~3.33.0"
+  },
+  "devDependencies": {
+    "chai": "~1.9.1",
+    "grunt-concurrent": "~0.5.0",
+    "grunt-contrib-clean": "~0.5.0",
+    "grunt-contrib-connect": "~0.3.0",
+    "grunt-contrib-jshint": "~0.10.0",
+    "grunt-contrib-watch": "~0.6.1",
+    "grunt-exec": "~0.4.2",
+    "grunt-jsdoc-to-markdown": "^0.4.2",
+    "grunt-jsonlint": "~1.0.4",
+    "grunt-mocha-test": "~0.11.0",
+    "grunt-node-inspector": "^0.1.6",
+    "grunt-nodemon": "~0.2.1",
+    "jshint-stylish": "~1.0.0",
+    "karma": "~0.12.16",
+    "matchdep": "~0.3.0",
+    "mocha": "~1.20.1",
+    "ncp": "~0.5.1",
+    "rimraf": "~2.2.8",
+    "should": "~4.0.4",
+    "sinon": "~1.10.2",
+    "stack-filter": "^1.0.0",
+    "supertest": "~0.13.0",
+    "time-grunt": "~1.0.0"
+  },
+  "scripts": {
+    "start": "grunt",
+    "setup": "npm i; grunt db;",
+    "test": "grunt test --verbose"
+  },
+  "bundledDependencies": [
+    "clever-odm"
+  ]
+}
