@@ -12,6 +12,8 @@ module.exports = {
       src: [
         'tests/unit/utils/bootstrapEnv.js',
         'tests/unit/utils/*.js',
+        'node_modules/clever-injector/test/test.injector.js',
+        'node_modules/clever-controller/test/controller.test.js',
         'tests/unit/classes/ModuleLoader.js',
         'tests/unit/classes/Module.js',
         'tests/unit/classes/*.js',
