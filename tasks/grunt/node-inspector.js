@@ -9,4 +9,4 @@ module.exports = {
       'save-live-edit' : true,
     }
   }
-}
+};

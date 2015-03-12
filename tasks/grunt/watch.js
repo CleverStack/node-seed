@@ -1,5 +1,3 @@
-'use strict';
-
 var utils = require('utils');
 
 module.exports = {
@@ -18,4 +16,4 @@ module.exports = {
     tasks: ['jsdoc:docs'],
     files: ['./*.js', './lib/**/*.js'].concat(utils.getModulePaths('**', '*.js'))
   }
-}
+};

@@ -1,5 +1,3 @@
-'use strict';
-
 var utils = require('utils');
 
 module.exports = {
@@ -15,6 +13,9 @@ module.exports = {
     './index.js',
     './cluster.js',
     './lib/**/*.js',
+    './modules/**/*.js',
+    './tasks/**/*.js',
+    './schema/**/*.js',
     utils.getModulePaths('*.js')
   ]
-}
+};
