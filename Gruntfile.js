@@ -43,7 +43,7 @@ module.exports = function(grunt) {
 
   // Load all modules Gruntfiles.js
   utils.getModulePaths().forEach(function(modulePath) {
-    var moduleGruntfile = [modulePath, 'Gruntfile.js'].join(path.sep);
+    var moduleGruntfile = [__dirname, modulePath, 'Gruntfile.js'].join(path.sep);
     if (fs.existsSync(moduleGruntfile)) {
       var gruntfile = require(moduleGruntfile)(grunt);
 
