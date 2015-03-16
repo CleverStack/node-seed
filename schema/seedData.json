@@ -1,3 +1,15 @@
 {
-  
+  "UserModel": [
+    {
+      "username": "default",
+      "password": "9033d3a3e778e12b2e8b2da9bc819ac077ea92b3",
+      "email": "default@cleverstack.io",
+      "firstName": "Clever",
+      "lastName": "User",
+      "phone": "",
+      "hasAdminRight": true,
+      "confirmed": true,
+      "active": true
+    }
+  ]
 }

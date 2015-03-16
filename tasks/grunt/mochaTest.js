@@ -1,5 +1,3 @@
-'use strict';
-
 var utils = require('utils');
 
 module.exports = {
@@ -8,14 +6,17 @@ module.exports = {
       options: {
         require  : 'chai',
         reporter : 'spec',
-        timeout  : 5000
+        timeout  : 5000,
+        bail     : true
       },
       src: [
-        'tests/unit/test.utils.bootstrapEnv.js',
-        'tests/unit/test.utils.moduleLoader.js',
-        'tests/unit/test.class.Module.js',
-        'tests/unit/test.class.Controller.js',
-        'tests/unit/test.class.Service.js',
+        'tests/unit/utils/bootstrapEnv.js',
+        'tests/unit/utils/*.js',
+        'node_modules/clever-injector/test/test.injector.js',
+        'node_modules/clever-controller/test/controller.test.js',
+        'tests/unit/classes/ModuleLoader.js',
+        'tests/unit/classes/Module.js',
+        'tests/unit/classes/*.js',
         'tests/unit/*.js'
       ].concat(utils.getModulePaths('tests', 'unit', '*.js'))
     },
@@ -37,9 +38,9 @@ module.exports = {
     }
   },
   register: function(grunt) {
-    grunt.registerTask('test',      ['mochaTest:unit', 'mochaTest:e2e', 'db']);
-    grunt.registerTask('test:unit', ['mochaTest:unit', 'db']);
-    grunt.registerTask('test:e2e',  ['mochaTest:e2e', 'db']);
+    grunt.registerTask('test',      ['db', 'mochaTest:unit', 'mochaTest:e2e', 'db']);
+    grunt.registerTask('test:unit', ['mochaTest:unit']);
+    grunt.registerTask('test:e2e',  ['mochaTest:e2e']);
     grunt.registerTask('test:ci',   ['watch:tests']);
   }
-}
+};

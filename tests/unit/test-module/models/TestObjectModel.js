@@ -1,15 +1,18 @@
-module.exports = function ( Model ) {
-    return Model.extend( 'TestObject',
-    {
-        type: 'ODM',
-        softDeletable: true,
-        timeStampable: true
+module.exports = function(Model) {
+  return Model.extend(
+  {
+    type            : 'ODM',
+    softDeletable   : true,
+    timeStampable   : true
+  },
+  {
+    id: {
+      type          : Number,
+      primaryKey    : true
     },
-    {
-        id: {
-            type: Number,
-            primaryKey: true
-        },
-        data: String
-    });
+    name: {
+      type          : String,
+      required      : true
+    }
+  });
 };

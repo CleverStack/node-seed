@@ -5,7 +5,8 @@ var path            = require('path')
   , packageJson     = require(__dirname + '/package.json')
   , merge           = require('deepmerge')
   , config          = require(path.join(__dirname, 'config'))
-  , helpers         = require(path.join(__dirname, 'lib', 'utils', 'helpers.js'))
+  , utils           = require(path.join(__dirname, 'lib', 'utils'))
+  , helpers         = utils.helpers
   , registerFuncs   = []
   , gruntConfig     = {};
 
@@ -41,8 +42,8 @@ module.exports = function(grunt) {
   loadGruntConfigs(config.tasks.grunt);
 
   // Load all modules Gruntfiles.js
-  packageJson.bundledDependencies.forEach(function(moduleName) {
-    var moduleGruntfile = [path.resolve(__dirname), 'modules', moduleName, 'Gruntfile.js'].join(path.sep);
+  utils.getModulePaths().forEach(function(modulePath) {
+    var moduleGruntfile = [__dirname, modulePath, 'Gruntfile.js'].join(path.sep);
     if (fs.existsSync(moduleGruntfile)) {
       var gruntfile = require(moduleGruntfile)(grunt);
 

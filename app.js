@@ -5,7 +5,7 @@ var utils        = require('utils')
   , debug        = env.debug
   , helpers      = utils.helpers
   , bodyParser   = require('body-parser')
-  , moduleLoader = env.moduleLoader
+  , moduleLoader = env.moduleLoader;
 
 moduleLoader.on('beforeLoad', function() {
   debug('Configuring express application...');
