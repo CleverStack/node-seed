@@ -3,9 +3,9 @@ var expect        = require('chai').expect
   , Exceptions    = require('exceptions')
   , ServiceClass  = injector.getInstance('Service')
   , ModelClass    = injector.getInstance('Model')
-  , packageJson   = injector.getInstance('packageJson')
-  , ormEnabled    = packageJson.bundledDependencies.indexOf('clever-orm') !== -1
-  , odmEnabled    = packageJson.bundledDependencies.indexOf('clever-odm') !== -1
+  , moduleLdr     = injector.getInstance('moduleLoader')
+  , ormEnabled    = moduleLdr.moduleIsEnabled('clever-orm')
+  , odmEnabled    = moduleLdr.moduleIsEnabled('clever-odm')
   , drivers       = []
   , testModule;
 

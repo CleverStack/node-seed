@@ -2,9 +2,9 @@ var expect      = require('chai').expect
   , sinon       = require('sinon')
   , underscore  = require('underscore')
   , injector    = require('injector')
-  , packageJson = injector.getInstance('packageJson')
-  , ormEnabled  = packageJson.bundledDependencies.indexOf('clever-orm') !== -1
-  , odmEnabled  = packageJson.bundledDependencies.indexOf('clever-odm') !== -1
+  , moduleLdr   = injector.getInstance('moduleLoader')
+  , ormEnabled  = moduleLdr.moduleIsEnabled('clever-orm')
+  , odmEnabled  = moduleLdr.moduleIsEnabled('clever-odm')
   , models
   , testModule
   , TestMiddlewareAndRouteCtrl

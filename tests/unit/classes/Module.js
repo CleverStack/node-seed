@@ -7,8 +7,8 @@ var utils       = require('utils')
   , Model       = injector.getInstance('Model')
   , Service     = injector.getInstance('Service')
   , Controller  = injector.getInstance('Controller')
-  , ormEnabled  = packageJson.bundledDependencies.indexOf('clever-orm') !== -1
-  , odmEnabled  = packageJson.bundledDependencies.indexOf('clever-odm') !== -1
+  , ormEnabled  = moduleLdr.moduleIsEnabled('clever-orm')
+  , odmEnabled  = moduleLdr.moduleIsEnabled('clever-odm')
   , rimraf      = require('rimraf')
   , path        = require('path')
   , fs          = require('fs')
@@ -98,24 +98,7 @@ describe('Module', function() {
   });
 
   after(function(done) {
-    var dest    = path.resolve(__dirname, '..', '..', '..', 'modules', 'test-module')
-      , pkgJson = path.resolve(__dirname, '..', '..', '..', 'package.json');
-
     // Remove the test-module from the modules folder
-    rimraf(dest, function(err) {
-      if (!err) {
-        var index = packageJson.bundledDependencies.indexOf('test-module');
-        if (index !== -1) {
-          packageJson.bundledDependencies.splice(index, 1);
-        }
-
-        fs.writeFile(pkgJson, JSON.stringify(packageJson, null, '  '), function(e) {
-          injector.instance('packageJson', packageJson);
-          done(e);
-        });
-      } else {
-        done(err);
-      }
-    });
+    rimraf(path.resolve(__dirname, '..', '..', '..', 'modules', 'test-module'), done);
   });
 });
