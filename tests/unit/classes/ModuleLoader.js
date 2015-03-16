@@ -23,7 +23,7 @@ describe('ModuleLoader', function() {
       async.parallel(
         [
           function ormDb(callback) {
-            if (moduleLdr.moduleIsEnabled('clever-orm') !== -1) {
+            if (moduleLdr.moduleIsEnabled('clever-orm') === true) {
               injector
                 .getInstance('sequelize')
                 .sync({ force: true })
