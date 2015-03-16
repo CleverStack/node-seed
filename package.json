@@ -55,7 +55,7 @@
     "sendgrid"                : "~1.6.0",
     "uberclass"               : "~1.0.1",
     "underscore"              : "~1.8.1",
-    "validator"               : "~3.33.0"
+    "validator"               : "~3.34.0"
   },
   "devDependencies": {
     "chai"                    : "~1.9.1",
