@@ -24,7 +24,7 @@ function loadGruntConfigs(taskNames, rootPath) {
       , taskConfig  = {};
 
     // Extend the main grunt config with this tasks config
-    taskConfig[taskName] = !!hasRegister ? gruntTask.config : gruntTask;
+    taskConfig[taskName.replace('.js', '')] = !!hasRegister ? gruntTask.config : gruntTask;
     gruntConfig          = merge(gruntConfig, taskConfig);
 
     // Allow registration of grunt tasks
@@ -59,7 +59,8 @@ module.exports = function(grunt) {
       registerFuncs.push(gruntfile[1]);
     }
   });
-
+  console.dir(gruntConfig);
+  process.exit(1);
   // Initialize the config
   grunt.initConfig(gruntConfig);
 
