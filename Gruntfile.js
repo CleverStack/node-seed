@@ -59,8 +59,7 @@ module.exports = function(grunt) {
       registerFuncs.push(gruntfile[1]);
     }
   });
-  console.dir(gruntConfig);
-  process.exit(1);
+
   // Initialize the config
   grunt.initConfig(gruntConfig);
 
