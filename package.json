@@ -55,7 +55,7 @@
     "stack-filter"            : "^1.0.0",
     "uberclass"               : "~1.0.1",
     "underscore"              : "~1.8.1",
-    "validator"               : "~3.34.0"
+    "validator"               : "~3.x"
   },
   "devDependencies": {
     "chai"                    : "~1.9.1",
