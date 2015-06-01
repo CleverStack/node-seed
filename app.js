@@ -7,7 +7,7 @@ var utils        = require('utils')
   , bodyParser   = require('body-parser')
   , moduleLoader = env.moduleLoader;
 
-moduleLoader.on('beforeLoad', function() {
+moduleLoader.on('beforeLoad', function setupExpress() {
   debug('Configuring express application...');
 
   app.use(require('morgan')('dev'));

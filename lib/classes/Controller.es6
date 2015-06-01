@@ -1,73 +1,36 @@
-var Exceptions       = require('exceptions')
-  , models           = require('models')
-  , injector         = require('injector')
-  , underscore       = require('underscore')
-  , CleverController = require('clever-controller')
-  , Controller;
+import Exceptions       from 'Exceptions';
+import models           from 'models';
+import injector         from 'injector';
+import underscore       from 'underscore';
+import CleverController from 'CleverController';
 
-/**
- * @class    Controller
- * @extends  CleverController
- */
-Controller = CleverController.extend(
-/**
- * @lends Controller
- */
-{
-  /**
-   * Express Application reference for Controller to autoRoute with
-   * @type {Express}
-   */
-  app: injector.getInstance('app'),
-
-  /**
-   * A Reference to a service to use with this Controller, to provide automatic CRUD.
-   * @type {Service}
-   */
-  service: null
-},
-/**
- * @lends Controller#
- */
-{
-  /**
-   * Helper function that can be used to get the findOptions object for a Service to use with its Model.
-   * 
-   * @function Controller#getOptionsForService
-   * @return {Object} containing where, limit, offset and includes.
-   */
-  getOptionsForService: function() {
-    var options = {
-      where: underscore.extend(underscore.omit(this.req.params, 'action'), underscore.omit(this.req.query, '_include', '_limit', '_offset')),
-    };
+exports class Controller extends CleverController {
+  static app     = injector.getInstance('app');
+  static service = null;
+  
+  getOptionsForService() {
+    let options = {
+      where: underscore.extend(
+        underscore.omit(this.req.params, 'action'),
+        underscore.omit(this.req.query, '_include', '_limit', '_offset')
+      )
+    }
+    
     if (this.req.query._limit) {
       options.limit = this.req.query._limit;
     }
     if (this.req.query._offset) {
       options.offset = this.req.query._offset;
     }
+
     return this.processIncludes(options);
-  },
+  }
 
-  /**
-   * Helper function that can be used to get a param by name first from req.params, then req.body or lastly req.query
-   *
-   * @function Controller#param
-   * @param  {String} name the name of the param you want the value for
-   * @return {Mixed}
-   */
-  param: function(name) {
+  param(name) {
     return this.req.params[name] || this.req.body[name] || this.req.query[name];
-  },
+  }
 
-  /**
-   * Helper function that can be used to pre-process includes for findOptions
-   *
-   * @function Controller#processIncludes
-   * @param  {Object} findOptions typically the result of Controller#getOptionsForService
-   * @return {Object} the findOptions
-   */
-  processIncludes: function(findOptions) {
+  processIncludes(findOptions) {
     if (!!this.req.query._include) {
       findOptions.include = [];
 
@@ -81,15 +44,9 @@ Controller = CleverController.extend(
       });
     }
     return findOptions;
-  },
+  }
 
-  /**
-   * Helper function to check the response for Exceptions, Errors and the like.
-   *
-   * @function Controller#handleServiceMessage
-   * @param  {Mixed} response   the response that need's to be sent to the user
-   */
-  handleServiceMessage: function(response) {
+  handleServiceMessage(response) {
     if (!!this.responseSent) {
       return;
     }
@@ -105,14 +62,10 @@ Controller = CleverController.extend(
     } else {
       this.send(response, 200);
     }
-  },
+  }
 
-  /**
-   * Default Read List CRUD Action, only works if you set Controller.service
-   * @function Controller#listAction
-   */
-  listAction: function() {
-    var service     = this.Class.service !== null ? this.Class.service : false
+  listAction() {
+    var service     = Controller.service !== null ? Controller.service : false
       , model       = service && service.model !== undefined ? service.model : false;
 
     if (!!service && !!model) {
@@ -120,14 +73,10 @@ Controller = CleverController.extend(
     } else {
       this.next();
     }
-  },
+  }
 
-  /**
-   * Default Read CRUD Action, only works if you set Controller.service
-   * @function Controller#getAction
-   */
-  getAction: function() {
-    var service     = this.Class.service !== null ? this.Class.service : false
+  getAction() {
+    var service     = Controller.service !== null ? Controller.service : false
       , model       = service && service.model !== undefined ? service.model : false
       , findOptions;
 
@@ -141,14 +90,10 @@ Controller = CleverController.extend(
     } else {
       this.next();
     }
-  },
+  }
 
-  /**
-   * Default Create CRUD Action, only works if you set Controller.service
-   * @function Controller#postAction
-   */
-  postAction: function() {
-    var service     = this.Class.service !== null ? this.Class.service : false
+  postAction() {
+    var service     = Controller.service !== null ? Controller.service : false
       , model       = service && service.model !== undefined ? service.model : false
       , findOptions;
 
@@ -166,14 +111,10 @@ Controller = CleverController.extend(
     } else {
       this.next();
     }
-  },
+  }
 
-  /**
-   * Default Update CRUD Action, only works if you set Controller.service
-   * @function Controller#putAction
-   */
-  putAction: function() {
-    var service     = this.Class.service !== null ? this.Class.service : false
+  putAction() {
+    var service     = Controller.service !== null ? Controller.service : false
       , model       = service && service.model !== undefined ? service.model : false
       , findOptions;
 
@@ -192,15 +133,11 @@ Controller = CleverController.extend(
     } else {
       this.next();
     }
-  },
+  }
 
-  /**
-   * Default Delete CRUD Action, only works if you set Controller.service
-   * @function Controller#deleteAction
-   */
-  deleteAction: function() {
-    var service     = this.Class.service !== null ? this.Class.service : false
-      , model       = service && service.model !== undefined ? service.model : false
+  deleteAction() {
+    var service   = Controller.service !== null ? Controller.service : false
+      , model     = service && service.model !== undefined ? service.model : false
       , findOptions;
 
     if (!!service && !!model) {
@@ -216,6 +153,4 @@ Controller = CleverController.extend(
       this.next();
     }
   }
-});
-
-module.exports = Controller;
+}

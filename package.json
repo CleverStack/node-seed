@@ -43,19 +43,19 @@
     "cors"                    : "~2.5.2",
     "debug"                   : "~2.1.0",
     "deepmerge"               : "~0.2.7",
+    "dottie"                  : "~0.3.0",
     "ejs"                     : "~2.3.1",
     "express"                 : "~4.12.2",
     "i"                       : "~0.3.2",
     "method-override"         : "~2.3.1",
-    "moment"                  : "~2.9.0",
     "morgan"                  : "~1.5.1",
     "nconf"                   : "~0.7.1",
-    "require-folder-tree"     : "^1.0.6",
     "response-time"           : "~2.3.0",
     "sendgrid"                : "~1.6.0",
+    "stack-filter"            : "^1.0.0",
     "uberclass"               : "~1.0.1",
     "underscore"              : "~1.8.1",
-    "validator"               : "~3.34.0"
+    "validator"               : "~3.x"
   },
   "devDependencies": {
     "chai"                    : "~1.9.1",
@@ -78,7 +78,6 @@
     "rimraf"                  : "~2.2.8",
     "should"                  : "~4.0.4",
     "sinon"                   : "~1.10.2",
-    "stack-filter"            : "^1.0.0",
     "supertest"               : "~0.13.0",
     "time-grunt"              : "~1.0.0"
   },

@@ -1,5 +1,3 @@
-'use strict';
-
 var path            = require('path')
   , fs              = require('fs')
   , packageJson     = require(__dirname + '/package.json')
@@ -17,14 +15,16 @@ process.env.NODE_PATH = helpers.nodePath();
  * Helper function to load grunt task configuration objects and register tasks
  * @param  {String} taskNames the names of the tasks you want to load
  */
-function loadGruntConfigs(taskNames) {
+function loadGruntConfigs(taskNames, rootPath) {
+  rootPath = rootPath || __dirname;
+
   taskNames.forEach(function(taskName) {
-    var gruntTask   = require(path.resolve(path.join(__dirname, 'tasks', 'grunt', taskName + '.js')))
+    var gruntTask   = require(path.resolve(path.join(rootPath, 'tasks', 'grunt', taskName)))
       , hasRegister = gruntTask.config && gruntTask.register
       , taskConfig  = {};
 
     // Extend the main grunt config with this tasks config
-    taskConfig[taskName] = !!hasRegister ? gruntTask.config : gruntTask;
+    taskConfig[taskName.replace('.js', '')] = !!hasRegister ? gruntTask.config : gruntTask;
     gruntConfig          = merge(gruntConfig, taskConfig);
 
     // Allow registration of grunt tasks
@@ -39,10 +39,15 @@ module.exports = function(grunt) {
   require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
   // Load the grunt task config files
-  loadGruntConfigs(config.tasks.grunt);
+  loadGruntConfigs(helpers.getFilesForFolder(path.resolve(path.join(__dirname, 'tasks', 'grunt'))));
 
   // Load all modules Gruntfiles.js
   utils.getModulePaths().forEach(function(modulePath) {
+
+    // Allow modules to use new style of task loading/registering
+    loadGruntConfigs(helpers.getFilesForFolder(path.join(__dirname, modulePath, 'tasks', 'grunt')), path.join(__dirname, modulePath));
+
+    // Support the modules having their own Gruntfile.js
     var moduleGruntfile = [__dirname, modulePath, 'Gruntfile.js'].join(path.sep);
     if (fs.existsSync(moduleGruntfile)) {
       var gruntfile = require(moduleGruntfile)(grunt);
