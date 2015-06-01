@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+
+var path    = require('path')
+  , lib     = GLOBAL.lib = require(process.env.libDir)
+  , program = GLOBAL.program = require(path.join(process.env.cliDir, 'node_modules', 'commander'))
+  , utils   = lib.utils;
+
+/**  Define CLI Usage
+================================*/
+program
+  .usage('[options] <target>')
+  .option('-f, --force', 'forces the deploy command, use when cli logs suggest using it')
+  .option('-c, --config', 'configure a deployment target by <target> name')
+  .option('-d, --defaults', 'uses default settings instead of prompting you')
+  .option('-v, --verbose', 'verbose output, useful for debugging')
+  .option('-S, --status', 'displays the status of ec2 instances configured for that <target> environment')
+  .option('-s, --start', 'stats the ec2 instances for the <target> environment')
+  .option('-p, --pause', 'pauses/stops the ec2 instances for the <target> environment')
+  .option('-t, --terminate', 'terminates the ec2 instances for the <target> environment')
+  .option('-r, --rollback', 'to a previous release version');
+
+
+/**  Define CLI Help
+================================*/
+program.on('--help', function() {
+  console.log('  Description:');
+  console.log('    This command will make EC2 deployments easy on your computer or CI Server such as Jenkins or Travis,'),
+  console.log('    simply genereate your configuration for each environment and you are ready to deploy your app.');
+  console.log('');
+  console.log('  Example:');
+  console.log('    clever deploy --config --defaults DEV');
+  console.log('    clever deploy --start --verbose DEV');
+  console.log('    clever deploy --status DEV');
+  console.log('');
+});
+
+/**  Parse CLI Arguments
+================================*/
+program.parse(process.argv);
+if (program.rawArgs.length < 3) {
+  program.help();
+}
