@@ -2,9 +2,9 @@ import Exceptions       from 'Exceptions';
 import models           from 'models';
 import injector         from 'injector';
 import underscore       from 'underscore';
-import CleverController from 'CleverController';
+import CleverController from 'clever-controller';
 
-exports class Controller extends CleverController {
+export default class Controller extends CleverController {
   static app     = injector.getInstance('app');
   static service = null;
   

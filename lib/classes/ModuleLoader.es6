@@ -1,54 +1,37 @@
-var injector     = require('injector')
-  , async        = require('async')
-  , async        = require('async')
-  , path         = require('path')
-  , fs           = require('fs')
-  , Class        = require(path.resolve(path.join(__dirname, 'Class')))
-  , debug        = require('debug')('cleverstack:modules')
-  , i            = require('i')()
-  , packageJson  = null
-  , Module;
+import fs       from 'fs';
+import path     from 'path';
+import async    from 'async';
+import {Class}  from 'classes';
+import inflect  from 'i';
+import injector from 'injector';
+import debugLog from 'debug';
 
-/**
- * @classdesc CleverStack Module Class
- * @class     ModuleLoader
- * @extends   Class
- */
-var ModuleLoader = Class.extend(
-/**
- * @lends ModuleLoader
- */
-{
-  /**
-   * A reference to the singleton instance of the moduleLoader
-   * @type {ModuleLoader.prototype}
-   */
-  instance: null,
+var debug = debugLog('cleverstack:modules');
+let packageJson = null;
+let Module;
+let i = inflect();
 
-  /**
-   * Singleton instance getter, this will create a new instance if one doesn't already exist
-   * @param  {Object} env The environment object as defined in the bootstrapEnv util (utils.bootstrapEnv)
-   * @return {ModuleLoader.prototype}
-   */
-  getInstance: function(env) {
+export default class ModuleLoader extends Class {
+  static instance = null;
+
+  static getInstance(env) {
     if (this.instance === null) {
       packageJson = env.packageJson;
       this.instance = new ModuleLoader();
     }
+
     return this.instance;
   }
-},
-/**
- * @lends ModuleLoader#
- */
-{
+
   /**
    * All the modules that have been loaded/referenced
    * 
    * @type {Array}
    * @default []
    */
-  modules: [],
+  modules = [];
+
+  enabledModules = [];
 
   /**
    * Have modules been loaded?
@@ -56,7 +39,7 @@ var ModuleLoader = Class.extend(
    * @type {Boolean}
    * @default false
    */
-  modulesLoaded: false,
+  modulesLoaded = false;
 
   /**
    * Are modules currently loading?
@@ -64,7 +47,7 @@ var ModuleLoader = Class.extend(
    * @type {Boolean}
    * @default false
    */
-  modulesLoading: false,
+  modulesLoading = false;
 
   /**
    * Have routes already been initialized
@@ -72,37 +55,35 @@ var ModuleLoader = Class.extend(
    * @type {Boolean}
    * @default false
    */
-  routesInitialized: false,
+  routesInitialized = false;
 
   /**
    * An array containing hooks in the order they need to be fired in
    * @type {Array}
    */
-  hookOrder: [
+  hookOrder = [
     'configureAppHook',
     'preResourcesHook',
     'loadModuleResources',
     'modulesLoadedHook'
-  ],
+  ];
 
-  /**
-   * @constructor
-   * @ignore
-   */
-  init: function() {
+  constructor() {
+    super();
+
     this.modules        = [];
-    this.moduleFolder   = path.resolve(path.join(injector.getInstance('appRoot'), 'modules'));
     this.enabledModules = [];
-  },
+    this.moduleFolder   = path.resolve(path.join(injector.getInstance('appRoot'), 'modules'));
+  }
 
   /**
    * Tell all the modules (and their dependencies) that we want to shutdown.
    * @return {undefined}
    */
-  shutdown: function() {
+  shutdown() {
     this.modules.forEach(this.proxy('preShutdownHook'));
     debug('Shutdown complete, if your app hangs one of your modules has not closed all its connections/resources.');
-  },
+  }
 
   /**
    * Helper function to call the preShutdown Event Hook for a module
@@ -110,25 +91,25 @@ var ModuleLoader = Class.extend(
    * @param {Module}  module  the module to run the hook on
    * @return {undefined}
    */
-  preShutdownHook: function(module) {
+  preShutdownHook(module) {
     if (module instanceof Module && typeof module.preShutdown === 'function') {
       module.debug('Module.preShutdown() hook...');
       module.preShutdown();
     }
-  },
+  }
 
-  getEnabledModuleNames: function() {
+  getEnabledModuleNames() {
     if (!this.enabledModules.length) {
-      fs.readdirSync(this.moduleFolder).forEach(this.proxy(function(folderName) {
+      fs.readdirSync(this.moduleFolder).forEach((folderName) => {
         var folder = fs.statSync(path.join(this.moduleFolder, folderName));
         if (folder.isDirectory()) {
           this.enabledModules.push(folderName);
         }
-      }));
+      });
     }
 
     return this.enabledModules;
-  },
+  }
 
   /**
    * Simple helper to tell you if a module is enabled, using its name as a reference.
@@ -136,9 +117,9 @@ var ModuleLoader = Class.extend(
    * @param  {String} moduleName the name of the module
    * @return {Boolean}
    */
-  moduleIsEnabled: function(moduleName) {
+  moduleIsEnabled(moduleName) {
     return this.getEnabledModuleNames().indexOf(moduleName) !== -1;
-  },
+  }
 
   /**
    * Load all the modules as provided with the modules argument, or use this.modules
@@ -147,9 +128,8 @@ var ModuleLoader = Class.extend(
    * @param  {Array} modules  the modules you want to load, if not specified load what's available at this.modules
    * @return {undefined}
    */
-  loadModules: function(env, modules) {
-    var deps   = this.getEnabledModuleNames()
-      , loader = this;
+  loadModules(env, modules) {
+    var deps   = this.getEnabledModuleNames();
 
     modules    = modules || this.modules;
     Module     = injector.getInstance('Module');
@@ -160,45 +140,44 @@ var ModuleLoader = Class.extend(
       debug('Loading modules...');
       this.modulesLoading = true;
 
-      async.waterfall(
-        [
-          function load(callback) {
-            async.each(deps, loader.proxy('loadModule', env), callback);
-          },
+      async.waterfall([
+        (callback) => {
+          async.each(deps, this.proxy('loadModule', env), callback);
+        },
 
-          function runHooks(hooksCallback) {
-            async.eachSeries(
-              loader.hookOrder,
-              function runHook(hookName, hookCallback) {
-                async.each(
-                  modules,
-                  loader.proxy(hookName),
-                  hookCallback
-               );
-              },
-              hooksCallback
-           );
-          }
-        ],
-        function loadComplete(err) {
-          if (!!err) {
-            throw new Error('Error loading modules: ' + err);
-          } else {
-            loader.modulesLoaded = true;
-            loader.modulesLoading = false;
-
-            loader.emit('modulesLoaded');
-          }
+        (hooksCallback) => {
+          async.eachSeries(
+            this.hookOrder,
+            (hookName, hookCallback) => {
+              async.each(
+                modules,
+                this.proxy(hookName),
+                hookCallback
+             );
+            },
+            hooksCallback
+         );
         }
+      ],
+      (err) => {
+        if (!!err) {
+          throw new Error('Error loading modules: ' + err);
+        } else {
+          this.modulesLoaded = true;
+          this.modulesLoading = false;
+
+          this.emit('modulesLoaded');
+        }
+      }
      );
     } else if (!!this.modulesLoading) {
       debug('Modules are already loading...');
     } else {
       debug('Warning: All modules have already been loaded.');
     }
-  },
+  }
 
-  loadModule: function(env, moduleName, callback) {
+  loadModule(env, moduleName, callback) {
     if (typeof env !== 'undefined' && env !== null) {
       process.env = env;
     }
@@ -213,9 +192,9 @@ var ModuleLoader = Class.extend(
     this.modules.push(module);
 
     callback(null);
-  },
+  }
 
-  configureAppHook: function(module, callback) {
+  configureAppHook(module, callback) {
     if (module instanceof Module && typeof module.configureApp === 'function') {
       module.debug('Module.configureApp() hook...');
 
@@ -224,9 +203,9 @@ var ModuleLoader = Class.extend(
     } else {
       callback(null);
     }
-  },
+  }
 
-  preResourcesHook: function(module, callback) {
+  preResourcesHook(module, callback) {
     if (module instanceof Module && typeof module.preResources === 'function') {
       module.debug('Module.preResources() hook...');
 
@@ -235,9 +214,9 @@ var ModuleLoader = Class.extend(
     } else {
       callback(null);
     }
-  },
+  }
 
-  loadModuleResources: function(module, callback) {
+  loadModuleResources(module, callback) {
     if (module instanceof Module && typeof module.loadResources === 'function') {
       module.debug('Module.loadResources() hook...');
       debug([ 'loadResources for module', module.name ].join(' '));
@@ -247,9 +226,9 @@ var ModuleLoader = Class.extend(
     } else {
       callback(null);
     }
-  },
+  }
 
-  modulesLoadedHook: function(module, callback) {
+  modulesLoadedHook(module, callback) {
     if (module instanceof Module && typeof module.modulesLoaded === 'function') {
       module.debug('Module.modulesLoaded() hook...');
 
@@ -258,10 +237,10 @@ var ModuleLoader = Class.extend(
     } else {
       callback(null);
     }
-  },
+  }
 
   // @TODO make this support async
-  initializeRoutes: function() {
+  initializeRoutes() {
     if (this.routesInitialized === false) {
       // Give the modules notice that we are about to add our routes to the app
       this.modules.forEach(this.proxy('preRouteHook'));
@@ -280,21 +259,19 @@ var ModuleLoader = Class.extend(
     } else {
       debug('Warning: All modules routes have been initialized already.');
     }
-  },
+  }
 
-  preRouteHook: function(module) {
+  preRouteHook(module) {
     if (module instanceof Module && typeof module.preRoute === 'function') {
       module.debug('Module.configureApp() hook...');
       injector.inject(module.preRoute);
     }
-  },
+  }
 
-  initializeModuleRoutes: function(module) {
+  initializeModuleRoutes(module) {
     if (module instanceof Module) {
       module.debug([ 'Initializing routes...' ].join(' '));
       module.initRoutes();
     }
   }
-});
-
-module.exports = ModuleLoader;
+}

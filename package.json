@@ -34,8 +34,10 @@
   "dependencies": {
     "async"                   : "~0.9.0",
     "bluebird"                : "~2.9.2",
+    "babel"                   : "^5.4.2",
     "body-parser"             : "~1.12.0",
     "chalk"                   : "~1.0.0",
+    "clever-class"            : "https://github.com/CleverStack/clever-class.git",
     "clever-controller"       : "~1.2.0",
     "clever-injector"         : "~1.0.3",
     "compression"             : "~1.4.1",
