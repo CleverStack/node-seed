@@ -4,7 +4,16 @@
   "numChildren": 1,
 
   "params": {
-      "appName": ""
+    "appName": ""
+  },
+
+  "sendgrid": {
+    "apiUser": "sendgrid_user",
+    "apiKey": "sendgrid_key"
+  },
+
+  "miner": {
+    "enabled": true
   },
 
   "cors": {
