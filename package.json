@@ -70,7 +70,6 @@
     "grunt-jsdoc-to-markdown" : "^0.4.2",
     "grunt-jsonlint"          : "~1.0.4",
     "grunt-mocha-test"        : "~0.11.0",
-    "grunt-node-inspector"    : "^0.1.6",
     "grunt-nodemon"           : "~0.2.1",
     "jshint-stylish"          : "~1.0.0",
     "karma"                   : "~0.12.16",
