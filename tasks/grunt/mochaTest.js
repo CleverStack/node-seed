@@ -38,7 +38,7 @@ module.exports = {
     }
   },
   register: function(grunt) {
-    grunt.registerTask('test',      ['db', 'mochaTest:unit', 'mochaTest:e2e', 'db']);
+    grunt.registerTask('test',      ['db', 'copy:testModule', 'mochaTest:unit', 'mochaTest:e2e', 'db']);
     grunt.registerTask('test:unit', ['mochaTest:unit']);
     grunt.registerTask('test:e2e',  ['mochaTest:e2e']);
     grunt.registerTask('test:ci',   ['watch:tests']);
