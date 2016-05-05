@@ -8,14 +8,6 @@ var utils       = require('utils')
 
 describe('ModuleLoader', function() {
 
-  before(function(done) {
-    var source  = path.resolve(__dirname, '..', 'test-module')
-      , dest    = path.resolve(__dirname, '..', '..', '..', 'modules', 'test-module');
-
-    // Copy the test-module into the modules folder
-    ncp(source, dest, done);
-  });
-
   it('should load modules', function(done) {
     this.timeout(20000);
     
