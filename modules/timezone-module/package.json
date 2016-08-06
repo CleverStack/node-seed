@@ -1,0 +1,25 @@
+{
+  "name": "timezone-module",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    
+  },
+  "author": {
+    "name": "Clevertech",
+    "email": "info@clevertech.biz",
+    "web": "http://www.clevertech.biz"
+  },
+  "collaborators": [
+    "Richard Gustin <richard@clevertech.biz>",
+    "Daniel Young <daniel@clevertech.biz>"
+  ],
+  "description": "",
+  "keywords": [
+    ""
+  ],
+  "main": "module.js",
+  "devDependencies": {
+
+  }
+}
